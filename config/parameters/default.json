@@ -10,7 +10,6 @@
     "AltWallet2": "",
     "AltWallet3": "",
     "API": "No",
-    "API_ID": 0,
     "API_Key": "",
     "APIPassword": "No",
     "ASIC_ALGO": [
@@ -34,9 +33,7 @@
     "CPUOnly": "No",
     "CPUThreads": 1,
     "Cuda": "10",
-    "Currency": [
-        "USD"
-    ],
+    "Currency": "USD",
     "Custom_Periods": 1,
     "Donate": 0.5,
     "ETH": "",
