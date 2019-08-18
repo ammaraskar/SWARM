@@ -532,7 +532,7 @@ While ($true) {
         Global:Get-Interval
         ## Get Shares
         log "Getting Coin Tracking From Pool" -foregroundColor Cyan
-        if ($glbal:Config.params.Track_Shares -eq "Yes") { Global:Get-CoinShares }
+        if ($global:Config.params.Track_Shares -eq "Yes") { Global:Get-CoinShares }
 
         ## Phase Clean up
         Global:Remove-Modules
