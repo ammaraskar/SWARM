@@ -12,7 +12,7 @@ Set-Alias -Name Win -Value Global:Get-Avalonia -Scope Global
 $Xaml = Get-Content ".\gui\SWARM_GUI\MainWindow.xaml"
 $Xaml = $Xaml | Out-String
 $global:window = ConvertTo-AvaloniaWindow -Xaml $Xaml
-$global:Window.Icon = ".\build\apps\icons\SWARM.ico"
+if($IsWindows){$global:Window.Icon = ".\build\apps\icons\SWARM.ico"}
 ################### END XAML CONVERSION ##############
 
 
