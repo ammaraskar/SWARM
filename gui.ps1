@@ -489,5 +489,9 @@ $Remove_Pool_Check = {
 }
 $Remove_Pool.add_Click($Remove_Pool_Check)
 
+
+
+
+
 ################### Begin GUI ###################
 Show-AvaloniaWindow -Window $Window
