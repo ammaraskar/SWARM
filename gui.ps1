@@ -23,7 +23,18 @@ $Exit.add_Click( { $global:window.Close() })
 ## Start SWARM
 $Start = Win "Start_Swarm"
 $Stop = Win "Stop_Swarm"
+$Save_and_Start = Win "Save_Swarm"
+$Save_and_Exit = Win "Save_Exit"
 $Start.add_Click( { .\startup.ps1 })
+$Save_and_Start.add_Click({
+    $Param | ConvertTo-Json -Depth 10 |Set-Content ".\config\parameters\newarguments.json"
+    .\startup.ps1
+})
+$Save_and_Exit.add_Click({
+    $Param | ConvertTo-Json -Depth 10 |Set-Content ".\config\parameters\newarguments.json"
+    $window.Close()
+    Exit
+})
 $Stop.add_Click( {
         $Miner_PID = if (test-Path ".\build\pid\miner_pid.txt") { cat ".\build\pid\miner_pid.txt" }
         $Background_PID = if (test-Path ".\build\pid\background_pid.txt") { cat ".\build\pid\background_pid.txt" }
@@ -411,14 +422,20 @@ $AMD1_Click = {
 $AMD1.add_Click($AMD1_Click)
 
 ## CPU Checkbox
-if ("CPU" -in $Param.Type) { $CPU.IsChecked = $true }
+if ("CPU" -in $Param.Type) { 
+    $CPU.IsChecked = $true
+    $UpDown.Foreground = "Black"
+    $UpDown.Background = "White"
+    $UpDown.IsEnabled = $false
+    $Thread_Title.Foreground = "Black"    
+}else{   
+$UpDown.Foreground = "Gray"
+$UpDown.Background = "Gray"
+$UpDown.IsEnabled = $false
+$Thread_Title.Foreground = "Gray"
+}
 if ($Param.CPUThreads -gt 0) {$UpDown.Value = $Param.CPUThreads}
 if("CPU" -notin $Param.Type) {
-    $UpDown.Foreground = "Gray"
-    $UpDown.Background = "Gray"
-    $UpDown.BorderBrush = "Gray"
-    $UpDown.IsEnabled = $false
-    $Thread_Title.Foreground = "Gray"
 }
 $CPU_Click = {
     if ($CPU.IsChecked) {
@@ -451,7 +468,7 @@ $ASIC_Click = {
 }
 $ASIC.add_Click($ASIC_Click)
 
-Register-ObjectEvent -InputObject $UpDown -EventName "ValueChanged" -Action {$Param.CPUThreads = $Updown.Value}
+Register-ObjectEvent -InputObject $UpDown -EventName "ValueChanged" -Action {$Param.CPUThreads = $Updown.Value} | Out-Null
 
 ## US Checkbox
 $US = Win "US"

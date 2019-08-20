@@ -27,6 +27,9 @@
         <MenuItem Header="_Start Swarm" Name="Start_Swarm"/>
         <MenuItem Header="_Stop Swarm" Name="Stop_Swarm"/>
         <Separator />
+        <MenuItem Header="_Save And Start Swarm" Name="Save_Swarm"/>
+        <MenuItem Header="_Save And Exit" Name="Save_Exit"/>
+        <Separator />
         <MenuItem Header="_Exit" Name="Exit"/>
       </MenuItem>      
     </Menu>

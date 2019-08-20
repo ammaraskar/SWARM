@@ -1,0 +1,1 @@
+pwsh -executionpolicy Bypass -command  ".\gui_start.ps1"
