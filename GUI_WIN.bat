@@ -1,1 +1,1 @@
-pwsh -executionpolicy Bypass -command  ".\gui_start.ps1"
+pwsh -executionpolicy Bypass -command  ".\gui\gui_start.ps1"

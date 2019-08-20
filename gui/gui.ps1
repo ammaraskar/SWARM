@@ -2,7 +2,7 @@ using module PSAvalonia;
 
 ################### LOAD DATA ###################
 
-$global:Dir = Split-Path $script:MyInvocation.MyCommand.Path
+$global:Dir = Split-Path (Split-Path $script:MyInvocation.MyCommand.Path)
 Set-Location $global:Dir
 function Global:Get-Avalonia($Name) { Find-AvaloniaControl -Window $global:window -Name $Name }
 Set-Alias -Name Win -Value Global:Get-Avalonia -Scope Global

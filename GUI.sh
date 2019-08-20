@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pwsh -command ".\gui_start.ps1"
+pwsh -command ".\gui\gui_start.ps1"

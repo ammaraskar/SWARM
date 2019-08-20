@@ -36,23 +36,23 @@
     <TabControl TabStripPlacement="Left">
       <TabItem Classes="h1" Header="BASIC SETTINGS" Background="White" Foreground="Black">
         <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-          <TextBlock Classes="h1" HorizontalAlignment="Center" Margin="0,5" Text="Wallet1:   " Grid.Row="0" Grid.Column="0"/>
-          <TextBox HorizontalAlignment="Left" Name="Wallet1" AcceptsReturn="False" Focusable="True" MinWidth="375" MaxWidth="375" Height="27" Watermark="BTC ADDRESSS" Grid.Row="0" Grid.Column="1"/>
-          <TextBlock Classes="h1" HorizontalAlignment="Left" Margin="5,5" Text="Location:" Grid.Row="0" Grid.Column="2"/>
-          <CheckBox Classes="h1" HorizontalAlignment="Left" Margin="0,0" Name="US" Grid.Row="0" Grid.Column="3" Content="US" Foreground="Black" Background="White" BorderBrush="Black"/>
-          <CheckBox Classes="h1" HorizontalAlignment="Left" Margin="-55,0" Name="EUROPE" Grid.Row="0" Grid.Column="4" Content="EUROPE" Foreground="Black" Background="White" BorderBrush="Black"/>
-          <CheckBox Classes="h1" HorizontalAlignment="Left" Margin="-0,0" Name="ASIA" Grid.Row="0" Grid.Column="5" Content="ASIA" Foreground="Black" Background="White" BorderBrush="Black"/>
-          <TextBlock Classes="h1" HorizontalAlignment="Center" Margin="0,9" Text="RigName1:   " Grid.Row="1" Grid.Column="0"/>
-          <TextBox HorizontalAlignment="Left" Name="Rigname1" AcceptsReturn="False" Height="27" Focusable="True" MinWidth="375" MaxWidth="375" Watermark="Your Rig NickName" Grid.Row="1" Grid.Column="1"/>
-          <TextBlock Classes="h1" HorizontalAlignment="Left" Margin="5,9" Text="Donate: " Grid.Row="1" Grid.Column="2"/>
-          <TextBox HorizontalAlignment="Left" Name="Donate" AcceptsReturn="False" Margin="0,5" Focusable="True" MinWidth="55" MaxWidth="55" Watermark="Amount" Grid.Row="1" Grid.Column="3"/>
-          <CheckBox Classes="h1" HorizontalAlignment="Left" Margin="-30,0" Name="Auto_Coin" Grid.Row="1" Grid.Column="4" Content="Auto Coin" Foreground="Black" Background="White" BorderBrush="Black"/>
-          <TextBlock Classes="h1" HorizontalAlignment="Left" Margin="40,5" Text="Pools Available  " Grid.Row="2" Grid.Column="1"/>
-          <TextBlock Classes="h1" HorizontalAlignment="Center" Margin="10,5" Text="Pools Used" Grid.Row="2" Grid.Column="3"/>
-          <ListBox Classes="h1" Name="Add_Pool_List" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-10,0" Grid.Row="3" Width="180" Height="200" Grid.Column="1"></ListBox>
-          <Button Classes="h1" Name="Add_Pool_Button" HorizontalAlignment="Right" VerticalAlignment="Top" Height="27" Width="200" Margin="-8,0" Grid.Row="3" Grid.Column="1" Content="Add Pool ==&gt;"/>
-          <Button Classes="h1" Name="Remove_Pool_Button" HorizontalAlignment="Right" VerticalAlignment="Top" Height="27" Width="200" Margin="-8,-150" Grid.Row="4" Grid.Column="1" Content="&lt;== Remove Pool"/>
-          <ListBox Classes="h1" Name="Pool_List" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="-42,0" Grid.Row="3" Width="180" Height="200" Grid.Column="3"></ListBox>
+          <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="8" Fill="Black" HorizontalAlignment="Left" MinWidth="731" MinHeight="35"/>
+          <TextBlock Classes="h1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5" Text=" Wallets " Foreground="White" Grid.Row="0" Grid.Column="0"/>
+          <DropDown SelectedIndex="0" Background="White" MaxHeight="30" BorderBrush="Black" HorizontalAlignment="Stretch" Name="Wallet_List" Grid.Row="0" Grid.Column="1" MaxWidth="125" MinWidth="125">
+            <DropDownItem Name="Wallet1" Content="Wallet1" ></DropDownItem>
+            <DropDownItem Name="Wallet2" Content="Wallet1" ></DropDownItem>
+            <DropDownItem Name="Wallet3" Content="Wallet1" ></DropDownItem>
+            <DropDownItem Name="AltWallet1" Content="AltWallet1" ></DropDownItem>
+            <DropDownItem Name="AltWallet2" Content="AltWallet2" ></DropDownItem>
+            <DropDownItem Name="AltWallet3" Content="AltWallet3" ></DropDownItem>
+            <DropDownItem Name="NiceHash_Wallet1" Content="NiceHash_Wallet1" ></DropDownItem>
+            <DropDownItem Name="NiceHash_Wallet2" Content="NiceHash_Wallet2" ></DropDownItem>
+            <DropDownItem Name="NiceHash_Wallet3" Content="NiceHash_Wallet3" ></DropDownItem>
+            <DropDownItem Name="ETH" Content="ETH" ></DropDownItem>
+          </DropDown>
+          <TextBox Name="Symbol" Grid.Row="0" Grid.Column="2" Margin="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="50" MaxWidth="50" MinHeight="25" BorderBrush="Black" Watermark="Symbol" AcceptsReturn="False" TextWrapping="NoWrap"/>
+          <TextBox Name="Address" Grid.Row="0" Grid.Column="3" Margin="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="350" MaxWidth="350" MinHeight="25" BorderBrush="Black" Watermark="Enter BTC Address Here" AcceptsReturn="False" TextWrapping="NoWrap"/>
+          <Button Name="Save_Wallet" Grid.Row="0" Grid.Column="4" MinWidth="100" HorizontalAlignment="Center" Margin="15,5" MinHeight="30" Content="Save Wallet" BorderThickness="3" BorderBrush="Gray" />
         </Grid>
       </TabItem>
       <TabItem Name="Rig_Settings" Classes="h1" Header="RIG SETTINGS" Background="White" Foreground="Black">

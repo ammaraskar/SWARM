@@ -10350,18 +10350,18 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Mayna\\Documents\\GitHub\\SWARM\\gui\\SWARM_GUI\\SWARM_GUI.csproj",
+      "projectUniqueName": "C:\\Users\\Mayna\\Documents\\GitHub\\SWARM\\gui\\SWARM_GUI.csproj",
       "projectName": "SWARM_GUI",
-      "projectPath": "C:\\Users\\Mayna\\Documents\\GitHub\\SWARM\\gui\\SWARM_GUI\\SWARM_GUI.csproj",
+      "projectPath": "C:\\Users\\Mayna\\Documents\\GitHub\\SWARM\\gui\\SWARM_GUI.csproj",
       "packagesPath": "C:\\Users\\Mayna\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Mayna\\Documents\\GitHub\\SWARM\\gui\\SWARM_GUI\\obj\\",
+      "outputPath": "C:\\Users\\Mayna\\Documents\\GitHub\\SWARM\\gui\\obj\\",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
       "fallbackFolders": [
         "c:\\program files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Mayna\\Documents\\GitHub\\SWARM\\gui\\SWARM_GUI\\NuGet.Config",
+        "C:\\Users\\Mayna\\Documents\\GitHub\\SWARM\\gui\\NuGet.Config",
         "C:\\Users\\Mayna\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
