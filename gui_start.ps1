@@ -4,7 +4,7 @@ Set-Location $Dir
 
 if(-not $Mod) {
     Write-Host "Installing GUI Module, please wait..."
-    Install-Module PSAvalonia
+    Install-Module PSAvalonia -Force
     Write-Host "Installed!"
 }
 

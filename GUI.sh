@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pwsh -command "`$Mod = Get-Module -ListAvailable -Name PSAvalonia;"
+pwsh -command ".\gui_start.ps1"
