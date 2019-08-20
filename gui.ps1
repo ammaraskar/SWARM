@@ -174,7 +174,7 @@ $Auto_Detect_Click = {
         $AMD1.IsEnabled = $false
         $CPU.IsEnabled = $false
         $ASIC.IsEnabled = $false
-        $UpDown.IsEnabled = $false
+        $UpDown.IsEnabled = $False
     
         $NVIDIA.IsChecked = $false
         $NVIDIA1.IsChecked = $false
@@ -195,7 +195,6 @@ $Auto_Detect_Click = {
         $AMD1.Foreground = "black"
         $CPU.Foreground = "black"
         $ASIC.Foreground = "black"
-        $UpDown.Foreground = "black"
         $Thread_Title.Foreground = "black"
 
         $NVIDIA.Background = "White"
@@ -206,8 +205,6 @@ $Auto_Detect_Click = {
         $AMD1.Background = "White"
         $CPU.Background = "White"
         $ASIC.Background = "White"
-        $UpDown.Background = "White"
-        $UpDown.Background = "White"
 
         $NVIDIA.BorderBrush = "Black"
         $NVIDIA1.BorderBrush = "Black"
@@ -226,7 +223,6 @@ $Auto_Detect_Click = {
         $AMD1.IsEnabled = $true
         $CPU.IsEnabled = $true
         $ASIC.IsEnabled = $true
-        $UpDown.IsEnabled = $true
 
         $NVIDIA.IsChecked = $false
         $NVIDIA1.IsChecked = $false
