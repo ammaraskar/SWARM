@@ -422,7 +422,7 @@ if ("CPU" -in $Param.Type) {
     $CPU.IsChecked = $true
     $UpDown.Foreground = "Black"
     $UpDown.Background = "White"
-    $UpDown.IsEnabled = $false
+    $UpDown.IsEnabled = $true
     $Thread_Title.Foreground = "Black"    
 }else{   
 $UpDown.Foreground = "Gray"
