@@ -1,9 +1,9 @@
+using module PSAvalonia;
+
 ################### LOAD DATA ###################
-using module PSAvalonia
 
 $global:Dir = Split-Path $script:MyInvocation.MyCommand.Path
 Set-Location $global:Dir
-
 function Global:Get-Avalonia($Name) { Find-AvaloniaControl -Window $global:window -Name $Name }
 Set-Alias -Name Win -Value Global:Get-Avalonia -Scope Global
 ################### END LOAD DATA ###################
@@ -52,8 +52,184 @@ $NVIDIA = Win "NVIDIA";
 $NVIDIA1 = Win "NVIDIA1"; 
 $NVIDIA2 = Win "NVIDIA2"; 
 $NVIDIA3 = Win "NVIDIA3";
+$CPU = Win "CPU"; 
+$ASIC = Win "ASIC"; 
+$Rig_Settings = Win "Grid_1_Rig_Settings"
+$UpDown = [Avalonia.Controls.NumericUpDown]::New()
+$UpDown.Maximum = 10
+$UpDown.Minimum = 0
+$UpDown.Margin = "-830,0,0,0"
+$UpDown.MaxWidth = 40
+$UpDown.MaxHeight = 35
+$Rig_Settings.Children.Add($UpDown)
+$Grid = [Avalonia.Controls.Grid]::SetRow($UpDown,1)
+$Grid = $Grid = [Avalonia.Controls.Grid]::SetColumn($UpDown,4)
+$Thread_Title = win "Thread_Title"
 
 ## NVIDIA Checkbox
+$Auto_Detect = Win "Auto_Detect"
+
+if([string]$Param.Type -eq "") {
+    $NVIDIA.Foreground = "Gray"
+    $NVIDIA1.Foreground = "Gray"
+    $NVIDIA2.Foreground = "Gray"
+    $NVIDIA3.Foreground = "Gray"
+    $AMD.Foreground = "Gray"
+    $AMD1.Foreground = "Gray"
+    $CPU.Foreground = "Gray"
+    $ASIC.Foreground = "Gray"
+    $UpDown.Foreground = "Gray"
+    $Thread_Title.Foreground = "Gray"
+
+    $NVIDIA.Background = "Gray"
+    $NVIDIA1.Background = "Gray"
+    $NVIDIA2.Background = "Gray"
+    $NVIDIA3.Background = "Gray"
+    $AMD.Background = "Gray"
+    $AMD1.Background = "Gray"
+    $CPU.Background = "Gray"
+    $ASIC.Background = "Gray"
+    $UpDown.Foreground = "Gray"
+
+    $NVIDIA.BorderBrush = "Gray"
+    $NVIDIA1.BorderBrush = "Gray"
+    $NVIDIA2.BorderBrush = "Gray"
+    $NVIDIA3.BorderBrush = "Gray"
+    $AMD.BorderBrush = "Gray"
+    $AMD1.BorderBrush = "Gray"
+    $CPU.BorderBrush = "Gray"
+    $ASIC.BorderBrush = "Gray"
+    $UpDown.Foreground = "Gray"
+
+    $NVIDIA.IsEnabled = $False
+    $NVIDIA1.IsEnabled = $false
+    $NVIDIA2.IsEnabled = $false
+    $NVIDIA3.IsEnabled = $false
+    $AMD.IsEnabled = $false
+    $AMD1.IsEnabled = $false
+    $CPU.IsEnabled = $false
+    $ASIC.IsEnabled = $false
+    $UpDown.IsEnabled = $False
+
+    $NVIDIA.IsChecked = $false
+    $NVIDIA1.IsChecked = $false
+    $NVIDIA2.IsChecked = $false
+    $NVIDIA3.IsChecked = $False
+    $AMD.IsChecked = $false
+    $AMD1.IsChecked = $false
+    $CPU.IsChecked = $false
+    $ASIC.IsChecked = $false
+    $Auto_Detect.IsChecked = $true
+    $Auto_Detect.IsEnabled = $true
+}
+
+$Auto_Detect_Click = {
+    if($Auto_Detect.IsChecked){
+        $NVIDIA.Foreground = "Gray"
+        $NVIDIA1.Foreground = "Gray"
+        $NVIDIA2.Foreground = "Gray"
+        $NVIDIA3.Foreground = "Gray"
+        $AMD.Foreground = "Gray"
+        $AMD1.Foreground = "Gray"
+        $CPU.Foreground = "Gray"
+        $ASIC.Foreground = "Gray"
+        $UpDown.Foreground = "Gray"
+        $Thread_Title.Foreground = "Gray"
+    
+        $NVIDIA.Background = "Gray"
+        $NVIDIA1.Background = "Gray"
+        $NVIDIA2.Background = "Gray"
+        $NVIDIA3.Background = "Gray"
+        $AMD.Background = "Gray"
+        $AMD1.Background = "Gray"
+        $CPU.Background = "Gray"
+        $ASIC.Background = "Gray"
+        $UpDown.Background = "Gray"
+    
+        $NVIDIA.BorderBrush = "Gray"
+        $NVIDIA1.BorderBrush = "Gray"
+        $NVIDIA2.BorderBrush = "Gray"
+        $NVIDIA3.BorderBrush = "Gray"
+        $AMD.BorderBrush = "Gray"
+        $AMD1.BorderBrush = "Gray"
+        $CPU.BorderBrush = "Gray"
+        $ASIC.BorderBrush = "Gray"
+    
+        $NVIDIA.IsEnabled = $false
+        $NVIDIA1.IsEnabled = $false
+        $NVIDIA2.IsEnabled = $false
+        $NVIDIA3.IsEnabled = $false
+        $AMD.IsEnabled = $false
+        $AMD1.IsEnabled = $false
+        $CPU.IsEnabled = $false
+        $ASIC.IsEnabled = $false
+        $UpDown.IsEnabled = $false
+    
+        $NVIDIA.IsChecked = $false
+        $NVIDIA1.IsChecked = $false
+        $NVIDIA2.IsChecked = $false
+        $NVIDIA3.IsChecked = $False
+        $AMD.IsChecked = $false
+        $AMD1.IsChecked = $false
+        $CPU.IsChecked = $false
+        $ASIC.IsChecked = $false
+
+        $Param.Type = @()
+    } else {
+        $NVIDIA.Foreground = "black"
+        $NVIDIA1.Foreground = "black"
+        $NVIDIA2.Foreground = "black"
+        $NVIDIA3.Foreground = "black"
+        $AMD.Foreground = "black"
+        $AMD1.Foreground = "black"
+        $CPU.Foreground = "black"
+        $ASIC.Foreground = "black"
+        $UpDown.Foreground = "black"
+        $Thread_Title.Foreground = "black"
+
+        $NVIDIA.Background = "White"
+        $NVIDIA1.Background = "White"
+        $NVIDIA2.Background = "White"
+        $NVIDIA3.Background = "White"
+        $AMD.Background = "White"
+        $AMD1.Background = "White"
+        $CPU.Background = "White"
+        $ASIC.Background = "White"
+        $UpDown.Background = "White"
+        $UpDown.Background = "White"
+
+        $NVIDIA.BorderBrush = "Black"
+        $NVIDIA1.BorderBrush = "Black"
+        $NVIDIA2.BorderBrush = "Black"
+        $NVIDIA3.BorderBrush = "Black"
+        $AMD.BorderBrush = "Black"
+        $AMD1.BorderBrush = "Black"
+        $CPU.BorderBrush = "Black"
+        $ASIC.BorderBrush = "Black"
+
+        $NVIDIA.IsEnabled = $true
+        $NVIDIA1.IsEnabled = $true
+        $NVIDIA2.IsEnabled = $true
+        $NVIDIA3.IsEnabled = $true
+        $AMD.IsEnabled = $true
+        $AMD1.IsEnabled = $true
+        $CPU.IsEnabled = $true
+        $ASIC.IsEnabled = $true
+        $UpDown.IsEnabled = $true
+
+        $NVIDIA.IsChecked = $false
+        $NVIDIA1.IsChecked = $false
+        $NVIDIA2.IsChecked = $false
+        $NVIDIA3.IsChecked = $False
+        $AMD.IsChecked = $false
+        $AMD1.IsChecked = $false
+        $CPU.IsChecked = $false
+        $ASIC.IsChecked = $false
+        $Param.Type = @()
+    }
+}
+$Auto_Detect.add_Click($Auto_Detect_Click)
+
 if ($Param.Type -like "*NVIDIA*") { $NVIDIA.IsChecked = $true }
 $NVIDIA_Click = {
     if ($NVIDIA.IsChecked) {
@@ -235,19 +411,35 @@ $AMD1_Click = {
 $AMD1.add_Click($AMD1_Click)
 
 ## CPU Checkbox
-$CPU = Win "CPU"; if ("CPU" -in $Param.Type) { $CPU.IsChecked = $true }
+if ("CPU" -in $Param.Type) { $CPU.IsChecked = $true }
+if ($Param.CPUThreads -gt 0) {$UpDown.Value = $Param.CPUThreads}
+if("CPU" -notin $Param.Type) {
+    $UpDown.Foreground = "Gray"
+    $UpDown.Background = "Gray"
+    $UpDown.BorderBrush = "Gray"
+    $UpDown.IsEnabled = $false
+    $Thread_Title.Foreground = "Gray"
+}
 $CPU_Click = {
     if ($CPU.IsChecked) {
         if ("CPU" -notin $Param.Type) { $Param.Type += "CPU" }
+        $UpDown.Foreground = "Black"
+        $UpDown.Background = "White"
+        $UpDown.IsEnabled = $true
+        $Thread_Title.Foreground = "black"
     }
     else {
         $Array = @(); 
         $Param.Type | % { if ($_ -ne "CPU") { $Array += $_ } }; $Param.Type = $Array
+        $UpDown.Foreground = "Gray"
+        $UpDown.Background = "Gray"
+        $UpDown.IsEnabled = $false
+        $Thread_Title.Foreground = "Gray"    
     }
 }
 $CPU.add_Click($CPU_Click)
 
-$ASIC = Win "ASIC"; if ("ASIC" -in $Param.Type) { $ASIC.IsChecked = $true }
+if ("ASIC" -in $Param.Type) { $ASIC.IsChecked = $true }
 $ASIC_Click = {
     if ($ASIC.IsChecked) {
         if ("ASIC" -notin $Param.Type) { $Param.Type += "ASIC" }
@@ -258,6 +450,8 @@ $ASIC_Click = {
     }
 }
 $ASIC.add_Click($ASIC_Click)
+
+Register-ObjectEvent -InputObject $UpDown -EventName "ValueChanged" -Action {$Param.CPUThreads = $Updown.Value}
 
 ## US Checkbox
 $US = Win "US"
@@ -488,10 +682,6 @@ $Remove_Pool_Check = {
     }
 }
 $Remove_Pool.add_Click($Remove_Pool_Check)
-
-
-
-
 
 ################### Begin GUI ###################
 Show-AvaloniaWindow -Window $Window

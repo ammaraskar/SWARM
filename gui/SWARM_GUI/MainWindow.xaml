@@ -52,19 +52,21 @@
           <ListBox Classes="h1" Name="Pool_List" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="-42,0" Grid.Row="3" Width="180" Height="200" Grid.Column="3"></ListBox>
         </Grid>
       </TabItem>
-      <TabItem Classes="h1" Header="RIG SETTINGS" Background="White" Foreground="Black">
-        <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
-          <TextBlock Classes="h1" HorizontalAlignment="Left" Margin="0,5" Text="TYPE:   " Grid.Row="0" Grid.Column="0"/>
+      <TabItem Name="Rig_Settings" Classes="h1" Header="RIG SETTINGS" Background="White" Foreground="Black">
+        <Grid Name="Grid_1_Rig_Settings" ColumnDefinitions="Auto,Auto,Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+          <TextBlock Classes="h1" HorizontalAlignment="Left" Margin="0,5" Text="Type:   " Grid.Row="0" Grid.Column="0"/>
           <CheckBox Classes="h1" HorizontalAlignment="Left" Name="NVIDIA" Grid.Row="0" Margin="-50,0" Grid.Column="1" Content="NVIDIA" Foreground="Black" Background="White" BorderBrush="Black"/>
           <CheckBox Classes="h1" HorizontalAlignment="Left" Name="AMD" Margin="-575,5" Grid.Row="0" Grid.Column="2" Content="AMD" Foreground="Black" Background="White" BorderBrush="Black"/>
-          <CheckBox Classes="h1" HorizontalAlignment="Left" Name="CPU" Margin="-520,5" Grid.Row="0" Grid.Column="3" Content="CPU" Foreground="Black" Background="White" BorderBrush="Black"/>
-          <CheckBox Classes="h1" HorizontalAlignment="Left" Name="ASIC" Margin="-465,5" Grid.Column="4" Content="ASIC" Foreground="Black" Background="White" BorderBrush="Black"/>
+          <CheckBox Classes="h1" HorizontalAlignment="Left" Name="CPU" Margin="-510,5" Grid.Row="0" Grid.Column="3" Content="CPU" Foreground="Black" Background="White" BorderBrush="Black"/>
+          <CheckBox Classes="h1" HorizontalAlignment="Left" Name="ASIC" Margin="-455,5" Grid.Column="4" Content="ASIC" Foreground="Black" Background="White" BorderBrush="Black"/>
           <CheckBox Classes="h1" HorizontalAlignment="Left" Name="NVIDIA1" Margin="-40,5" Grid.Row="1" Grid.Column="1" Content="NVIDIA1" Foreground="Gray" IsEnabled="false"/>
           <CheckBox Classes="h1" HorizontalAlignment="Left" Name="NVIDIA2" Margin="-40,5" Grid.Row="2" Grid.Column="1" Content="NVIDIA2" Foreground="Gray" IsEnabled="false"/>
           <CheckBox Classes="h1" HorizontalAlignment="Left" Name="NVIDIA3" Margin="-40,5" Grid.Row="3" Grid.Column="1" Content="NVIDIA3" Foreground="Gray" IsEnabled="false"/>
           <CheckBox Classes="h1" HorizontalAlignment="Left" Name="AMD1" Margin="-565,5" Grid.Row="1" Grid.Column="2" Content="AMD1" Foreground="Gray" IsEnabled="false"/>
+          <CheckBox Classes="h1" HorizontalAlignment="Left" Name="Auto_Detect" Margin="-540,15" Grid.Row="2" Grid.Column="2" Content="AUTO-DETECT" BorderBrush="Black" Background="White" Foreground="Black" IsEnabled="true"/>
+          <TextBlock FontSize="10" Name="Thread_Title" FontWeight="Bold" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="3" Margin="-500,10" Text="CPU Threads:" Foreground="Gray"/>
           <TextBlock Classes="h1" Margin="0,5" HorizontalAlignment="Center" Grid.Row="4" Text="Hive API Key:   "/>
-          <TextBox HorizontalAlignment="Left" Height="65" Name="Hive_API" AcceptsReturn="False" Focusable="True" MinWidth="600" MaxWidth="600" Watermark="Your Hive API Key" Grid.Row="4" Grid.Column="1"/>
+          <TextBox HorizontalAlignment="Left" Height="65" Name="Hive_API" AcceptsReturn="False" Focusable="True" MinWidth="600" MaxWidth="600" Watermark="Your Hive API Key. Giving Hive API Key Allow OC Settings From Website To Work." Grid.Row="4" Grid.Column="1"/>
         </Grid>
       </TabItem>
       <TabItem Classes="h1" Header="SWITCHING SETTINGS" Background="White" Foreground="Black">
