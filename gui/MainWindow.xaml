@@ -51,8 +51,8 @@
             <DropDownItem Name="ETH" Content="ETH" ></DropDownItem>
           </DropDown>
           
-          <TextBox Name="Symbol" ZIndex="1" Canvas.Left="140" Canvas.Top="7" MinWidth="55" MaxWidth="55" MinHeight="25" MaxHeight="25" BorderBrush="Black" Watermark="Symbol" AcceptsReturn="False" TextWrapping="NoWrap"/>
-          <TextBox Name="Address" ZIndex="1" Canvas.Left="200" Canvas.Top="7" MaxHeight="25" MinWidth="365" MaxWidth="365" MinHeight="25" BorderBrush="Black" Watermark="Enter Address Here. Used With AMD1/NVIDIA1/CPU1/AUTO" AcceptsReturn="False" TextWrapping="NoWrap"/>
+          <TextBox Name="Symbol" ZIndex="1" Canvas.Left="140" Canvas.Top="7" MinWidth="55" MaxWidth="55" MinHeight="30" MaxHeight="30" BorderBrush="Black" Watermark="Symbol" AcceptsReturn="False" TextWrapping="NoWrap"/>
+          <TextBox Name="Address" ZIndex="1" Canvas.Left="200" Canvas.Top="7" MaxHeight="30" MinWidth="365" MaxWidth="365" MinHeight="30" BorderBrush="Black" Watermark="Enter Address Here. Used With AMD1/NVIDIA1/CPU1/AUTO" AcceptsReturn="False" TextWrapping="NoWrap"/>
           <Button Name="Save_Wallet" ZIndex="1" Canvas.Left="580" Canvas.Top="5" FontWeight="Bold" MinWidth="100" MaxHeight="30" Content="Save Wallet" BorderThickness="2" BorderBrush="Gray" />
 
           <Rectangle Fill="Black" Canvas.Top="45" MinWidth="210" MinHeight="30" />
