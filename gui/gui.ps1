@@ -28,6 +28,9 @@ else { $global:Config.Add("Param",(Get-Content ".\config\parameters\default.json
 ## Location
 . .\gui\build\location.ps1
 
+## RigName
+. .\gui\build\rigname.ps1
+
 ##Type Parameters
 ## AMD Checkbox
 $AMD = Win "AMD";

@@ -64,23 +64,23 @@
 
           <Rectangle Fill="Black" Canvas.Top="45" Canvas.Left="224" MinWidth="180" MinHeight="30" />
           <Rectangle Fill="Black" Canvas.Top="45" Canvas.Left="525" MinWidth="180" MinHeight="30" />
-          <TextBlock Classes="h1" Canvas.Top="52" Canvas.Left="261" Foreground="White" FontWeight="Bold" Text="Pools Available"/>
+          <TextBlock Classes="h1" Canvas.Top="52" Canvas.Left="270" Foreground="White" FontWeight="Bold" Text="Pools Available"/>
           <TextBlock Classes="h1" Canvas.Top="52" Canvas.Left="575" Foreground="White" FontWeight="Bold" Text="Current Pools"/>
           <ListBox Classes="h1" Name="Add_Pool_List" Canvas.Left="224" Canvas.Top="75" Width="180" Height="200"></ListBox>
           <Button Classes="h1" Name="Add_Pool_Button" FontWeight="Bold" Canvas.Left="415" Canvas.Top="100" Height="27" Width="115" BorderBrush="Gray" BorderThickness="2" Margin="-8,0" Grid.Row="3" Grid.Column="1" Content="Add Pool =&gt;"/>
           <Button Classes="h1" Name="Remove_Pool_Button" FontWeight="Bold" Canvas.Left="407" Canvas.Top="150" Height="27" Width="115" BorderBrush="Gray" BorderThickness="2" Content="&lt;= Remove"/>
           <ListBox Classes="h1" Name="Pool_List" Canvas.Left="525" Canvas.Top="75" Width="180" Height="200"></ListBox>
 
-          <Rectangle Fill="Black" Canvas.Top="150" MinWidth="210" MinHeight="30" />
-          <TextBlock Foreground="White" FontWeight="Bold" Text="Rigname" Canvas.Top="155" Canvas.Left="75"/>
-          <Rectangle Fill="White" Canvas.Top="180" MinWidth="210" MinHeight="95" />
-          <TextBox Name="Rig" ZIndex="1" Canvas.Left="50" Canvas.Top="230" MinWidth="100" MaxWidth="100" MinHeight="25" MaxHeight="30" BorderBrush="Black" Watermark="Nickname" AcceptsReturn="False" TextWrapping="NoWrap"/>
-          <DropDown SelectedIndex="0" ZIndex="1" Background="White" MinHeight="30" MaxHeight="30" BorderBrush="Black" Canvas.Left="56" Canvas.Top="190" Name="Rig_List" MaxWidth="90" MinWidth="90">
+          <Rectangle Fill="Black" Canvas.Top="125" MinWidth="210" MinHeight="30" />
+          <TextBlock Foreground="White" FontWeight="Bold" Text="Rigname" Canvas.Top="130" Canvas.Left="75"/>
+          <Rectangle Fill="White" Canvas.Top="145" MinWidth="210" MinHeight="95" />
+          <TextBox Name="Rig" ZIndex="1" Canvas.Left="50" Canvas.Top="205" MinWidth="100" MaxWidth="100" MinHeight="25" MaxHeight="30" BorderBrush="Black" Watermark="Nickname" AcceptsReturn="False" TextWrapping="NoWrap"/>
+          <DropDown SelectedIndex="0" ZIndex="1" Background="White" MinHeight="30" MaxHeight="30" BorderBrush="Black" Canvas.Left="56" Canvas.Top="165" Name="Rig_List" MaxWidth="90" MinWidth="90">
             <DropDownItem Name="Rigname1" Content="Rigname1" />
             <DropDownItem Name="Rigname2" Content="Rigname2" ></DropDownItem>
             <DropDownItem Name="Rigname3" Content="Rigname3" ></DropDownItem>
           </DropDown>
-          <TextBlock Foreground="Black" FontWeight="Regular" Text="Enter Name For Group1" Canvas.Top="258" Canvas.Left="35"/>
+          <TextBlock Foreground="Black" Name="Rig_Text" FontWeight="Regular" Text="Enter Name For Group1" Canvas.Top="228" Canvas.Left="35"/>
 
         </Canvas>
       </TabItem>
