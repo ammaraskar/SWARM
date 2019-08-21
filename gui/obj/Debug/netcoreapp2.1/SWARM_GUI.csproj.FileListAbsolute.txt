@@ -9,3 +9,14 @@ C:\Users\Mayna\Documents\GitHub\SWARM\gui\SWARM_GUI\obj\Debug\netcoreapp2.1\SWAR
 C:\Users\Mayna\Documents\GitHub\SWARM\gui\SWARM_GUI\obj\Debug\netcoreapp2.1\SWARM_GUI.AssemblyInfo.cs
 C:\Users\Mayna\Documents\GitHub\SWARM\gui\SWARM_GUI\obj\Debug\netcoreapp2.1\SWARM_GUI.dll
 C:\Users\Mayna\Documents\GitHub\SWARM\gui\SWARM_GUI\obj\Debug\netcoreapp2.1\SWARM_GUI.pdb
+C:\Users\Mayna\Documents\GitHub\SWARM\gui\bin\Debug\netcoreapp2.1\SWARM_GUI.deps.json
+C:\Users\Mayna\Documents\GitHub\SWARM\gui\bin\Debug\netcoreapp2.1\SWARM_GUI.runtimeconfig.json
+C:\Users\Mayna\Documents\GitHub\SWARM\gui\bin\Debug\netcoreapp2.1\SWARM_GUI.runtimeconfig.dev.json
+C:\Users\Mayna\Documents\GitHub\SWARM\gui\bin\Debug\netcoreapp2.1\SWARM_GUI.dll
+C:\Users\Mayna\Documents\GitHub\SWARM\gui\bin\Debug\netcoreapp2.1\SWARM_GUI.pdb
+C:\Users\Mayna\Documents\GitHub\SWARM\gui\obj\Debug\netcoreapp2.1\SWARM_GUI.csprojAssemblyReference.cache
+C:\Users\Mayna\Documents\GitHub\SWARM\gui\obj\Debug\netcoreapp2.1\SWARM_GUI.csproj.CoreCompileInputs.cache
+C:\Users\Mayna\Documents\GitHub\SWARM\gui\obj\Debug\netcoreapp2.1\SWARM_GUI.AssemblyInfoInputs.cache
+C:\Users\Mayna\Documents\GitHub\SWARM\gui\obj\Debug\netcoreapp2.1\SWARM_GUI.AssemblyInfo.cs
+C:\Users\Mayna\Documents\GitHub\SWARM\gui\obj\Debug\netcoreapp2.1\SWARM_GUI.dll
+C:\Users\Mayna\Documents\GitHub\SWARM\gui\obj\Debug\netcoreapp2.1\SWARM_GUI.pdb

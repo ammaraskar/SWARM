@@ -1,57 +1,32 @@
 using module PSAvalonia;
 
-################### LOAD DATA ###################
+## LOAD DATA
+$global:Config = [hashtable]::Synchronized(@{})
+$global:Config.ADD("Dir",(Split-Path (Split-Path $script:MyInvocation.MyCommand.Path)))
+Set-Location $global:config.Dir
 
-$global:Dir = Split-Path (Split-Path $script:MyInvocation.MyCommand.Path)
-Set-Location $global:Dir
-function Global:Get-Avalonia($Name) { Find-AvaloniaControl -Window $global:window -Name $Name }
+function Global:Get-Avalonia($Name) { Find-AvaloniaControl -Window $global:config.window -Name $Name }
 Set-Alias -Name Win -Value Global:Get-Avalonia -Scope Global
-################### END LOAD DATA ###################
 
-################### XAML CONVERSION ###################
-$Xaml = Get-Content ".\gui\SWARM_GUI\MainWindow.xaml"
+## XAML CONVERSION
+$Xaml = Get-Content ".\gui\MainWindow.xaml"
 $Xaml = $Xaml | Out-String
-$global:window = ConvertTo-AvaloniaWindow -Xaml $Xaml
-if($IsWindows){$global:Window.Icon = ".\build\apps\icons\SWARM.ico"}
-################### END XAML CONVERSION ##############
+$Config.Add("window",(convertTo-AvaloniaWindow -Xaml $Xaml))
+if($IsWindows){$global:Config.Window.Icon = ".\build\apps\icons\SWARM.ico"}
 
+## PARAMETERS 
+if (test-path ".\config\parameters\newarguments.json") { $global:Config.Add("Param",(Get-Content ".\config\parameters\newarguments.json" | ConvertFrom-Json)) } 
+else { $global:Config.Add("Param",(Get-Content ".\config\parameters\newarguments.json" | ConvertFrom-Json)) }
 
-################### MENU ITEMS ###################
-## Handle Exit Click
-$Exit = Win "Exit"
-$Exit.add_Click( { $global:window.Close() })
-## Start SWARM
-$Start = Win "Start_Swarm"
-$Stop = Win "Stop_Swarm"
-$Save_and_Start = Win "Save_Swarm"
-$Save_and_Exit = Win "Save_Exit"
-$Start.add_Click( { .\startup.ps1 })
-$Save_and_Start.add_Click({
-    $Param | ConvertTo-Json -Depth 10 |Set-Content ".\config\parameters\newarguments.json"
-    .\startup.ps1
-})
-$Save_and_Exit.add_Click({
-    $Param | ConvertTo-Json -Depth 10 |Set-Content ".\config\parameters\newarguments.json"
-    $window.Close()
-    Exit
-})
-$Stop.add_Click( {
-        $Miner_PID = if (test-Path ".\build\pid\miner_pid.txt") { cat ".\build\pid\miner_pid.txt" }
-        $Background_PID = if (test-Path ".\build\pid\background_pid.txt") { cat ".\build\pid\background_pid.txt" }
-        if ($Miner_PID) {
-            $Proc = Get-Process -Id $Miner_PID -ErrorAction Ignore
-            if ($Proc) { Stop-Process -Id $Proc.Id }
-        }
-        if ($Background_PID) {
-            $Proc = Get-Process -Id $Background_PID -ErrorAction Ignore
-            if ($Proc) { Stop-Process -Id $Proc.Id }
-        }
-    })
-################### End MENU ITEMS ###################
+## Menu Items
+. .\gui\build\menu.ps1
 
-################### PARAMETERS ###################
-if (test-path ".\config\parameters\newarguments.json") { $Param = Get-Content ".\config\parameters\newarguments.json" | ConvertFrom-Json } 
-else { $Param = Get-Content ".\config\parameters\default.json" | ConvertFrom-JSon }
+## Tab1 - Basic Settings ##
+## Wallets
+. .\gui\build\wallets.ps1
+
+## Location
+. .\gui\build\location.ps1
 
 ##Type Parameters
 ## AMD Checkbox
@@ -80,7 +55,7 @@ $Thread_Title = win "Thread_Title"
 ## NVIDIA Checkbox
 $Auto_Detect = Win "Auto_Detect"
 
-if([string]$Param.Type -eq "") {
+if([string]$global:config.param.Type -eq "") {
     $NVIDIA.Foreground = "Gray"
     $NVIDIA1.Foreground = "Gray"
     $NVIDIA2.Foreground = "Gray"
@@ -185,7 +160,7 @@ $Auto_Detect_Click = {
         $CPU.IsChecked = $false
         $ASIC.IsChecked = $false
 
-        $Param.Type = @()
+        $global:config.param.Type = @()
     } else {
         $NVIDIA.Foreground = "black"
         $NVIDIA1.Foreground = "black"
@@ -232,12 +207,12 @@ $Auto_Detect_Click = {
         $AMD1.IsChecked = $false
         $CPU.IsChecked = $false
         $ASIC.IsChecked = $false
-        $Param.Type = @()
+        $global:config.param.Type = @()
     }
 }
 $Auto_Detect.add_Click($Auto_Detect_Click)
 
-if ($Param.Type -like "*NVIDIA*") { $NVIDIA.IsChecked = $true }
+if ($global:config.param.Type -like "*NVIDIA*") { $NVIDIA.IsChecked = $true }
 $NVIDIA_Click = {
     if ($NVIDIA.IsChecked) {
 
@@ -257,8 +232,8 @@ $NVIDIA_Click = {
         $NVIDIA2.IsEnabled = $true
         $NVIDIA3.IsEnabled = $true
 
-        if("AMD1" -in $Param.Type -and "NVIDIA2" -notin $Param.Type) {
-            $Param.Type += "NVIDIA2"
+        if("AMD1" -in $global:config.param.Type -and "NVIDIA2" -notin $global:config.param.Type) {
+            $global:config.param.Type += "NVIDIA2"
             $NVIDIA2.IsChecked = $true
             $NVIDIA1.IsEnabled = $false
             $NVIDIA1.Foreground = "Gray"
@@ -266,8 +241,8 @@ $NVIDIA_Click = {
             $NVIDIA1.BorderBrush = "Gray"
             $NVIDIA1.IsChecked = $false
         }
-        elseif ("NVIDIA1" -notin $Param.Type) { 
-            $Param.Type += "NVIDIA1" 
+        elseif ("NVIDIA1" -notin $global:config.param.Type) { 
+            $global:config.param.Type += "NVIDIA1" 
             $NVIDIA1.IsChecked = $true
         }
     }
@@ -293,13 +268,13 @@ $NVIDIA_Click = {
         $NVIDIA3.IsChecked = $False
 
         $Array = @();
-        $Param.Type | % { if ($_ -ne "NVIDIA1" -and $_ -ne "NVIDIA2" -and $_ -ne "NVIDIA3") { $Array += $_ } }; 
-        $Param.Type = $Array
+        $global:config.param.Type | % { if ($_ -ne "NVIDIA1" -and $_ -ne "NVIDIA2" -and $_ -ne "NVIDIA3") { $Array += $_ } }; 
+        $global:config.param.Type = $Array
     }
 }
 $NVIDIA.add_Click($NVIDIA_Click)
 
-if ("NVIDIA1" -in $Param.Type -or "NVIDIA2" -in $Param.Type -or "NVIDIA3" -in $Param.Type) {
+if ("NVIDIA1" -in $global:config.param.Type -or "NVIDIA2" -in $global:config.param.Type -or "NVIDIA3" -in $global:config.param.Type) {
     $NVIDIA1.Foreground = "black"
     $NVIDIA2.Foreground = "black"
     $NVIDIA3.Foreground = "black"
@@ -316,44 +291,44 @@ if ("NVIDIA1" -in $Param.Type -or "NVIDIA2" -in $Param.Type -or "NVIDIA3" -in $P
     $NVIDIA2.IsEnabled = $true
     $NVIDIA3.IsEnabled = $true
 
-    if ("NVIDIA1" -in $Param.Type) { $NVIDIA1.IsChecked = $true }
-    if ("NVIDIA2" -in $Param.Type) { $NVIDIA2.IsChecked = $true }
-    if ("NVIDIA3" -in $Param.Type) { $NVIDIA3.IsChecked = $True }
+    if ("NVIDIA1" -in $global:config.param.Type) { $NVIDIA1.IsChecked = $true }
+    if ("NVIDIA2" -in $global:config.param.Type) { $NVIDIA2.IsChecked = $true }
+    if ("NVIDIA3" -in $global:config.param.Type) { $NVIDIA3.IsChecked = $True }
 }
 $NVIDIA1_Click = {
     if ($NVIDIA1.IsChecked) {
-        if ("NVIDIA1" -notin $Param.Type) { $Param.Type += "NVIDIA1" }
+        if ("NVIDIA1" -notin $global:config.param.Type) { $global:config.param.Type += "NVIDIA1" }
     }
     else {
         $Array = @(); 
-        $Param.Type | % { if ($_ -ne "NVIDIA1") { $Array += $_ } }; $Param.Type = $Array
+        $global:config.param.Type | % { if ($_ -ne "NVIDIA1") { $Array += $_ } }; $global:config.param.Type = $Array
     }
 }
 $NVIDIA1.add_Click($NVIDIA1_Click)
 
 $NVIDIA2_Click = {
     if ($NVIDIA2.IsChecked) {
-        if ("NVIDIA2" -notin $Param.Type) { $Param.Type += "NVIDIA2" }
+        if ("NVIDIA2" -notin $global:config.param.Type) { $global:config.param.Type += "NVIDIA2" }
     }
     else {
         $Array = @(); 
-        $Param.Type | % { if ($_ -ne "NVIDIA2") { $Array += $_ } }; $Param.Type = $Array
+        $global:config.param.Type | % { if ($_ -ne "NVIDIA2") { $Array += $_ } }; $global:config.param.Type = $Array
     }
 }
 $NVIDIA2.add_Click($NVIDIA2_Click)
 
 $NVIDIA3_Click = {
     if ($NVIDIA3.IsChecked) {
-        if ("NVIDIA3" -notin $Param.Type) { $Param.Type += "NVIDIA3" }
+        if ("NVIDIA3" -notin $global:config.param.Type) { $global:config.param.Type += "NVIDIA3" }
     }
     else {
         $Array = @(); 
-        $Param.Type | % { if ($_ -ne "NVIDIA3") { $Array += $_ } }; $Param.Type = $Array
+        $global:config.param.Type | % { if ($_ -ne "NVIDIA3") { $Array += $_ } }; $global:config.param.Type = $Array
     }
 }
 $NVIDIA3.add_Click($NVIDIA3_Click)
 
-if ($Param.Type -like "*AMD*") { 
+if ($global:config.param.Type -like "*AMD*") { 
     $AMD.IsChecked = $true 
     $NVIDIA1.Foreground = "Gray"
     $NVIDIA1.Background = "Gray"
@@ -368,11 +343,11 @@ $AMD_Click = {
         $AMD1.BorderBrush = "Black"
         $AMD1.IsEnabled = $true
         $AMD1.IsChecked = $true
-        if ("AMD1" -notin $Param.Type) { $Param.Type += "AMD1" }
-        if ("NVIDIA1" -in $Param.Type) { 
+        if ("AMD1" -notin $global:config.param.Type) { $global:config.param.Type += "AMD1" }
+        if ("NVIDIA1" -in $global:config.param.Type) { 
             $Array = @();
-            $Param.Type | % { if ($_ -ne "NVIDIA1") { $Array += $_ } }; 
-            $Param.Type = $Array
+            $global:config.param.Type | % { if ($_ -ne "NVIDIA1") { $Array += $_ } }; 
+            $global:config.param.Type = $Array
         }
         $NVIDIA1.Foreground = "Gray"
         $NVIDIA1.Background = "Gray"
@@ -393,13 +368,13 @@ $AMD_Click = {
         $AMD1.IsEnabled = $false
         $AMD1.IsChecked = $false
         $Array = @();
-        $Param.Type | % { if ($_ -ne "AMD1") { $Array += $_ } }; 
-        $Param.Type = $Array
+        $global:config.param.Type | % { if ($_ -ne "AMD1") { $Array += $_ } }; 
+        $global:config.param.Type = $Array
     }
 }
 $AMD.add_Click($AMD_Click)
 
-if ("AMD1" -in $Param.Type) { 
+if ("AMD1" -in $global:config.param.Type) { 
     $AMD1.Foreground = "black"
     $AMD1.Background = "White"
     $AMD1.BorderBrush = "Black"
@@ -408,17 +383,17 @@ if ("AMD1" -in $Param.Type) {
 }
 $AMD1_Click = {
     if ($AMD1.IsChecked) {
-        if ("AMD1" -notin $Param.Type) { $Param.Type += "AMD1" }
+        if ("AMD1" -notin $global:config.param.Type) { $global:config.param.Type += "AMD1" }
     }
     else {
         $Array = @(); 
-        $Param.Type | % { if ($_ -ne "AMD1") { $Array += $_ } }; $Param.Type = $Array
+        $global:config.param.Type | % { if ($_ -ne "AMD1") { $Array += $_ } }; $global:config.param.Type = $Array
     }
 }
 $AMD1.add_Click($AMD1_Click)
 
 ## CPU Checkbox
-if ("CPU" -in $Param.Type) { 
+if ("CPU" -in $global:config.param.Type) { 
     $CPU.IsChecked = $true
     $UpDown.Foreground = "Black"
     $UpDown.Background = "White"
@@ -430,12 +405,12 @@ $UpDown.Background = "Gray"
 $UpDown.IsEnabled = $false
 $Thread_Title.Foreground = "Gray"
 }
-if ($Param.CPUThreads -gt 0) {$UpDown.Value = $Param.CPUThreads}
-if("CPU" -notin $Param.Type) {
+if ($global:config.param.CPUThreads -gt 0) {$UpDown.Value = $global:config.param.CPUThreads}
+if("CPU" -notin $global:config.param.Type) {
 }
 $CPU_Click = {
     if ($CPU.IsChecked) {
-        if ("CPU" -notin $Param.Type) { $Param.Type += "CPU" }
+        if ("CPU" -notin $global:config.param.Type) { $global:config.param.Type += "CPU" }
         $UpDown.Foreground = "Black"
         $UpDown.Background = "White"
         $UpDown.IsEnabled = $true
@@ -443,7 +418,7 @@ $CPU_Click = {
     }
     else {
         $Array = @(); 
-        $Param.Type | % { if ($_ -ne "CPU") { $Array += $_ } }; $Param.Type = $Array
+        $global:config.param.Type | % { if ($_ -ne "CPU") { $Array += $_ } }; $global:config.param.Type = $Array
         $UpDown.Foreground = "Gray"
         $UpDown.Background = "Gray"
         $UpDown.IsEnabled = $false
@@ -452,187 +427,48 @@ $CPU_Click = {
 }
 $CPU.add_Click($CPU_Click)
 
-if ("ASIC" -in $Param.Type) { $ASIC.IsChecked = $true }
+if ("ASIC" -in $global:config.param.Type) { $ASIC.IsChecked = $true }
 $ASIC_Click = {
     if ($ASIC.IsChecked) {
-        if ("ASIC" -notin $Param.Type) { $Param.Type += "ASIC" }
+        if ("ASIC" -notin $global:config.param.Type) { $global:config.param.Type += "ASIC" }
     }
     else {
         $Array = @(); 
-        $Param.Type | % { if ($_ -ne "ASIC") { $Array += $_ } }; $Param.Type = $Array
+        $global:config.param.Type | % { if ($_ -ne "ASIC") { $Array += $_ } }; $global:config.param.Type = $Array
     }
 }
 $ASIC.add_Click($ASIC_Click)
 
-Register-ObjectEvent -InputObject $UpDown -EventName "ValueChanged" -Action {$Param.CPUThreads = $Updown.Value} | Out-Null
-
-## US Checkbox
-$US = Win "US"
-$EUROPE = Win "EUROPE"
-$ASIA = Win "ASIA"
-if ("US" -in $Param.Location) {
-    $EUROPE.Foreground = "Gray"
-    $ASIA.Foreground = "Gray"
-    $EUROPE.Background = "Gray"
-    $ASIA.Background = "Gray"
-    $EUROPE.BorderBrush = "Gray"
-    $ASIA.BorderBrush = "Gray"
-    $EUROPE.IsEnabled = $false
-    $ASIA.IsEnabled = $false
-    $EUROPE.IsChecked = $false
-    $ASIA.IsChecked = $false
-    $US.IsChecked = $true
-}
-if ("Europe" -in $Param.Location) {
-    $US.Foreground = "Gray"
-    $ASIA.Foreground = "Gray"
-    $US.Background = "Gray"
-    $ASIA.Background = "Gray"
-    $US.BorderBrush = "Gray"
-    $ASIA.BorderBrush = "Gray"
-    $US.IsEnabled = $false
-    $ASIA.IsEnabled = $false
-    $US.IsChecked = $false
-    $ASIA.IsChecked = $false
-    $EUROPE.IsChecked = $true
-}
-if ("Asia" -in $Param.Location) {
-    $US.Foreground = "Gray"
-    $EUROPE.Foreground = "Gray"
-    $US.Background = "Gray"
-    $EUROPE.Background = "Gray"
-    $US.BorderBrush = "Gray"
-    $EUROPE.BorderBrush = "Gray"
-    $ASIA.BorderBrush = "Gray"
-    $US.IsEnabled = $false
-    $EUROPE.IsEnabled = $false
-    $US.IsChecked = $false
-    $EUROPE.IsChecked = $false
-    $ASIA.IsChecked = $true
-}
-
-## US CheckBox
-$US_Check = {
-    if ($US.IsChecked -eq $false) {
-        $US.Foreground = "Black"
-        $EUROPE.Foreground = "Black"
-        $ASIA.Foreground = "Black"
-        $US.Background = "White"
-        $EUROPE.Background = "White"
-        $ASIA.Background = "White"
-        $ASIA.BorderBrush = "Black"
-        $US.BorderBrush = "Black"
-        $EUROPE.BorderBrush = "Black"
-        $US.IsEnabled = $true
-        $EUROPE.IsEnabled = $true
-        $ASIA.IsEnabled = $true
-    }
-    else {
-        $EUROPE.Foreground = "Gray"
-        $ASIA.Foreground = "Gray"
-        $EUROPE.Background = "Gray"
-        $ASIA.Background = "Gray"
-        $EUROPE.BorderBrush = "Gray"
-        $ASIA.BorderBrush = "Gray"
-        $EUROPE.IsEnabled = $false
-        $ASIA.IsEnabled = $false
-        $EUROPE.IsChecked = $false
-        $ASIA.IsChecked = $false
-        $Param.Location = "US"
-    }
-}
-$US.add_Click($US_Check)
-
-$EUROPE_Check = {
-    if ($EUROPE.IsChecked -eq $false) {
-        $US.Foreground = "Black"
-        $EUROPE.Foreground = "Black"
-        $ASIA.Foreground = "Black"
-        $US.Background = "White"
-        $EUROPE.Background = "White"
-        $ASIA.Background = "White"
-        $ASIA.BorderBrush = "Black"
-        $US.BorderBrush = "Black"
-        $EUROPE.BorderBrush = "Black"
-        $US.IsEnabled = $true
-        $EUROPE.IsEnabled = $true
-        $ASIA.IsEnabled = $true
-    }
-    else {
-        $US.Foreground = "Gray"
-        $ASIA.Foreground = "Gray"
-        $US.Background = "Gray"
-        $ASIA.Background = "Gray"
-        $US.BorderBrush = "Gray"
-        $ASIA.BorderBrush = "Gray"
-        $US.IsEnabled = $false
-        $ASIA.IsEnabled = $false
-        $US.IsChecked = $false
-        $ASIA.IsChecked = $false
-        $Param.Location = "EUROPE"
-    }
-}
-$EUROPE.add_Click($EUROPE_Check)
-
-$ASIA_Check = {
-    if ($ASIA.IsChecked -eq $false) {
-        $US.Foreground = "Black"
-        $EUROPE.Foreground = "Black"
-        $ASIA.Foreground = "Black"
-        $US.Background = "White"
-        $EUROPE.Background = "White"
-        $ASIA.Background = "White"
-        $ASIA.BorderBrush = "Black"
-        $US.BorderBrush = "Black"
-        $EUROPE.BorderBrush = "Black"
-        $US.IsEnabled = $true
-        $EUROPE.IsEnabled = $true
-        $ASIA.IsEnabled = $true
-    }
-    else {
-        $US.Foreground = "Gray"
-        $EUROPE.Foreground = "Gray"
-        $US.Background = "Gray"
-        $EUROPE.Background = "Gray"
-        $US.BorderBrush = "Gray"
-        $EUROPE.BorderBrush = "Gray"
-        $US.IsEnabled = $false
-        $EUROPE.IsEnabled = $false
-        $US.IsChecked = $false
-        $EUROPE.IsChecked = $false
-        $PARAM.Location = "ASIA"
-    }
-}
-$ASIA.add_Click($ASIA_Check)
+Register-ObjectEvent -InputObject $UpDown -EventName "ValueChanged" -Action {$global:config.param.CPUThreads = $Updown.Value} | Out-Null
 
 ## Add Wallet1 To Params:
 $Wallet1 = Win "Wallet1"
-if ($Param.Wallet1) {
-    $Wallet1.Text = $Param.Wallet1
+if ($global:config.param.Wallet1) {
+    $Wallet1.Text = $global:config.param.Wallet1
 }
 $Rigname1 = Win "Rigname1"
-if ($Param.Rigname1) {
-    $Rigname1.Text = $Param.Rigname1
+if ($global:config.param.Rigname1) {
+    $Rigname1.Text = $global:config.param.Rigname1
 }
 $Donate = Win "Donate"
-if ($Param.Donate) {
-    $Donate.Text = $Param.Donate
+if ($global:config.param.Donate) {
+    $Donate.Text = $global:config.param.Donate
 }
 $Auto_Coin = Win "Auto_Coin"
-if ($Param.Auto_Coin -eq "Yes") {
+if ($global:config.param.Auto_Coin -eq "Yes") {
     $Auto_Coin.IsChecked = $true
 }
 $Auto_Coin_Check = {
     if ($Auto_Coin.IsChecked -eq $true) {
-        $Param.Auto_Coin = "Yes"
+        $global:config.param.Auto_Coin = "Yes"
     }
-    else { $Param.Auto_Coin = "No" }
+    else { $global:config.param.Auto_Coin = "No" }
 }
 $Auto_Coin.add_Click($Auto_Coin_Check)
 
 ## Pools
 $Pool_List = Win "Pool_List"
-$Param.PoolName | % {
+$global:config.param.PoolName | % {
     $Item = [Avalonia.Controls.ListBoxItem]::new()
     $Item.Content = "$($_)"
     $Pool_List.ITEMS.Add($Item)
@@ -659,7 +495,7 @@ $Add_Pool_Check = {
             $Item = [Avalonia.Controls.ListBoxItem]::new()
             $Item.Content = "$($Add_Pool_List.SelectedItem.Content)"
             $Pool_List.ITEMS.Add($Item)
-            $Param.PoolName += "$($Add_Pool_List.SelectedItem.Content)"
+            $global:config.param.PoolName += "$($Add_Pool_List.SelectedItem.Content)"
             $Add_Pool_List.ITEMS.Clear()
             $AllPools | % {
                 if ($_ -notin $Pool_List.ITEMS.Content) {
@@ -681,10 +517,10 @@ $Remove_Pool_Check = {
             $Item.Content = "$($Pool_List.SelectedItem.Content)"
             $Add_Pool_List.ITEMS.Add($Item)
             $Array = @()
-            $Param.Poolname | % { if ($_ -ne "$($Pool_List.SelectedItem.Content)") { $Array += "$($_)" } }
-            $Param.Poolname = $Array
+            $global:config.param.Poolname | % { if ($_ -ne "$($Pool_List.SelectedItem.Content)") { $Array += "$($_)" } }
+            $global:config.param.Poolname = $Array
             $Pool_List.ITEMS.Clear()
-            $Param.Poolname | % {
+            $global:config.param.Poolname | % {
                 if ($_ -notin $Add_Pool_List.ITEMS.Content) {
                     $Item = [Avalonia.Controls.ListBoxItem]::new()
                     $Item.Content = "$($_)"
@@ -697,4 +533,4 @@ $Remove_Pool_Check = {
 $Remove_Pool.add_Click($Remove_Pool_Check)
 
 ################### Begin GUI ###################
-Show-AvaloniaWindow -Window $Window
+Show-AvaloniaWindow -Window $global:config.window

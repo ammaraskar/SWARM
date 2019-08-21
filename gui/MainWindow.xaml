@@ -31,17 +31,17 @@
         <MenuItem Header="_Save And Exit" Name="Save_Exit"/>
         <Separator />
         <MenuItem Header="_Exit" Name="Exit"/>
-      </MenuItem>      
+      </MenuItem>
     </Menu>
     <TabControl TabStripPlacement="Left">
       <TabItem Classes="h1" Header="BASIC SETTINGS" Background="White" Foreground="Black">
-        <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-          <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="8" Fill="Black" HorizontalAlignment="Left" MinWidth="731" MinHeight="35"/>
-          <TextBlock Classes="h1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5" Text=" Wallets " Foreground="White" Grid.Row="0" Grid.Column="0"/>
-          <DropDown SelectedIndex="0" Background="White" MaxHeight="30" BorderBrush="Black" HorizontalAlignment="Stretch" Name="Wallet_List" Grid.Row="0" Grid.Column="1" MaxWidth="125" MinWidth="125">
-            <DropDownItem Name="Wallet1" Content="Wallet1" ></DropDownItem>
-            <DropDownItem Name="Wallet2" Content="Wallet1" ></DropDownItem>
-            <DropDownItem Name="Wallet3" Content="Wallet1" ></DropDownItem>
+        <Canvas Height="600">
+          <Rectangle Fill="Black" HorizontalAlignment="Left" MinWidth="731" MinHeight="40" ZIndex="0"/>
+          
+          <DropDown SelectedIndex="0" ZIndex="1" Background="White" MaxHeight="30" BorderBrush="Black" Canvas.Left="10" Canvas.Top="7" Name="Wallet_List" MaxWidth="125" MinWidth="125">
+            <DropDownItem Name="Wallet1" Content="Wallet1" />
+            <DropDownItem Name="Wallet2" Content="Wallet2" ></DropDownItem>
+            <DropDownItem Name="Wallet3" Content="Wallet3" ></DropDownItem>
             <DropDownItem Name="AltWallet1" Content="AltWallet1" ></DropDownItem>
             <DropDownItem Name="AltWallet2" Content="AltWallet2" ></DropDownItem>
             <DropDownItem Name="AltWallet3" Content="AltWallet3" ></DropDownItem>
@@ -50,10 +50,39 @@
             <DropDownItem Name="NiceHash_Wallet3" Content="NiceHash_Wallet3" ></DropDownItem>
             <DropDownItem Name="ETH" Content="ETH" ></DropDownItem>
           </DropDown>
-          <TextBox Name="Symbol" Grid.Row="0" Grid.Column="2" Margin="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="50" MaxWidth="50" MinHeight="25" BorderBrush="Black" Watermark="Symbol" AcceptsReturn="False" TextWrapping="NoWrap"/>
-          <TextBox Name="Address" Grid.Row="0" Grid.Column="3" Margin="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="350" MaxWidth="350" MinHeight="25" BorderBrush="Black" Watermark="Enter BTC Address Here" AcceptsReturn="False" TextWrapping="NoWrap"/>
-          <Button Name="Save_Wallet" Grid.Row="0" Grid.Column="4" MinWidth="100" HorizontalAlignment="Center" Margin="15,5" MinHeight="30" Content="Save Wallet" BorderThickness="3" BorderBrush="Gray" />
-        </Grid>
+          
+          <TextBox Name="Symbol" ZIndex="1" Canvas.Left="140" Canvas.Top="7" MinWidth="50" MaxWidth="50" MinHeight="25" MaxHeight="30" BorderBrush="Black" Watermark="Symbol" AcceptsReturn="False" TextWrapping="NoWrap"/>
+          <TextBox Name="Address" ZIndex="1" Canvas.Left="195" Canvas.Top="7" MaxHeight="30" VerticalAlignment="Top" HorizontalAlignment="Left" MinWidth="355" MaxWidth="355" MinHeight="25" BorderBrush="Black" Watermark="Enter Address Here. Used With AMD1/NVIDIA1/CPU1/AUTO" AcceptsReturn="False" TextWrapping="NoWrap"/>
+          <Button Name="Save_Wallet" ZIndex="1" Canvas.Left="555" Canvas.Top="5" FontWeight="Bold" MinWidth="100" MaxHeight="30" Content="Save Wallet" BorderThickness="2" BorderBrush="Gray" />
+
+          <Rectangle Fill="Black" Canvas.Top="45" MinWidth="180" MinHeight="30" />
+          <Rectangle Fill="White" Canvas.Top="75" MinWidth="180" MinHeight="30" />
+          <TextBlock Foreground="White" FontWeight="Bold" Text="Location" Canvas.Top="52" Canvas.Left="65"/>
+          <RadioButton GroupName="Location" Name="USA" Canvas.Top="81" Canvas.Left="5" Content="USA" FontWeight="Bold" IsDefault="True" IsChecked="True" BorderBrush="Black" Foreground="Black"/>
+          <RadioButton GroupName="Location" Name="EUROPE" Canvas.Top="81" Canvas.Left="57" Content="EUROPE" FontWeight="Bold" BorderBrush="Black" Foreground="Black"/>
+          <RadioButton GroupName="Location" Name="ASIA" Canvas.Top="81" Canvas.Left="130" Content="ASIA" FontWeight="Bold" BorderBrush="Black" Foreground="Black"/>
+
+          <Rectangle Fill="Black" Canvas.Top="45" Canvas.Left="185" MinWidth="180" MinHeight="30" />
+          <Rectangle Fill="Black" Canvas.Top="45" Canvas.Left="495" MinWidth="180" MinHeight="30" />
+          <TextBlock Classes="h1" Canvas.Top="52" Canvas.Left="230" Foreground="White" FontWeight="Bold" Text="Pools Available"/>
+          <TextBlock Classes="h1" Canvas.Top="52" Canvas.Left="545" Foreground="White" FontWeight="Bold" Text="Current Pools"/>
+          <ListBox Classes="h1" Name="Add_Pool_List" Canvas.Left="185" Canvas.Top="75" Width="180" Height="200"></ListBox>
+          <Button Classes="h1" Name="Add_Pool_Button" FontWeight="Bold" Canvas.Left="380" Canvas.Top="100" Height="27" Width="115" BorderBrush="Gray" BorderThickness="2" Margin="-8,0" Grid.Row="3" Grid.Column="1" Content="Add Pool ==&gt;"/>
+          <Button Classes="h1" Name="Remove_Pool_Button" FontWeight="Bold" Canvas.Left="372" Canvas.Top="150" Height="27" Width="115" BorderBrush="Gray" BorderThickness="2" Content="&lt;== Remove Pool"/>
+          <ListBox Classes="h1" Name="Pool_List" Canvas.Left="495" Canvas.Top="75" Width="180" Height="200"></ListBox>
+
+          <Rectangle Fill="Black" Canvas.Top="150" MinWidth="180" MinHeight="30" />
+          <TextBlock Foreground="White" FontWeight="Bold" Text="Rigname" Canvas.Top="155" Canvas.Left="65"/>
+          <Rectangle Fill="White" Canvas.Top="180" MinWidth="180" MinHeight="95" />
+          <TextBox Name="Rig" ZIndex="1" Canvas.Left="40" Canvas.Top="230" MinWidth="100" MaxWidth="100" MinHeight="25" MaxHeight="30" BorderBrush="Black" Watermark="Nickname" AcceptsReturn="False" TextWrapping="NoWrap"/>
+          <DropDown SelectedIndex="0" ZIndex="1" Background="White" MinHeight="30" MaxHeight="30" BorderBrush="Black" Canvas.Left="46" Canvas.Top="190" Name="Rig_List" MaxWidth="85" MinWidth="85">
+            <DropDownItem Name="Rigname1" Content="Rigname1" />
+            <DropDownItem Name="Rigname2" Content="Rigname2" ></DropDownItem>
+            <DropDownItem Name="Rigname3" Content="Rigname3" ></DropDownItem>
+          </DropDown>
+          <TextBlock Foreground="Black" FontWeight="Regular" Text="Enter Name For Group1" Canvas.Top="258" Canvas.Left="25"/>
+
+        </Canvas>
       </TabItem>
       <TabItem Name="Rig_Settings" Classes="h1" Header="RIG SETTINGS" Background="White" Foreground="Black">
         <Grid Name="Grid_1_Rig_Settings" ColumnDefinitions="Auto,Auto,Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
