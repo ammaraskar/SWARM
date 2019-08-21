@@ -16,7 +16,7 @@ if($IsWindows){$global:Config.Window.Icon = ".\build\apps\icons\SWARM.ico"}
 
 ## PARAMETERS 
 if (test-path ".\config\parameters\newarguments.json") { $global:Config.Add("Param",(Get-Content ".\config\parameters\newarguments.json" | ConvertFrom-Json)) } 
-else { $global:Config.Add("Param",(Get-Content ".\config\parameters\newarguments.json" | ConvertFrom-Json)) }
+else { $global:Config.Add("Param",(Get-Content ".\config\parameters\default.json" | ConvertFrom-Json)) }
 
 ## Menu Items
 . .\gui\build\menu.ps1

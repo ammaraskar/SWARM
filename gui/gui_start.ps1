@@ -1,5 +1,5 @@
 $Mod = Get-Module -ListAvailable -Name PSAvalonia
-$Dir = Split-Path $script:MyInvocation.MyCommand.Path
+$Dir = Split-Path (Split-Path $script:MyInvocation.MyCommand.Path)
 Set-Location $Dir
 
 if(-not $Mod) {
