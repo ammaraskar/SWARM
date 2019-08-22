@@ -16,14 +16,14 @@ $Start.add_Click( { .\startup.ps1 })
 
 ## Save and Start Swarm
 $Save_and_Start.add_Click({
-    $global:config.param | ConvertTo-Json -Depth 10 |Set-Content ".\config\parameters\newarguments.json"
+    $Config.param | ConvertTo-Json -Depth 10 |Set-Content ".\config\parameters\newarguments.json"
     .\startup.ps1
 })
 
 ## Save and Exit
 $Save_and_Exit.add_Click({
-    $global:config.param | ConvertTo-Json -Depth 10 |Set-Content ".\config\parameters\newarguments.json"
-    $global:config.window.Close()
+    $Config.param | ConvertTo-Json -Depth 10 |Set-Content ".\config\parameters\newarguments.json"
+    $Config.window.Close()
     Exit
 })
 
