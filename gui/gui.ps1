@@ -1,22 +1,24 @@
-using module PSAvalonia;
-
-## LOAD DATA
 $global:Config = [hashtable]::Synchronized(@{})
 $global:Config.ADD("Dir",(Split-Path (Split-Path $script:MyInvocation.MyCommand.Path)))
 Set-Location $global:config.Dir
 
-function Global:Get-Avalonia($Name) { Find-AvaloniaControl -Window $global:config.window -Name $Name }
+$Script = {
+Import-Module PSAvalonia;
+Set-Location $config.Dir
+
+## LOAD DATA
+function Global:Get-Avalonia($Name) { Find-AvaloniaControl -Window $Config.window -Name $Name }
 Set-Alias -Name Win -Value Global:Get-Avalonia -Scope Global
 
 ## XAML CONVERSION
 $Xaml = Get-Content ".\gui\MainWindow.xaml"
 $Xaml = $Xaml | Out-String
 $Config.Add("window",(convertTo-AvaloniaWindow -Xaml $Xaml))
-if($IsWindows){$global:Config.Window.Icon = ".\build\apps\icons\SWARM.ico"}
+if($IsWindows){$Config.Window.Icon = ".\build\apps\icons\SWARM.ico"}
 
 ## PARAMETERS 
-if (test-path ".\config\parameters\newarguments.json") { $global:Config.Add("Param",(Get-Content ".\config\parameters\newarguments.json" | ConvertFrom-Json)) } 
-else { $global:Config.Add("Param",(Get-Content ".\config\parameters\default.json" | ConvertFrom-Json)) }
+if (test-path ".\config\parameters\newarguments.json") { $Config.Add("Param",(Get-Content ".\config\parameters\newarguments.json" | ConvertFrom-Json)) } 
+else { $Config.Add("Param",(Get-Content ".\config\parameters\default.json" | ConvertFrom-Json)) }
 
 ## Menu Items
 . .\gui\build\menu.ps1
@@ -30,6 +32,9 @@ else { $global:Config.Add("Param",(Get-Content ".\config\parameters\default.json
 
 ## RigName
 . .\gui\build\rigname.ps1
+
+## Pools
+. .\gui\build\pools.ps1
 
 ##Type Parameters
 ## AMD Checkbox
@@ -58,7 +63,7 @@ $Thread_Title = win "Thread_Title"
 ## NVIDIA Checkbox
 $Auto_Detect = Win "Auto_Detect"
 
-if([string]$global:config.param.Type -eq "") {
+if([string]$Config.param.Type -eq "") {
     $NVIDIA.Foreground = "Gray"
     $NVIDIA1.Foreground = "Gray"
     $NVIDIA2.Foreground = "Gray"
@@ -163,7 +168,7 @@ $Auto_Detect_Click = {
         $CPU.IsChecked = $false
         $ASIC.IsChecked = $false
 
-        $global:config.param.Type = @()
+        $Config.param.Type = @()
     } else {
         $NVIDIA.Foreground = "black"
         $NVIDIA1.Foreground = "black"
@@ -210,12 +215,12 @@ $Auto_Detect_Click = {
         $AMD1.IsChecked = $false
         $CPU.IsChecked = $false
         $ASIC.IsChecked = $false
-        $global:config.param.Type = @()
+        $Config.param.Type = @()
     }
 }
 $Auto_Detect.add_Click($Auto_Detect_Click)
 
-if ($global:config.param.Type -like "*NVIDIA*") { $NVIDIA.IsChecked = $true }
+if ($Config.param.Type -like "*NVIDIA*") { $NVIDIA.IsChecked = $true }
 $NVIDIA_Click = {
     if ($NVIDIA.IsChecked) {
 
@@ -235,8 +240,8 @@ $NVIDIA_Click = {
         $NVIDIA2.IsEnabled = $true
         $NVIDIA3.IsEnabled = $true
 
-        if("AMD1" -in $global:config.param.Type -and "NVIDIA2" -notin $global:config.param.Type) {
-            $global:config.param.Type += "NVIDIA2"
+        if("AMD1" -in $Config.param.Type -and "NVIDIA2" -notin $Config.param.Type) {
+            $Config.param.Type += "NVIDIA2"
             $NVIDIA2.IsChecked = $true
             $NVIDIA1.IsEnabled = $false
             $NVIDIA1.Foreground = "Gray"
@@ -244,8 +249,8 @@ $NVIDIA_Click = {
             $NVIDIA1.BorderBrush = "Gray"
             $NVIDIA1.IsChecked = $false
         }
-        elseif ("NVIDIA1" -notin $global:config.param.Type) { 
-            $global:config.param.Type += "NVIDIA1" 
+        elseif ("NVIDIA1" -notin $Config.param.Type) { 
+            $Config.param.Type += "NVIDIA1" 
             $NVIDIA1.IsChecked = $true
         }
     }
@@ -271,13 +276,13 @@ $NVIDIA_Click = {
         $NVIDIA3.IsChecked = $False
 
         $Array = @();
-        $global:config.param.Type | % { if ($_ -ne "NVIDIA1" -and $_ -ne "NVIDIA2" -and $_ -ne "NVIDIA3") { $Array += $_ } }; 
-        $global:config.param.Type = $Array
+        $Config.param.Type | % { if ($_ -ne "NVIDIA1" -and $_ -ne "NVIDIA2" -and $_ -ne "NVIDIA3") { $Array += $_ } }; 
+        $Config.param.Type = $Array
     }
 }
 $NVIDIA.add_Click($NVIDIA_Click)
 
-if ("NVIDIA1" -in $global:config.param.Type -or "NVIDIA2" -in $global:config.param.Type -or "NVIDIA3" -in $global:config.param.Type) {
+if ("NVIDIA1" -in $Config.param.Type -or "NVIDIA2" -in $Config.param.Type -or "NVIDIA3" -in $Config.param.Type) {
     $NVIDIA1.Foreground = "black"
     $NVIDIA2.Foreground = "black"
     $NVIDIA3.Foreground = "black"
@@ -294,44 +299,44 @@ if ("NVIDIA1" -in $global:config.param.Type -or "NVIDIA2" -in $global:config.par
     $NVIDIA2.IsEnabled = $true
     $NVIDIA3.IsEnabled = $true
 
-    if ("NVIDIA1" -in $global:config.param.Type) { $NVIDIA1.IsChecked = $true }
-    if ("NVIDIA2" -in $global:config.param.Type) { $NVIDIA2.IsChecked = $true }
-    if ("NVIDIA3" -in $global:config.param.Type) { $NVIDIA3.IsChecked = $True }
+    if ("NVIDIA1" -in $Config.param.Type) { $NVIDIA1.IsChecked = $true }
+    if ("NVIDIA2" -in $Config.param.Type) { $NVIDIA2.IsChecked = $true }
+    if ("NVIDIA3" -in $Config.param.Type) { $NVIDIA3.IsChecked = $True }
 }
 $NVIDIA1_Click = {
     if ($NVIDIA1.IsChecked) {
-        if ("NVIDIA1" -notin $global:config.param.Type) { $global:config.param.Type += "NVIDIA1" }
+        if ("NVIDIA1" -notin $Config.param.Type) { $Config.param.Type += "NVIDIA1" }
     }
     else {
         $Array = @(); 
-        $global:config.param.Type | % { if ($_ -ne "NVIDIA1") { $Array += $_ } }; $global:config.param.Type = $Array
+        $Config.param.Type | % { if ($_ -ne "NVIDIA1") { $Array += $_ } }; $Config.param.Type = $Array
     }
 }
 $NVIDIA1.add_Click($NVIDIA1_Click)
 
 $NVIDIA2_Click = {
     if ($NVIDIA2.IsChecked) {
-        if ("NVIDIA2" -notin $global:config.param.Type) { $global:config.param.Type += "NVIDIA2" }
+        if ("NVIDIA2" -notin $Config.param.Type) { $Config.param.Type += "NVIDIA2" }
     }
     else {
         $Array = @(); 
-        $global:config.param.Type | % { if ($_ -ne "NVIDIA2") { $Array += $_ } }; $global:config.param.Type = $Array
+        $Config.param.Type | % { if ($_ -ne "NVIDIA2") { $Array += $_ } }; $Config.param.Type = $Array
     }
 }
 $NVIDIA2.add_Click($NVIDIA2_Click)
 
 $NVIDIA3_Click = {
     if ($NVIDIA3.IsChecked) {
-        if ("NVIDIA3" -notin $global:config.param.Type) { $global:config.param.Type += "NVIDIA3" }
+        if ("NVIDIA3" -notin $Config.param.Type) { $Config.param.Type += "NVIDIA3" }
     }
     else {
         $Array = @(); 
-        $global:config.param.Type | % { if ($_ -ne "NVIDIA3") { $Array += $_ } }; $global:config.param.Type = $Array
+        $Config.param.Type | % { if ($_ -ne "NVIDIA3") { $Array += $_ } }; $Config.param.Type = $Array
     }
 }
 $NVIDIA3.add_Click($NVIDIA3_Click)
 
-if ($global:config.param.Type -like "*AMD*") { 
+if ($Config.param.Type -like "*AMD*") { 
     $AMD.IsChecked = $true 
     $NVIDIA1.Foreground = "Gray"
     $NVIDIA1.Background = "Gray"
@@ -346,11 +351,11 @@ $AMD_Click = {
         $AMD1.BorderBrush = "Black"
         $AMD1.IsEnabled = $true
         $AMD1.IsChecked = $true
-        if ("AMD1" -notin $global:config.param.Type) { $global:config.param.Type += "AMD1" }
-        if ("NVIDIA1" -in $global:config.param.Type) { 
+        if ("AMD1" -notin $Config.param.Type) { $Config.param.Type += "AMD1" }
+        if ("NVIDIA1" -in $Config.param.Type) { 
             $Array = @();
-            $global:config.param.Type | % { if ($_ -ne "NVIDIA1") { $Array += $_ } }; 
-            $global:config.param.Type = $Array
+            $Config.param.Type | % { if ($_ -ne "NVIDIA1") { $Array += $_ } }; 
+            $Config.param.Type = $Array
         }
         $NVIDIA1.Foreground = "Gray"
         $NVIDIA1.Background = "Gray"
@@ -371,13 +376,13 @@ $AMD_Click = {
         $AMD1.IsEnabled = $false
         $AMD1.IsChecked = $false
         $Array = @();
-        $global:config.param.Type | % { if ($_ -ne "AMD1") { $Array += $_ } }; 
-        $global:config.param.Type = $Array
+        $Config.param.Type | % { if ($_ -ne "AMD1") { $Array += $_ } }; 
+        $Config.param.Type = $Array
     }
 }
 $AMD.add_Click($AMD_Click)
 
-if ("AMD1" -in $global:config.param.Type) { 
+if ("AMD1" -in $Config.param.Type) { 
     $AMD1.Foreground = "black"
     $AMD1.Background = "White"
     $AMD1.BorderBrush = "Black"
@@ -386,17 +391,17 @@ if ("AMD1" -in $global:config.param.Type) {
 }
 $AMD1_Click = {
     if ($AMD1.IsChecked) {
-        if ("AMD1" -notin $global:config.param.Type) { $global:config.param.Type += "AMD1" }
+        if ("AMD1" -notin $Config.param.Type) { $Config.param.Type += "AMD1" }
     }
     else {
         $Array = @(); 
-        $global:config.param.Type | % { if ($_ -ne "AMD1") { $Array += $_ } }; $global:config.param.Type = $Array
+        $Config.param.Type | % { if ($_ -ne "AMD1") { $Array += $_ } }; $Config.param.Type = $Array
     }
 }
 $AMD1.add_Click($AMD1_Click)
 
 ## CPU Checkbox
-if ("CPU" -in $global:config.param.Type) { 
+if ("CPU" -in $Config.param.Type) { 
     $CPU.IsChecked = $true
     $UpDown.Foreground = "Black"
     $UpDown.Background = "White"
@@ -408,12 +413,12 @@ $UpDown.Background = "Gray"
 $UpDown.IsEnabled = $false
 $Thread_Title.Foreground = "Gray"
 }
-if ($global:config.param.CPUThreads -gt 0) {$UpDown.Value = $global:config.param.CPUThreads}
-if("CPU" -notin $global:config.param.Type) {
+if ($Config.param.CPUThreads -gt 0) {$UpDown.Value = $Config.param.CPUThreads}
+if("CPU" -notin $Config.param.Type) {
 }
 $CPU_Click = {
     if ($CPU.IsChecked) {
-        if ("CPU" -notin $global:config.param.Type) { $global:config.param.Type += "CPU" }
+        if ("CPU" -notin $Config.param.Type) { $Config.param.Type += "CPU" }
         $UpDown.Foreground = "Black"
         $UpDown.Background = "White"
         $UpDown.IsEnabled = $true
@@ -421,7 +426,7 @@ $CPU_Click = {
     }
     else {
         $Array = @(); 
-        $global:config.param.Type | % { if ($_ -ne "CPU") { $Array += $_ } }; $global:config.param.Type = $Array
+        $Config.param.Type | % { if ($_ -ne "CPU") { $Array += $_ } }; $Config.param.Type = $Array
         $UpDown.Foreground = "Gray"
         $UpDown.Background = "Gray"
         $UpDown.IsEnabled = $false
@@ -430,110 +435,31 @@ $CPU_Click = {
 }
 $CPU.add_Click($CPU_Click)
 
-if ("ASIC" -in $global:config.param.Type) { $ASIC.IsChecked = $true }
+if ("ASIC" -in $Config.param.Type) { $ASIC.IsChecked = $true }
 $ASIC_Click = {
     if ($ASIC.IsChecked) {
-        if ("ASIC" -notin $global:config.param.Type) { $global:config.param.Type += "ASIC" }
+        if ("ASIC" -notin $Config.param.Type) { $Config.param.Type += "ASIC" }
     }
     else {
         $Array = @(); 
-        $global:config.param.Type | % { if ($_ -ne "ASIC") { $Array += $_ } }; $global:config.param.Type = $Array
+        $Config.param.Type | % { if ($_ -ne "ASIC") { $Array += $_ } }; $Config.param.Type = $Array
     }
 }
 $ASIC.add_Click($ASIC_Click)
 
-Register-ObjectEvent -InputObject $UpDown -EventName "ValueChanged" -Action {$global:config.param.CPUThreads = $Updown.Value} | Out-Null
-
-## Add Wallet1 To Params:
-$Wallet1 = Win "Wallet1"
-if ($global:config.param.Wallet1) {
-    $Wallet1.Text = $global:config.param.Wallet1
-}
-$Rigname1 = Win "Rigname1"
-if ($global:config.param.Rigname1) {
-    $Rigname1.Text = $global:config.param.Rigname1
-}
-$Donate = Win "Donate"
-if ($global:config.param.Donate) {
-    $Donate.Text = $global:config.param.Donate
-}
-$Auto_Coin = Win "Auto_Coin"
-if ($global:config.param.Auto_Coin -eq "Yes") {
-    $Auto_Coin.IsChecked = $true
-}
-$Auto_Coin_Check = {
-    if ($Auto_Coin.IsChecked -eq $true) {
-        $global:config.param.Auto_Coin = "Yes"
-    }
-    else { $global:config.param.Auto_Coin = "No" }
-}
-$Auto_Coin.add_Click($Auto_Coin_Check)
-
-## Pools
-$Pool_List = Win "Pool_List"
-$global:config.param.PoolName | % {
-    $Item = [Avalonia.Controls.ListBoxItem]::new()
-    $Item.Content = "$($_)"
-    $Pool_List.ITEMS.Add($Item)
-}
-$Add_Pool_List = Win "Add_Pool_List"
-$AllPools = @()
-$Pool = Get-ChildItem ".\algopools"
-$Pool | % { $AllPools += $_.BaseName }
-$Pool = Get-ChildItem ".\custompools"
-$Pool | % { $AllPools += $_.BaseName }
-
-$AllPools | % {
-    if ($_ -notin $Pool_List.ITEMS.Content) {
-        $Item = [Avalonia.Controls.ListBoxItem]::new()
-        $Item.Content = "$($_)"
-        $Add_Pool_List.ITEMS.Add($Item)
-    }
-}
-
-$Add_Pool = Win "Add_Pool_Button"
-$Add_Pool_Check = {
-    if ($Add_Pool_List.SelectedItem) {
-        if ($Add_Pool_List.SelectedItem.Content -notin $Pool_List.ITEMS.Content) {
-            $Item = [Avalonia.Controls.ListBoxItem]::new()
-            $Item.Content = "$($Add_Pool_List.SelectedItem.Content)"
-            $Pool_List.ITEMS.Add($Item)
-            $global:config.param.PoolName += "$($Add_Pool_List.SelectedItem.Content)"
-            $Add_Pool_List.ITEMS.Clear()
-            $AllPools | % {
-                if ($_ -notin $Pool_List.ITEMS.Content) {
-                    $Item = [Avalonia.Controls.ListBoxItem]::new()
-                    $Item.Content = "$($_)"
-                    $Add_Pool_List.ITEMS.Add($Item)
-                }
-            }        
-        }
-    }
-}
-$Add_Pool.add_Click($Add_Pool_Check)
-
-$Remove_Pool = Win "Remove_Pool_Button"
-$Remove_Pool_Check = {
-    if ($Pool_List.SelectedItem) {
-        if ($Pool_List.SelectedItem.Content -notin $Add_Pool_List.ITEMS.Content) {
-            $Item = [Avalonia.Controls.ListBoxItem]::new()
-            $Item.Content = "$($Pool_List.SelectedItem.Content)"
-            $Add_Pool_List.ITEMS.Add($Item)
-            $Array = @()
-            $global:config.param.Poolname | % { if ($_ -ne "$($Pool_List.SelectedItem.Content)") { $Array += "$($_)" } }
-            $global:config.param.Poolname = $Array
-            $Pool_List.ITEMS.Clear()
-            $global:config.param.Poolname | % {
-                if ($_ -notin $Add_Pool_List.ITEMS.Content) {
-                    $Item = [Avalonia.Controls.ListBoxItem]::new()
-                    $Item.Content = "$($_)"
-                    $Pool_List.ITEMS.Add($Item)
-                }
-            }        
-        }
-    }
-}
-$Remove_Pool.add_Click($Remove_Pool_Check)
+Register-ObjectEvent -InputObject $UpDown -EventName "ValueChanged" -Action {$Config.param.CPUThreads = $Updown.Value} | Out-Null
 
 ################### Begin GUI ###################
-Show-AvaloniaWindow -Window $global:config.window
+Show-AvaloniaWindow -Window $Config.window
+}
+
+$run = [runspacefactory]::CreateRunspace()
+$run.Open()
+$run.SessionStateProxy.SetVariable('Config', $global:Config)
+$psCmd = [PowerShell]::Create().AddScript($script)
+$psCmd.runspace = $run
+$pscmd.beginInvoke() | Out-Null
+
+while($true) {
+    Start-Sleep -S 1
+}
