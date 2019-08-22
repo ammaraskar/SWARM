@@ -3,14 +3,14 @@ $(vars).CPUTypes | ForEach-Object {
     $ConfigType = $_;
 
     ##Miner Path Information
-    if ($(vars).cpu.sugarchain.$ConfigType) { $Path = "$($(vars).cpu.sugarchain.$ConfigType)" }
+    if ($(vars).cpu.jayddee.$ConfigType) { $Path = "$($(vars).cpu.jayddee.$ConfigType)" }
     else { $Path = "None" }
-    if ($(vars).cpu.sugarchain.uri) { $Uri = "$($(vars).cpu.sugarchain.uri)" }
+    if ($(vars).cpu.jayddee.uri) { $Uri = "$($(vars).cpu.jayddee.uri)" }
     else { $Uri = "None" }
-    if ($(vars).cpu.sugarchain.minername) { $MinerName = "$($(vars).cpu.sugarchain.minername)" }
+    if ($(vars).cpu.jayddee.minername) { $MinerName = "$($(vars).cpu.jayddee.minername)" }
     else { $MinerName = "None" }
 
-    $Name = "sugarchain";
+    $Name = "jayddee";
 
     ##Log Directory
     $Log = Join-Path $($(vars).dir) "logs\$ConfigType.log"
@@ -19,7 +19,7 @@ $(vars).CPUTypes | ForEach-Object {
     if ($(arg).CPUThreads -ne '') { $Devices = $(arg).CPUThreads }
 
     ##Get Configuration File
-    $MinerConfig = $Global:config.miners.sugarchain
+    $MinerConfig = $Global:config.miners.jayddee
 
     ##Export would be /path/to/[SWARMVERSION]/build/export##
     $ExportDir = Join-Path $($(vars).dir) "build\export"
@@ -59,7 +59,7 @@ $(vars).CPUTypes | ForEach-Object {
                         Path       = $Path
                         Devices    = $Devices
                         Stratum    = "$($_.Protocol)://$($_.Pool_Host):$($_.Port)" 
-                        Version    = "$($(vars).cpu.sugarchain.version)"
+                        Version    = "$($(vars).cpu.jayddee.version)"
                         DeviceCall = "cpuminer-opt"
                         Arguments  = "-a $($MinerConfig.$ConfigType.naming.$($_.Algorithm)) -o stratum+tcp://$($_.Pool_Host):$($_.Port) -b 0.0.0.0:10001 -u $($_.User1) -p $($_.Pass1)$($Diff) $($MinerConfig.$ConfigType.commands.$($_.Algorithm))"
                         HashRates  = $Stat.Hour
