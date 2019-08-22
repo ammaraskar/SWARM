@@ -84,32 +84,33 @@ if ($Name -in $(arg).PoolName) {
 
                 $StatAlgo = $Nicehash_Algorithm -replace "`_","`-"
                 $Stat = Global:Set-Stat -Name "$($Name)_$($StatAlgo)_profit" -Value ([Double]$_.paying / $Divisor * (1 - ($Fee / 100)))
+                $Level = $Stat.$($(arg).Stat_Algo)
      
                 [Pool]::New(
                     ## Symbol
-                    "$($_.Name)-Algo",
+                    "$($nicehash_Algorithm)-Algo",
                     ## Algorithm
-                    "$($_.Name)",
+                    $nicehash_Algorithm,
                     ## Level
                     $Level,
                     ## Stratum
                     "stratum+tcp",
                     ## Pool_Host
-                    $Pool_Host,
+                    $nicehash_Host,
                     ## Pool_Port
-                    $Pool_Port,
+                    $nicehash_Port,
                     ## User1
-                    $User1,
+                    $NH_Wallet1.$($(arg).RigName1),
                     ## User2
-                    $User2,
+                    $NH_Wallet2.$($(arg).RigName2),
                     ## User3
-                    $User3,
+                    $NH_Wallet3.$($(arg).RigName3),
                     ## Pass1
-                    "c=$Pass1,id=$($(arg).RigName1)",
+                    "x",
                     ## Pass2
-                    "c=$Pass2,id=$($(arg).RigName2)",
+                    "x",
                     ## Pass3
-                    "c=$Pass3,id=$($(arg).RigName3)",
+                    "x",
                     ## Previous
                     $previous
                 )
