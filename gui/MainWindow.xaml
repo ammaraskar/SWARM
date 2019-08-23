@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
         Width="800"
         Height="600"
         x:Class="SWARM_GUI.MainWindow"
@@ -37,7 +37,7 @@
       <TabItem Classes="h1" Header="BASIC SETTINGS" Background="White" Foreground="Black">
         <StackPanel Name="Tab1_Main">
           
-          <Grid Name="Tab1_Row1" RowDefinitions="40" ColumnDefinitions="5,125,5,55,5,365,25,100,Auto">
+          <Grid Name="Tab1_Row1" RowDefinitions="40" ColumnDefinitions="5,125,5,55,5,365,25,120,Auto">
             <Rectangle Fill="Black" Grid.Column="0" HorizontalAlignment="Left" MinWidth="731" Grid.ColumnSpan="9" MaxWidth="735" MinHeight="40" MaxHeight="40" ZIndex="0"/>
             <DropDown Grid.Column="1" SelectedIndex="0" ZIndex="1" Background="White" MaxHeight="30" BorderBrush="Black" HorizontalAlignment="Left" Name="Wallet_List" MaxWidth="125" MinWidth="125">
               <DropDownItem Name="Wallet1" Content="Wallet1" />
@@ -58,7 +58,7 @@
           
           <Grid Name="Tab1_Row2" RowDefinitions="5" ColumnDefinitions="Auto" />
 
-          <Grid Name="Tab1_Row3" RowDefinitions="Auto,Auto" ColumnDefinitions="82,128,10,45,130,125,50,80,Auto">
+          <Grid Name="Tab1_Row3" RowDefinitions="Auto,Auto" ColumnDefinitions="82,128,10,45,130,125,50,120,Auto">
             <Rectangle Fill="Black" Grid.Column="0" Grid.ColumnSpan="2" ZIndex="0" Margin="0,0" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="210" MaxWidth="210" MinHeight="30" MaxHeight="30"/>
             <TextBlock Grid.Column="1" ZIndex="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5" Foreground="White" FontWeight="Bold" Text="Location"/>
             <Rectangle Fill="Black" Grid.Column="3" Grid.ColumnSpan="2" ZIndex="0" Margin="0,0" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="180" MaxWidth="180" MaxHeight="30" MinHeight="30" />
