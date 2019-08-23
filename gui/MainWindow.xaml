@@ -3,7 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
-        Width="800"
+        Width="900"
         Height="600"
         x:Class="SWARM_GUI.MainWindow"
         Title="SWARM_GUI">
@@ -21,7 +21,7 @@
       <Setter Property="FontWeight" Value="Bold"/>
     </Style>
   </Window.Styles>
-  <StackPanel Background="Green">
+  <StackPanel Background="DarkGreen">
     <Menu DockPanel.Dock="Top" Background="White">
       <MenuItem Header="File">
         <MenuItem Header="_Start Swarm" Name="Start_Swarm"/>
@@ -35,9 +35,9 @@
     </Menu>
     <TabControl TabStripPlacement="Left" DockPanel.Dock="Top">
       <TabItem Classes="h1" Header="BASIC SETTINGS" Background="White" Foreground="Black">
-        <StackPanel Name="Tab1_Main">
+        <Grid Name="Tab1_Main" RowDefinitions="40,5,30,95,110,500">
           
-          <Grid Name="Tab1_Row1" RowDefinitions="40" ColumnDefinitions="5,125,5,55,5,365,25,120,Auto">
+          <Grid Name="Tab1_Row1" Grid.Row="0" RowDefinitions="40" ColumnDefinitions="5,125,5,55,5,365,25,120,Auto">
             <Rectangle Fill="Black" Grid.Column="0" HorizontalAlignment="Left" MinWidth="731" Grid.ColumnSpan="9" MaxWidth="735" MinHeight="40" MaxHeight="40" ZIndex="0"/>
             <DropDown Grid.Column="1" SelectedIndex="0" ZIndex="1" Background="White" MaxHeight="30" BorderBrush="Black" HorizontalAlignment="Left" Name="Wallet_List" MaxWidth="125" MinWidth="125">
               <DropDownItem Name="Wallet1" Content="Wallet1" />
@@ -56,9 +56,9 @@
             <Button Name="Save_Wallet" Grid.Column="7" ZIndex="1" Margin="0,6" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" MinWidth="100" MaxWidth="100" MaxHeight="30" Content="Save Wallet" BorderThickness="2" BorderBrush="Gray" />
            </Grid>
           
-          <Grid Name="Tab1_Row2" RowDefinitions="5" ColumnDefinitions="Auto" />
+          <Grid Name="Tab1_Row2" Grid.Row="1" RowDefinitions="5" ColumnDefinitions="Auto" />
 
-          <Grid Name="Tab1_Row3" RowDefinitions="Auto,Auto" ColumnDefinitions="82,128,10,45,130,125,50,120,Auto">
+          <Grid Name="Tab1_Row3" Grid.Row="2" RowDefinitions="Auto,Auto" ColumnDefinitions="82,128,10,45,130,125,50,120,Auto">
             <Rectangle Fill="Black" Grid.Column="0" Grid.ColumnSpan="2" ZIndex="0" Margin="0,0" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="210" MaxWidth="210" MinHeight="30" MaxHeight="30"/>
             <TextBlock Grid.Column="1" ZIndex="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5" Foreground="White" FontWeight="Bold" Text="Location"/>
             <Rectangle Fill="Black" Grid.Column="3" Grid.ColumnSpan="2" ZIndex="0" Margin="0,0" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="180" MaxWidth="180" MaxHeight="30" MinHeight="30" />
@@ -67,7 +67,7 @@
             <TextBlock Grid.Column="7" ZIndex="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5" Foreground="White" FontWeight="Bold" Text="Current Pools"/>
           </Grid>
 
-          <Grid RowDefinitions="Auto" ColumnDefinitions="Auto">
+          <Grid RowDefinitions="Auto" Grid.Row="3" ColumnDefinitions="Auto">
             <Rectangle Fill="White" ZIndex="0" HorizontalAlignment="Left" Margin="0,0" VerticalAlignment="Top" MinWidth="210" MaxWidth="210" MaxHeight="30" MinHeight="30" />
             <ListBox Name="Add_Pool_List" HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="Gray" BorderThickness="3" Margin="220,0" Width="180" Height="200"></ListBox>
             <ListBox Name="Pool_List" HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="Gray" BorderThickness="3" Margin="520,0" Width="180" Height="200"></ListBox>
@@ -89,8 +89,13 @@
             <TextBlock Foreground="White" FontWeight="Bold" Text="Rigname" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="80,40"/>
           </Grid>
           
+          <Grid Grid.Row="4" RowDefinitions="5" ColumnDefinitions="Auto" />
+
+
+          <ComboBox Grid.Row="5" Name="DataGrid" VerticalAlignment="Top" Margin="0,0" HorizontalAlignment="Left" Height="275" Width="700">
+          </ComboBox>
           
-        </StackPanel>
+        </Grid>
       </TabItem>
       
       
