@@ -820,3 +820,28 @@ to allow full values.
   For ``-Auto_Coin``
 * This is only for users with ``Auto_Coin``
   You can ignore if not using.
+
+
+
+
+
+
+            <Rectangle Fill="White" ZIndex="0" HorizontalAlignment="Left" Margin="0,0" VerticalAlignment="Top" MinWidth="210" MaxWidth="210" MaxHeight="30" MinHeight="30" />
+            <ListBox Name="Add_Pool_List" HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="Gray" BorderThickness="3" Margin="224,-5" Width="180" Height="200"></ListBox>
+            <ListBox Name="Pool_List" HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="Gray" BorderThickness="3" Margin="535,-5" Width="180" Height="200"></ListBox>
+            <RadioButton GroupName="Location" ZIndex="1" Name="USA" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1,0" Content="USA" FontWeight="Bold" IsDefault="True" IsChecked="True" BorderBrush="Black" Foreground="Black"/>
+            <RadioButton GroupName="Location" ZIndex="1" Name="EUROPE" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="65,0" Content="EUROPE" FontWeight="Bold" BorderBrush="Black" Foreground="Black"/>
+            <RadioButton GroupName="Location" ZIndex="1" Name="ASIA"  Content="ASIA" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,0" BorderBrush="Black" Foreground="Black"/>
+            <Button Name="Add_Pool_Button" ZIndex="1" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="412,30" Height="27" Width="113" BorderBrush="Gray" BorderThickness="2" Content="Add Pool =&gt;"/>
+            <Button Name="Remove_Pool_Button" ZIndex="1" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="412,105" Height="27" Width="113" BorderBrush="Gray" BorderThickness="2" Content="&lt;= Remove"/>
+            <Rectangle Fill="Black" ZIndex="0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,35" MaxWidth="210" MinWidth="210" MaxHeight="30" MinHeight="30" />
+            <Rectangle Fill="White" ZIndex="0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,65" MaxWidth="210" MinWidth="210" MaxHeight="130" MinHeight="130" Height="210" />
+            <DropDown SelectedIndex="0" ZIndex="1" Margin="60,75" Background="White" MinHeight="30" MaxHeight="30" BorderBrush="Black" VerticalAlignment="Top" HorizontalAlignment="Left" Name="Rig_List" MaxWidth="90" MinWidth="90">
+              <DropDownItem Name="Rigname1" Content="Rigname1" />
+              <DropDownItem Name="Rigname2" Content="Rigname2" ></DropDownItem>
+              <DropDownItem Name="Rigname3" Content="Rigname3" ></DropDownItem>
+            </DropDown>
+            <TextBox Name="Rig" ZIndex="1" Margin="55,110" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="100" MaxWidth="100" MinHeight="25" MaxHeight="30" BorderBrush="Black" Watermark="Nickname" AcceptsReturn="False" TextWrapping="NoWrap"/>
+            <TextBlock ZIndex="1" Text="Enter Name For Group1" Foreground="Black" Name="Rig_Text" Margin="44,135" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Button ZIndex="1" Name="Save_Rig" Margin="45,155" FontWeight="Bold" BorderBrush="Gray" BorderThickness="2" HorizontalAlignment="Left" VerticalAlignment="Top" MaxHeight="30" MinHeight="30" MinWidth="120" MaxWidth="120" Content="Save Rig Name"/>
+            <TextBlock Foreground="White" FontWeight="Bold" Text="Rigname" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="80,40"/>
