@@ -4,6 +4,7 @@ function Global:Get-StatsTrex {
         try { $Data = $Request.Content | ConvertFrom-Json -ErrorAction Stop; }catch { Write-Host "Failed To parse API" -ForegroundColor Red }
         if ([Double]$Data.hashrate_minute -ne 0 -or [Double]$Data.accepted_count -ne 0) { 
             $global:RAW = [Double]$Data.hashrate_minute;  
+            $global:TypeHashes.$($Global:MinerType) = $global:RAW
             $global:GPUKHS = [Double]$Data.hashrate_minute / 1000
         }
         Global:Write-MinerData2;

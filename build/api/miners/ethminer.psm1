@@ -24,6 +24,7 @@ function Global:Get-StatsEthminer {
         catch { Write-Host "Failed To parse API" -ForegroundColor Red; Break }
         if ($Data) { $Summary = $Data.result[2]; $Threads = $Data.result[3]; }
         $global:RAW += $Summary -split ";" | Select-Object -First 1 | ForEach-Object { [Double]$_ * $Multiplier } 
+        $global:TypeHashes.$($Global:MinerType) = $global:RAW
         Global:Write-MinerData2;
         $global:GPUKHS += $Summary -split ";" | Select-Object -First 1 | ForEach-Object { [Double]$_ / $Divsor } 
         $Hash = $Threads -split ";" | ForEach-Object { [Double]$_ / $Divsor }

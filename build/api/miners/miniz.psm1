@@ -4,6 +4,7 @@ function Global:Get-StatsMiniz {
         $Data = $Request.Content -split " "
         $Hash = $Data | Select-String "Sol/s" | Select-String "data-label" | ForEach-Object { $_ -split "</td>" | Select-Object -First 1 } | ForEach-Object { $_ -split ">" | Select-Object -Last 1 }
         $global:RAW = $Hash | Select-Object -Last 1
+        $global:TypeHashes.$($Global:MinerType) = $global:RAW
         Global:Write-MinerData2;
         $global:GPUKHS += [Double]$global:RAW / 1000
         $Shares = $Data | Select-String "Shares" | Select-Object -Last 1 | ForEach-Object { $_ -split "</td>" | Select-Object -First 1 } | ForEach-Object { $_ -split ">" | Select-Object -Last 1 }

@@ -5,6 +5,7 @@ function Global:Get-StatsBminer {
         catch { Write-Host "Failed To parse API" -ForegroundColor Red }
         for ($global:i = 0; $global:i -lt $Devices.Count; $global:i++) { 
             $GPU = $Devices[$global:i]; $global:RAW += [Double]$Data.Miners.$GPU.solver.solution_rate / 1
+            $global:TypeHashes.$($Global:MinerType) = $global:RAW
             $global:GPUKHS += [Double]$Data.Miners.$GPU.solver.solution_rate / 1000
         }
         Global:Write-MinerData2;

@@ -5,6 +5,7 @@ function Global:Get-StatsLolminer {
     if ($request) {
         try { $Data = $Request.Content | ConvertFrom-Json -ErrorAction Stop; }catch { Write-Host "Failed To parse API" -ForegroundColor Red; break }
         $global:RAW = [Double]$Data.Session.Performance_Summary        
+        $global:TypeHashes.$($Global:MinerType) = $global:RAW
         $global:GPUKHS += [Double]$Data.Session.Performance_Summary / 1000
         Global:Write-MinerData2;
         $Hash = $Data.GPUs.Performance

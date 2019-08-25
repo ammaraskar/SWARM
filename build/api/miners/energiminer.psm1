@@ -6,6 +6,7 @@ function Global:Get-StatsEnergiminer {
         $MHS = $Data | Select-String -Pattern "Mh/s" -AllMatches -Context 1, 0 | ForEach-Object { $_.Context.PreContext[0] }
         $MHS = $MHS -replace '\x1b\[[0-9;]*m', ''
         $global:RAW = [Double]$MHS * 1000000
+        $global:TypeHashes.$($Global:MinerType) = $global:RAW
         Global:Write-MinerData2;
         $global:GPUKHS += [Double]$MHS * 1000
         $Hash = $Data | Select-String -Pattern "GPU/" -AllMatches -Context 0, 1

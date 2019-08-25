@@ -4,6 +4,7 @@ function Global:Get-StatsDSTM {
         try { $Data = $Null; $Data = $Request | ConvertFrom-Json -ErrorAction Stop; }catch { Write-Host "Failed To parse GPU Array" -ForegroundColor Red; break }
         $Data = $Data.result
         $Data.sol_ps | ForEach-Object { $global:RAW += [Double]$_; $global:GPUKHS += [Double]$_ / 1000 }
+        $global:TypeHashes.$($Global:MinerType) = $global:RAW
         Global:Write-MinerData2;
         $Hash = $Data.sol_ps
         try { 

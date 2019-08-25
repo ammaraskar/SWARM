@@ -5,6 +5,7 @@ function Global:Get-StatsGminer {
         Catch { Write-Host "Failed To parse API" -ForegroundColor Red; Break }
         if ($Data) {
             $Data.devices.speed | ForEach-Object { $global:RAW += [Double]$_; }
+            $global:TypeHashes.$($Global:MinerType) = $global:RAW
             $Hash = $Data.devices.speed
             Global:Write-MinerData2;
             try { 

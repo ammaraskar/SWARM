@@ -19,6 +19,7 @@ function Global:Get-StatsCgminer {
         if ($response."PHS_5s") { $global:RAW = [Double]$response."PHS_5s" * $Hash_Table.PHS }
         Global:Write-MinerData2;
         $global:ASICKHS += if ($global:RAW -ne 0) { [Double]$global:RAW / 1000 }
+        $global:TypeHashes.$($Global:MinerType) = $global:RAW
         $global:ASICHashRates.$($global:Anumber) = if ($global:RAW -ne 0) { [Double]$global:RAW / 1000 }
         $global:MinerREJ += $response.Rejected
         $global:MinerACC += $response.Accepted

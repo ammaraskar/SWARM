@@ -11,6 +11,7 @@ function Global:Get-StatsCcminer {
     if ($Request) {
         try { $GetKHS = $Request -split ";" | ConvertFrom-StringData -ErrorAction Stop }catch { Write-Warning "Failed To Get Summary"; break }
         $global:RAW = if ([Double]$GetKHS.KHS -ne 0 -or [Double]$GetKHS.ACC -ne 0) { [Double]$GetKHS.KHS * $Multiplier }
+        $global:TypeHashes.$($Global:MinerType) = $global:RAW
         Global:Write-MinerData2;
         $global:GPUKHS += if ([Double]$GetKHS.KHS -ne 0 -or [Double]$GetKHS.ACC -ne 0) { [Double]$GetKHS.KHS }
     }

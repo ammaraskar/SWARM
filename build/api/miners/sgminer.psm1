@@ -20,6 +20,7 @@ function Global:Get-StatsSgminer {
         elseif ($summary.'KHS 30s' -gt 0) { $sum = $summary.'KHS 30s'; $sgkey = 'KHS 30s' }
         $Hash = $threads.$sgkey
         $global:RAW += [Double]$Sum * 1000
+        $global:TypeHashes.$($Global:MinerType) = $global:RAW
         Global:Write-MinerData2;
         $global:GPUKHS += $Sum
         try { 

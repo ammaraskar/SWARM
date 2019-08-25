@@ -2,9 +2,10 @@ $global:Config = [hashtable]::Synchronized(@{})
 $global:Config.ADD("Dir",(Split-Path (Split-Path $script:MyInvocation.MyCommand.Path)))
 Set-Location $global:config.Dir
 
-#$Script = {
-
+$Script = {
+Set-Location $global:config.Dir
 Import-Module ".\gui\PSAvalonia\1.0\PSAvalonia.psd1"
+Import-Module ".\build\powershell\global\hashrates.psm1"
 
 ## LOAD DATA
 function Global:Get-Avalonia($Name) { Find-AvaloniaControl -Window $Config.window -Name $Name }
@@ -13,7 +14,7 @@ Set-Alias -Name Win -Value Global:Get-Avalonia -Scope Global
 ## XAML CONVERSION
 $Xaml = Get-Content ".\gui\MainWindow.xaml"
 $Xaml = $Xaml | Out-String
-$Config.Add("window",(convertTo-AvaloniaWindow -Xaml $Xaml))
+$global:Config.Add("window",(convertTo-AvaloniaWindow -Xaml $Xaml))
 if($IsWindows){$Config.Window.Icon = ".\build\apps\icons\SWARM.ico"}
 
 ## PARAMETERS 
@@ -461,16 +462,15 @@ Register-ObjectEvent -InputObject $UpDown -EventName "ValueChanged" -Action {$Co
 Show-AvaloniaWindow -Window $Config.window
 
 ## # out this line to debug
-## }
-
-$run = [runspacefactory]::CreateRunspace()
-$run.Open()
+}
 
 ## out these lines to debug
-##$run.SessionStateProxy.SetVariable('Config', $global:Config)
-#$psCmd = [PowerShell]::Create().AddScript($script)
-#$psCmd.runspace = $run
-#$pscmd.beginInvoke() | Out-Null
+$run = [runspacefactory]::CreateRunspace()
+$run.Open()
+$run.SessionStateProxy.SetVariable('Config', $global:Config)
+$psCmd = [PowerShell]::Create().AddScript($script)
+$psCmd.runspace = $run
+$pscmd.beginInvoke() | Out-Null
 
 ## Will fill with code laster
 while($true) {

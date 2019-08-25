@@ -148,6 +148,7 @@ While ($True) {
     $global:AllACC = 0; $global:ALLREJ = 0;
     $global:HIVE_ALGO = @{ }; $Group1 = $null; $Default_Group = $null; 
     $Hive = $null; $global:UPTIME = 0; $global:Web_Stratum = @{ }; $global:Workers = @{ }
+    $global:TypeHashes = @{}
 
     Global:Add-Module "$($(vars).background)\run.psm1"
     Global:Add-Module "$($(vars).background)\initial.psm1"
@@ -188,6 +189,8 @@ While ($True) {
                 $global:Anumber = $global:MinerType -replace "ASIC",""
                 $global:Anumber = $global:ANumber - 1
             }
+            
+            $global:TypeHashes.Add("$global:MinerType",0)
 
             ##Build Algo Table
             switch ($global:MinerType) {
@@ -635,8 +638,11 @@ While ($True) {
         stratum    = $Global:StatStratum
         start_time = $StartTime
         workername = $Global:StatWorker
+        typehashes = $global:TypeHashes
     }
     $global:Config.params = $(arg)
+
+    $global:Config.Stats | ConvertTo-Json -Depth 10 | Set-Content ".\build\txt\json_stats.txt"
 
     if ($global:GetMiners -and $global:GETSWARM.HasExited -eq $false) {
         Write-Host " "

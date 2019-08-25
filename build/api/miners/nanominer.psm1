@@ -9,6 +9,7 @@ function Global:Get-StatsNanominer {
                 "ethash" { $Data.Devices | % { $global:RAW += [Double]$_.hashrates.hashrate * 1000000 } }
                 default { $Data.Devices | % { $global:RAW += [Double]$_.hashrates.hashrate } }
             }
+            $global:TypeHashes.$($Global:MinerType) = $global:RAW
             Global:Write-MinerData2;
             try { 
                 for ($global:i = 0; $global:i -lt $Devices.Count; $global:i++) {

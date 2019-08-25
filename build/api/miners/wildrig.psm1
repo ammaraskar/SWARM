@@ -4,6 +4,7 @@ function Global:Get-StatsWildrig {
     if ($Request) {
         try { $Data = $Null; $Data = $Request.Content | ConvertFrom-Json -ErrorAction Stop; }catch { Write-Host "Failed To parse API" -ForegroundColor Red; break }
         try { $global:RAW = $Data.hashrate.total[0]; $global:GPUKHS += [Double]$Data.hashrate.total[0] / 1000 }catch { }
+        $global:TypeHashes.$($Global:MinerType) = $global:RAW
         Global:Write-MinerData2;
         $Hash = $Data.hashrate.threads
         try {

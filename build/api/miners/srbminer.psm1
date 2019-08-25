@@ -5,6 +5,7 @@ function Global:Get-StatsSrbminer {
         Catch { Write-Host "Failed To parse API" -ForegroundColor Red; Break }
         if ($Data) {
             $Data.devices.hashrate | ForEach-Object { $global:RAW += [Double]$_; }
+            $global:TypeHashes.$($Global:MinerType) = $global:RAW
             $Hash = $Data.devices.hashrate
             Global:Write-MinerData2;
             try {

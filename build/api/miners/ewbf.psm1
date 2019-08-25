@@ -6,6 +6,7 @@ function Global:Get-StatsEWBF {
         catch { Write-Host "Failed To parse API" -ForegroundColor Red; break }
         $Data = $Data.result
         $Data.speed_sps | ForEach-Object { $global:RAW += [Double]$_; $global:GPUKHS += [Double]$_ / 1000 }
+        $global:TypeHashes.$($Global:MinerType) = $global:RAW
         $Hash = $Data.speed_sps
         Global:Write-MinerData2;
         try {

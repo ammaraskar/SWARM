@@ -8,6 +8,7 @@ function Global:Get-StatsXmrstak {
         if (-not $HashRate_Total) { $HashRate_Total = [Double]$Data.hashrate.total[1] } #fix
         if (-not $HashRate_Total) { $HashRate_Total = [Double]$Data.hashrate.total[2] } #fix
         $global:RAW = $HashRate_Total
+        $global:TypeHashes.$($Global:MinerType) = $global:RAW
         $global:GPUKHS += [Double]$HashRate_Total / 1000
         Write-Host "Note: XMR-STAK/XMRig API is not great. You can't match threads to specific GPU." -ForegroundColor Yellow
         Global:Write-MinerData2

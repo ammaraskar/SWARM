@@ -6,6 +6,7 @@ function Global:Get-StatsExcavator {
         try { $Data = $Null; $Data = $Request | ConvertFrom-Json -ErrorAction Stop; }
         catch { Write-Host "Failed To parse API" -ForegroundColor Red; break }
         $global:RAW = $Summary.algorithms.speed
+        $global:TypeHashes.$($Global:MinerType) = $global:RAW
         Global:Write-MinerData2;
         $global:GPUKHS += [Double]$Summary.algorithms.speed / 1000
     }

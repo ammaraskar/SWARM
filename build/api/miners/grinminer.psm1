@@ -8,6 +8,7 @@ function Global:Get-StatsGrinMiner {
             $DeviceData = $DeviceData -split "Graphs per second: " | Select-Object -Last 1 | ForEach-Object { $_ -split " - Total" | Select-Object -First 1 }
             if ($DeviceData) { $Hash += [Double]$DeviceData / 1000 ; $global:RAW += [Double]$DeviceData; $global:GPUKHS += [Double]$DeviceData / 1000 }
             else { $Hash += 0; $global:RAW += 0; $global:GPUKHS += 0 }
+            $global:TypeHashes.$($Global:MinerType) = $global:RAW
         }
         Global:Write-MinerData2;
         try { 

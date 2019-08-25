@@ -3,6 +3,7 @@ function Global:Get-StatsMultiminer {
     if ($GetSummary) {
         $SUM = $GetSummary -split ";" | Select-String "KHS=" | ForEach-Object { $_ -replace ("KHS=", "") }
         $global:RAW = [double]$SUM * 1000
+        $global:TypeHashes.$($Global:MinerType) = $global:RAW
         Global:Write-MinerData2
     }
     else { Write-Host "API Summary Failed- Could Not Total Hashrate" -Foreground Red; break }

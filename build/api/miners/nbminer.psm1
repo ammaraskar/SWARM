@@ -3,6 +3,7 @@ function Global:Get-StatsNebutech {
     if ($Request) {
         $Data = $Request
         $global:RAW += [Double]$Data.miner.total_hashrate_raw
+        $global:TypeHashes.$($Global:MinerType) = $global:RAW
         $global:GPUKHS += [Double]$Data.miner.total_hashrate_raw / 1000
         Global:Write-MinerData2;
         $Hash = $Data.Miner.devices.hashrate_raw | %{[Double]$_ / 1000}
