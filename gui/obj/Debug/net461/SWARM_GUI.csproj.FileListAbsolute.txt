@@ -314,3 +314,4 @@ C:\Users\Mayna\Documents\GitHub\SWARM\gui\bin\Debug\net461\System.Reactive.Provi
 C:\Users\Mayna\Documents\GitHub\SWARM\gui\bin\Debug\net461\System.Reactive.Runtime.Remoting.dll
 C:\Users\Mayna\Documents\GitHub\SWARM\gui\bin\Debug\net461\System.Reactive.Windows.Forms.dll
 C:\Users\Mayna\Documents\GitHub\SWARM\gui\bin\Debug\net461\System.Reactive.Windows.Threading.dll
+C:\Users\Mayna\Documents\GitHub\SWARM\gui\bin\Debug\net461\Avalonia.Controls.DataGrid.dll

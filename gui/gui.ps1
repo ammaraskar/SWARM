@@ -2,9 +2,17 @@ $global:Config = [hashtable]::Synchronized(@{})
 $global:Config.ADD("Dir",(Split-Path (Split-Path $script:MyInvocation.MyCommand.Path)))
 Set-Location $global:config.Dir
 
-$Script = {
-Import-Module PSAvalonia;
-Set-Location $config.Dir
+$Pkg = Get-Package "Avalonia"
+
+if("Avalonia" -notin $Pkg.Name -or $Pkg.Version -ne "0.8.2") {
+    Write-Host "Installing Avalonia Gui Dependencies"
+    . .\gui\psavalonia\Install-Dependencies.ps1
+}
+
+## # out this line to debug
+#$Script = {
+
+Import-Module ".\gui\PSAvalonia\1.0\PSAvalonia.psd1"
 
 ## LOAD DATA
 function Global:Get-Avalonia($Name) { Find-AvaloniaControl -Window $Config.window -Name $Name }
@@ -23,7 +31,11 @@ else { $Config.Add("Param",(Get-Content ".\config\parameters\default.json" | Con
 ## Menu Items
 . .\gui\build\menu.ps1
 
+###########################
 ## Tab1 - Basic Settings ##
+###########################
+$Tab1 = Win "Tab1_Main"
+
 ## Wallets
 . .\gui\build\wallets.ps1
 
@@ -36,12 +48,16 @@ else { $Config.Add("Param",(Get-Content ".\config\parameters\default.json" | Con
 ## Pools
 . .\gui\build\pools.ps1
 
-##Type Parameters
+## Data_Feed
+. .\gui\build\datafeed.ps1
+
+
+## NVIDIA Checkboxes##Type Parameters
 ## AMD Checkbox
+
 $AMD = Win "AMD";
 $AMD1 = Win "AMD1"; 
 
-## NVIDIA Checkboxes
 $NVIDIA = Win "NVIDIA"; 
 $NVIDIA1 = Win "NVIDIA1"; 
 $NVIDIA2 = Win "NVIDIA2"; 
@@ -57,7 +73,7 @@ $UpDown.MaxWidth = 40
 $UpDown.MaxHeight = 35
 $Rig_Settings.Children.Add($UpDown)
 $Grid = [Avalonia.Controls.Grid]::SetRow($UpDown,1)
-$Grid = $Grid = [Avalonia.Controls.Grid]::SetColumn($UpDown,4)
+$Grid = [Avalonia.Controls.Grid]::SetColumn($UpDown,4)
 $Thread_Title = win "Thread_Title"
 
 ## NVIDIA Checkbox
@@ -451,14 +467,18 @@ Register-ObjectEvent -InputObject $UpDown -EventName "ValueChanged" -Action {$Co
 
 ################### Begin GUI ###################
 Show-AvaloniaWindow -Window $Config.window
-}
+
+## # out this line to debug
+## }
 
 $run = [runspacefactory]::CreateRunspace()
 $run.Open()
-$run.SessionStateProxy.SetVariable('Config', $global:Config)
-$psCmd = [PowerShell]::Create().AddScript($script)
-$psCmd.runspace = $run
-$pscmd.beginInvoke() | Out-Null
+
+## out these lines to debug
+##$run.SessionStateProxy.SetVariable('Config', $global:Config)
+#$psCmd = [PowerShell]::Create().AddScript($script)
+#$psCmd.runspace = $run
+#$pscmd.beginInvoke() | Out-Null
 
 ## Will fill with code laster
 while($true) {

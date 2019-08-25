@@ -7,20 +7,6 @@
         Height="600"
         x:Class="SWARM_GUI.MainWindow"
         Title="SWARM_GUI">
-  <Window.Styles>
-    <Style Selector="TabItem.h1">
-      <Setter Property="FontSize" Value="14"/>
-      <Setter Property="FontWeight" Value="Bold"/>
-    </Style>
-    <Style Selector="TextBlock.h1">
-      <Setter Property="FontSize" Value="12"/>
-      <Setter Property="FontWeight" Value="Bold"/>
-    </Style>
-    <Style Selector="CheckBox.h1">
-      <Setter Property="FontSize" Value="10"/>
-      <Setter Property="FontWeight" Value="Bold"/>
-    </Style>
-  </Window.Styles>
   <StackPanel Background="DarkGreen">
     <Menu DockPanel.Dock="Top" Background="White">
       <MenuItem Header="File">
@@ -32,7 +18,7 @@
         <Separator />
         <MenuItem Header="_Exit" Name="Exit"/>
       </MenuItem>
-    </Menu>
+    </Menu>    
     <TabControl TabStripPlacement="Left" DockPanel.Dock="Top">
       <TabItem Classes="h1" Header="BASIC SETTINGS" Background="White" Foreground="Black">
         <Grid Name="Tab1_Main" RowDefinitions="40,5,30,95,110,500">
@@ -87,14 +73,7 @@
             <TextBlock ZIndex="1" Text="Enter Name For Group1" Foreground="Black" Name="Rig_Text" Margin="44,135" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <Button ZIndex="1" Name="Save_Rig" Margin="45,155" FontWeight="Bold" BorderBrush="Gray" BorderThickness="2" HorizontalAlignment="Left" VerticalAlignment="Top" MaxHeight="30" MinHeight="30" MinWidth="120" MaxWidth="120" Content="Save Rig Name"/>
             <TextBlock Foreground="White" FontWeight="Bold" Text="Rigname" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="80,40"/>
-          </Grid>
-          
-          <Grid Grid.Row="4" RowDefinitions="5" ColumnDefinitions="Auto" />
-
-
-          <ComboBox Grid.Row="5" Name="DataGrid" VerticalAlignment="Top" Margin="0,0" HorizontalAlignment="Left" Height="275" Width="700">
-          </ComboBox>
-          
+          </Grid>          
         </Grid>
       </TabItem>
       

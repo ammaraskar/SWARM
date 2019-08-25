@@ -1,0 +1,138 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>Microsoft.PowerShell.Commands.PSRepositoryItemInfo</T>
+      <T>System.Management.Automation.PSCustomObject</T>
+      <T>System.Object</T>
+    </TN>
+    <MS>
+      <S N="Name">PSAvalonia</S>
+      <Version N="Version">1.0</Version>
+      <S N="Type">Module</S>
+      <S N="Description">Avalonia UI bindings for PowerShell</S>
+      <S N="Author">Adam Driscoll</S>
+      <S N="CompanyName">adamdriscoll</S>
+      <S N="Copyright">(c) 2019 Adam Driscoll. All rights reserved.</S>
+      <DT N="PublishedDate">2019-06-17T22:46:07-04:00</DT>
+      <Obj N="InstalledDate" RefId="1">
+        <DT>2019-08-24T13:08:42.2972662-04:00</DT>
+        <MS>
+          <Obj N="DisplayHint" RefId="2">
+            <TN RefId="1">
+              <T>Microsoft.PowerShell.Commands.DisplayHintType</T>
+              <T>System.Enum</T>
+              <T>System.ValueType</T>
+              <T>System.Object</T>
+            </TN>
+            <ToString>DateTime</ToString>
+            <I32>2</I32>
+          </Obj>
+        </MS>
+      </Obj>
+      <Nil N="UpdatedDate" />
+      <Nil N="LicenseUri" />
+      <Nil N="ProjectUri" />
+      <Nil N="IconUri" />
+      <Obj N="Tags" RefId="3">
+        <TN RefId="2">
+          <T>System.Object[]</T>
+          <T>System.Array</T>
+          <T>System.Object</T>
+        </TN>
+        <LST>
+          <S>PSModule</S>
+          <S>PSEdition_Core</S>
+        </LST>
+      </Obj>
+      <Obj N="Includes" RefId="4">
+        <TN RefId="3">
+          <T>System.Collections.Hashtable</T>
+          <T>System.Object</T>
+        </TN>
+        <DCT>
+          <En>
+            <S N="Key">Command</S>
+            <Obj N="Value" RefId="5">
+              <TNRef RefId="2" />
+              <LST>
+                <S>Show-AvaloniaWindow</S>
+                <S>Find-AvaloniaControl</S>
+                <S>ConvertTo-AvaloniaWindow</S>
+              </LST>
+            </Obj>
+          </En>
+          <En>
+            <S N="Key">DscResource</S>
+            <Obj N="Value" RefId="6">
+              <TNRef RefId="2" />
+              <LST />
+            </Obj>
+          </En>
+          <En>
+            <S N="Key">Workflow</S>
+            <Ref N="Value" RefId="6" />
+          </En>
+          <En>
+            <S N="Key">RoleCapability</S>
+            <Ref N="Value" RefId="6" />
+          </En>
+          <En>
+            <S N="Key">Function</S>
+            <Ref N="Value" RefId="6" />
+          </En>
+          <En>
+            <S N="Key">Cmdlet</S>
+            <Obj N="Value" RefId="7">
+              <TNRef RefId="2" />
+              <LST>
+                <S>Show-AvaloniaWindow</S>
+                <S>Find-AvaloniaControl</S>
+                <S>ConvertTo-AvaloniaWindow</S>
+              </LST>
+            </Obj>
+          </En>
+        </DCT>
+      </Obj>
+      <Nil N="PowerShellGetFormatVersion" />
+      <Nil N="ReleaseNotes" />
+      <Obj N="Dependencies" RefId="8">
+        <TNRef RefId="2" />
+        <LST />
+      </Obj>
+      <S N="RepositorySourceLocation">https://www.powershellgallery.com/api/v2</S>
+      <S N="Repository">PSGallery</S>
+      <S N="PackageManagementProvider">NuGet</S>
+      <Obj N="AdditionalMetadata" RefId="9">
+        <TN RefId="4">
+          <T>System.Management.Automation.PSCustomObject</T>
+          <T>System.Object</T>
+        </TN>
+        <MS>
+          <S N="copyright">(c) 2019 Adam Driscoll. All rights reserved.</S>
+          <S N="description">Avalonia UI bindings for PowerShell</S>
+          <S N="requireLicenseAcceptance">False</S>
+          <S N="isLatestVersion">True</S>
+          <S N="isAbsoluteLatestVersion">True</S>
+          <S N="versionDownloadCount">83</S>
+          <S N="downloadCount">83</S>
+          <S N="packageSize">23684521</S>
+          <S N="published">6/17/2019 10:46:07 PM -04:00</S>
+          <S N="created">6/17/2019 10:46:07 PM -04:00</S>
+          <S N="lastUpdated">8/24/2019 3:39:34 PM -04:00</S>
+          <S N="tags">PSModule PSEdition_Core PSCmdlet_Show-AvaloniaWindow PSCommand_Show-AvaloniaWindow PSCmdlet_Find-AvaloniaControl PSCommand_Find-AvaloniaControl PSCmdlet_ConvertTo-AvaloniaWindow PSCommand_ConvertTo-AvaloniaWindow PSIncludes_Cmdlet</S>
+          <S N="developmentDependency">False</S>
+          <S N="updated">2019-08-24T15:39:34Z</S>
+          <S N="NormalizedVersion">1.0.0</S>
+          <S N="Authors">Adam Driscoll</S>
+          <S N="IsPrerelease">false</S>
+          <S N="ItemType">Module</S>
+          <S N="FileList">PSAvalonia.nuspec|Avalonia.Animation.dll|Avalonia.Base.dll|Avalonia.Controls.DataGrid.dll|Avalonia.Controls.dll|Avalonia.DesignerSupport.dll|Avalonia.Desktop.dll|Avalonia.DesktopRuntime.dll|Avalonia.Diagnostics.dll|Avalonia.Direct2D1.dll|Avalonia.dll|Avalonia.Input.dll|Avalonia.Interactivity.dll|Avalonia.Layout.dll|Avalonia.Logging.Serilog.dll|Avalonia.Markup.dll|Avalonia.Markup.Xaml.dll|Avalonia.Native.dll|Avalonia.OpenGL.dll|Avalonia.Remote.Protocol.dll|Avalonia.Skia.dll|Avalonia.Styling.dll|Avalonia.Themes.Default.dll|Avalonia.Visuals.dll|Avalonia.Win32.dll|Avalonia.X11.dll|JetBrains.Annotations.dll|libSkiaSharp.dll|Microsoft.DotNet.PlatformAbstractions.dll|Microsoft.Win32.SystemEvents.dll|PSAvalonia.deps.json|PSAvalonia.dll|PSAvalonia.pdb|PSAvalonia.psd1|Serilog.dll|Serilog.Sinks.Debug.dll|Serilog.Sinks.Trace.dll|SharpDX.Direct2D1.dll|SharpDX.Direct3D11.dll|SharpDX.dll|SharpDX.DXGI.dll|SharpGen.Runtime.COM.dll|SharpGen.Runtime.dll|SkiaSharp.dll|System.Drawing.Common.dll|System.Management.Automation.dll|System.Reactive.dll|System.Runtime.CompilerServices.Unsafe.dll|runtimes\linux-x64\native\libSkiaSharp.so|runtimes\osx\native\libAvaloniaNative.dylib|runtimes\osx\native\libSkiaSharp.dylib|runtimes\tizen-armel\native\libSkiaSharp.so|runtimes\tizen-x86\native\libSkiaSharp.so|runtimes\win-x64\native\libSkiaSharp.dll|runtimes\win-x86\native\libSkiaSharp.dll|runtimes\unix\lib\netcoreapp2.0\System.Drawing.Common.dll|runtimes\win\lib\netcoreapp2.0\Microsoft.Win32.SystemEvents.dll|runtimes\win\lib\netcoreapp2.0\System.Drawing.Common.dll</S>
+          <S N="GUID">0041c9b1-a9d5-4c11-926f-ea47bce8967a</S>
+          <S N="PowerShellVersion">6.0</S>
+          <S N="CompanyName">Ironman Software, LLC</S>
+        </MS>
+      </Obj>
+      <S N="InstalledLocation">C:\Users\Mayna\Documents\PowerShell\Modules\PSAvalonia\1.0</S>
+    </MS>
+  </Obj>
+</Objs>
