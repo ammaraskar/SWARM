@@ -82,7 +82,7 @@
             <TextBlock Foreground="White" FontWeight="Bold" Text="Rigname" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="80,40"/>
           </Grid>
 
-          <DataGrid Name="Tab1_Row6" RowBackground="White" AlternatingRowBackground="LightGray" GridLinesVisibility="All" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black" HorizontalAlignment="Left" Grid.Row="5" MinWidth="722" MaxWidth="722" AutoGenerateColumns="True" IsReadOnly="True" />          
+          <DataGrid Name="Tab1_Row6" RowBackground="White" AlternatingRowBackground="LightGray" GridLinesVisibility="All" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black" HorizontalAlignment="Left" Grid.Row="5" MinWidth="722" AutoGenerateColumns="True" MaxWidth="722" IsReadOnly="True" />
         </Grid>
       </TabItem>
       

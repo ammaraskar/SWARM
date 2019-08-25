@@ -1,3 +1,4 @@
+$Debug = $true
 $global:Config = [hashtable]::Synchronized(@{})
 $global:Config.ADD("Dir",(Split-Path (Split-Path $script:MyInvocation.MyCommand.Path)))
 Set-Location $global:config.Dir
@@ -460,17 +461,21 @@ $ASIC.add_Click($ASIC_Click)
 Register-ObjectEvent -InputObject $UpDown -EventName "ValueChanged" -Action {$Config.param.CPUThreads = $Updown.Value} | Out-Null
 
 ################### Begin GUI ###################
+
 Show-AvaloniaWindow -Window $Config.window
 ## # out this line to debug
 }
 
+
 ## out these lines to debug
+if(-not $Debug) {
 $run = [runspacefactory]::CreateRunspace()
 $run.Open()
 $run.SessionStateProxy.SetVariable('Config', $global:Config)
 $psCmd = [PowerShell]::Create().AddScript($script)
 $psCmd.runspace = $run
 $Global:Config.Add("handle",($pscmd.beginInvoke()))
+} else {& $Script}
 
 While($Global:Config.handle.IsCompleted -eq $false){
     Start-Sleep -S 1
