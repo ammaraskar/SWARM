@@ -39,7 +39,7 @@ Function Global:Invoke-UpdateData {
             $BTCDay = $($($_.Profit) | ForEach-Object { if ($null -ne $_) { $_.ToString("N5") }else { "Bench" } })
             $CoinDay = $($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ / $Rates.Exchange).ToString("N5") }else { "Bench" } } )
             $CurDay = $($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ * $Rates.Rate).ToString("N2") }else { "Bench" } })
-            $Data_Objects += [Data_Object]::New($Sel.Type, $Sel.Miner, $Sel.Symbol, $HashRate, $WattDay, $BTCDay, $CoinDay, $CurDay, $Sel.MInerPool)
+            $Data_Objects += [Data_Object]::New($Sel.Type, $Sel.Name, $Sel.Symbol, $HashRate, $WattDay, $BTCDay, $CoinDay, $CurDay, $Sel.MInerPool)
         }
     } else {
         $Data_Objects += [Data_Object]::New("Waiting For Data...", "None", "None", "None", "None", "None", "None", "None","None")
