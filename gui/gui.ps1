@@ -6,6 +6,7 @@ $Script = {
 Set-Location $global:config.Dir
 Import-Module ".\gui\PSAvalonia\1.0\PSAvalonia.psd1"
 Import-Module ".\build\powershell\global\hashrates.psm1"
+if(test-path (".\build\txt\json_stats.txt")){Remove-Item ".\build\txt\json_stats.txt"}
 
 ## LOAD DATA
 function Global:Get-Avalonia($Name) { Find-AvaloniaControl -Window $Config.window -Name $Name }

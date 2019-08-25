@@ -75,7 +75,7 @@
             <TextBlock Foreground="White" FontWeight="Bold" Text="Rigname" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="80,40"/>
           </Grid>
 
-          <DataGrid Name="Tab1_Row6" Grid.Row="5" AutoGenerateColumns="True" IsReadOnly="True" />
+          <DataGrid Name="Tab1_Row6" HorizontalAlignment="Left" Grid.Row="5" MinWidth="731" MaxWidth="731" AutoGenerateColumns="True" IsReadOnly="True" />
           
         </Grid>
       </TabItem>

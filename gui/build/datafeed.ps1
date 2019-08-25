@@ -28,12 +28,14 @@ Function Global:Invoke-UpdateData {
 
     $Data_Objects = @()
     
-    if ($C_Data) {
+    if ($D_Data) {
         $C_Data | ForEach-Object {
             $Sel = $_
             $HashRate = $D_Data.TypeHashes.$($Sel.Type) | ConvertTo-Hash
             $Data_Objects += [Data_Object]::New($Sel.Type, $Sel.Name, $Sel.Algo, $HashRate, $Sel.Profit, $Sel.Fiat_Day, $Sel.Profit_Day, $Sel.MinerPool)
         }
+    } else {
+        $Data_Objects += [Data_Object]::New("Waiting For Data...", "None", "None", "None", "None", "None", "None", "None")
     }
     $Data_Grid.Items = $Data_Objects
     [int32]$RefreshInterval = 30
