@@ -38,16 +38,23 @@ Function Global:Invoke-UpdateData {
         $Data_Objects += [Data_Object]::New("Waiting For Data...", "None", "None", "None", "None", "None", "None", "None")
     }
     $Data_Grid.Items = $Data_Objects
-    [int32]$RefreshInterval = 30
+    [int32]$RefreshInterval = 10
     $Timer.Interval = New-Timespan -Seconds ($RefreshInterval -as [int32])
     $Timer.IsEnabled = $True
     $Timer.start()
+    Remove-Variable -name C_Data -ErrorAction Ignore
+    Remove-Variable -name D_Data -ErrorAction Ignore
     Write-Host "Timer Started"
+    Get-Job -State Completed | Remove-Job
+    [GC]::Collect()
+    [GC]::WaitForPendingFinalizers()
+    [GC]::Collect()
+    Clear-History
 }
     
 $Data_Grid = Win "Tab1_Row6"
 $Timer = [Avalonia.Threading.DispatcherTimer]::New()
-[int32]$RefreshInterval = 30
+[int32]$RefreshInterval = 10
 $Timer.Interval = New-Timespan -Seconds ($RefreshInterval -as [int32])
 $Timer.IsEnabled = $false
 $Timer.add_Tick({Global:Invoke-UpdateData})
