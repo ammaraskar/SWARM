@@ -2,14 +2,6 @@ $global:Config = [hashtable]::Synchronized(@{})
 $global:Config.ADD("Dir",(Split-Path (Split-Path $script:MyInvocation.MyCommand.Path)))
 Set-Location $global:config.Dir
 
-$Pkg = Get-Package "Avalonia"
-
-if("Avalonia" -notin $Pkg.Name -or $Pkg.Version -ne "0.8.2") {
-    Write-Host "Installing Avalonia Gui Dependencies"
-    . .\gui\psavalonia\Install-Dependencies.ps1
-}
-
-## # out this line to debug
 #$Script = {
 
 Import-Module ".\gui\PSAvalonia\1.0\PSAvalonia.psd1"
