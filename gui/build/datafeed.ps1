@@ -1,17 +1,17 @@
 class Data_Object {
     [string]$Type
     [string]$Miner
-    [string]$Algorithm
+    [string]$Item
     [string]$HashRate
     [string]$Watt_Day
     [String]$BTC_Day
     [String]$Profit_Day
     [string]$Pool
     
-    Data_Object([string]$Type, [String]$miner, [string]$Algorithm, [String]$HashRate, [String]$Watt_Day, [String]$BTC_Day, [String]$Profit_Day, [String]$Pool) {
+    Data_Object([string]$Type, [String]$miner, [string]$Item, [String]$HashRate, [String]$Watt_Day, [String]$BTC_Day, [String]$Profit_Day, [String]$Pool) {
         [string]$this.Type = $Type
         [string]$this.Miner = $Miner
-        [string]$this.Algorithm = $Algorithm
+        [string]$this.Item = $Item
         [string]$this.HashRate = $HashRate
         [string]$this.Watt_Day = $Watt_Day
         [string]$this.BTC_Day = $BTC_Day
