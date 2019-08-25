@@ -7,6 +7,13 @@
         Height="600"
         x:Class="SWARM_GUI.MainWindow"
         Title="SWARM_GUI">
+
+  <Window.Styles>
+    <Style Selector="DataGridColumnHeader">
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    </Style>
+  </Window.Styles>
+
   <StackPanel Background="DarkGreen">
     <Menu DockPanel.Dock="Top" Background="White">
       <MenuItem Header="File">
@@ -75,7 +82,7 @@
             <TextBlock Foreground="White" FontWeight="Bold" Text="Rigname" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="80,40"/>
           </Grid>
 
-          <DataGrid Name="Tab1_Row6" RowBackground="White" AlternatingRowBackground="LightGray" GridLinesVisibility="All" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black" HorizontalAlignment="Left" Grid.Row="5" MinWidth="722" MaxWidth="722" AutoSizingColumns="True" AutoGenerateColumns="True" IsReadOnly="True" />          
+          <DataGrid Name="Tab1_Row6" RowBackground="White" AlternatingRowBackground="LightGray" GridLinesVisibility="All" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black" HorizontalAlignment="Left" Grid.Row="5" MinWidth="722" MaxWidth="722" AutoGenerateColumns="True" IsReadOnly="True" />          
         </Grid>
       </TabItem>
       

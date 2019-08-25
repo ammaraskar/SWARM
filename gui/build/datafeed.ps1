@@ -46,7 +46,6 @@ Function Global:Invoke-UpdateData {
 }
     
 $Data_Grid = Win "Tab1_Row6"
-
 $Timer = [Avalonia.Threading.DispatcherTimer]::New()
 [int32]$RefreshInterval = 30
 $Timer.Interval = New-Timespan -Seconds ($RefreshInterval -as [int32])
