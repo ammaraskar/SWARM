@@ -9,22 +9,23 @@ $Save_and_Exit = Win "Save_Exit"
 
 
 ## Exit
-$Exit.add_Click( { $global:window.Close() })
+$Exit.add_Click( {
+    $global:Config.window.Close()
+})
 
 ## Start SWARM
 $Start.add_Click( { .\startup.ps1 })
 
 ## Save and Start Swarm
 $Save_and_Start.add_Click({
-    $Config.param | ConvertTo-Json -Depth 10 |Set-Content ".\config\parameters\newarguments.json"
+    $global:Config.param | ConvertTo-Json -Depth 10 |Set-Content ".\config\parameters\newarguments.json"
     .\startup.ps1
 })
 
 ## Save and Exit
 $Save_and_Exit.add_Click({
-    $Config.param | ConvertTo-Json -Depth 10 |Set-Content ".\config\parameters\newarguments.json"
-    $Config.window.Close()
-    Exit
+    $global:Config.param | ConvertTo-Json -Depth 10 |Set-Content ".\config\parameters\newarguments.json"
+    $global:Config.window.Close()
 })
 
 ## Stop SWARM

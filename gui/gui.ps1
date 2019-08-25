@@ -461,7 +461,6 @@ Register-ObjectEvent -InputObject $UpDown -EventName "ValueChanged" -Action {$Co
 
 ################### Begin GUI ###################
 Show-AvaloniaWindow -Window $Config.window
-
 ## # out this line to debug
 }
 
@@ -471,9 +470,8 @@ $run.Open()
 $run.SessionStateProxy.SetVariable('Config', $global:Config)
 $psCmd = [PowerShell]::Create().AddScript($script)
 $psCmd.runspace = $run
-$pscmd.beginInvoke() | Out-Null
+$Global:Config.Add("handle",($pscmd.beginInvoke()))
 
-## Will fill with code laster
-while($true) {
+While($Global:Config.handle.IsCompleted -eq $false){
     Start-Sleep -S 1
 }
