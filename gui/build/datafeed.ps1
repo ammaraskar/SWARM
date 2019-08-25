@@ -3,7 +3,7 @@ class Data_Object {
     [string]$Miner
     [string]$Algorithm
     [string]$HashRate
-    [string]$WattDay
+    [string]$Watt_Day
     [String]$BTC_Day
     [String]$Profit_Day
     [string]$Pool

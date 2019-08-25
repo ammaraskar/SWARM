@@ -24,7 +24,7 @@
         <Grid Name="Tab1_Main" RowDefinitions="40,5,30,95,110,500">
           
           <Grid Name="Tab1_Row1" Grid.Row="0" RowDefinitions="40" ColumnDefinitions="5,125,5,55,5,365,25,120,Auto">
-            <Rectangle Fill="Black" Grid.Column="0" HorizontalAlignment="Left" MinWidth="731" Grid.ColumnSpan="9" MaxWidth="735" MinHeight="40" MaxHeight="40" ZIndex="0"/>
+            <Rectangle Fill="Black" Grid.Column="0" HorizontalAlignment="Left" MinWidth="722" Grid.ColumnSpan="9" MaxWidth="722" MinHeight="40" MaxHeight="40" ZIndex="0"/>
             <DropDown Grid.Column="1" SelectedIndex="0" ZIndex="1" Background="White" MaxHeight="30" BorderBrush="Black" HorizontalAlignment="Left" Name="Wallet_List" MaxWidth="125" MinWidth="125">
               <DropDownItem Name="Wallet1" Content="Wallet1" />
               <DropDownItem Name="Wallet2" Content="Wallet2" ></DropDownItem>
@@ -75,8 +75,7 @@
             <TextBlock Foreground="White" FontWeight="Bold" Text="Rigname" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="80,40"/>
           </Grid>
 
-          <DataGrid Name="Tab1_Row6" HorizontalAlignment="Left" Grid.Row="5" MinWidth="731" MaxWidth="731" AutoGenerateColumns="True" IsReadOnly="True" />
-          
+          <DataGrid Name="Tab1_Row6" RowBackground="White" AlternatingRowBackground="LightGray" GridLinesVisibility="All" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black" HorizontalAlignment="Left" Grid.Row="5" MinWidth="722" MaxWidth="722" AutoSizingColumns="True" AutoGenerateColumns="True" IsReadOnly="True" />          
         </Grid>
       </TabItem>
       
