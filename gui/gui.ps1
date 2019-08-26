@@ -19,6 +19,13 @@ $Xaml = $Xaml | Out-String
 $global:Config.Add("window",(convertTo-AvaloniaWindow -Xaml $Xaml))
 if($IsWindows){$Config.Window.Icon = ".\build\apps\icons\SWARM.ico"}
 
+## Load View Models
+. .\gui\build\viewmodelbase.ps1
+
+$ViewModel = [MainWindowViewModel]::New()
+
+$config.Window.DataContext = $ViewModel
+
 ## PARAMETERS 
 if (test-path ".\config\parameters\newarguments.json") { $Config.Add("Param",(Get-Content ".\config\parameters\newarguments.json" | ConvertFrom-Json)) } 
 else { $Config.Add("Param",(Get-Content ".\config\parameters\default.json" | ConvertFrom-Json)) }

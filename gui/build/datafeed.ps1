@@ -51,6 +51,7 @@ Function Global:Invoke-UpdateData {
     $Timer.start()
     Remove-Variable -name C_Data -ErrorAction Ignore
     Remove-Variable -name D_Data -ErrorAction Ignore
+    Remove-Variable -name Rates -ErrorAction Ignore
     Get-Job -State Completed | Remove-Job
     [GC]::Collect()
     [GC]::WaitForPendingFinalizers()
