@@ -85,7 +85,7 @@
             <DataGrid.Columns>
               <DataGridTextColumn Header="Type"
                                   Binding="{Binding Type}"
-                                  Width="55" />
+                                  Width="60" />
               <DataGridTextColumn Header="Miner"
                                   Binding="{Binding Miner}"
                                   Width="110" />
@@ -97,7 +97,7 @@
                                   Width="75" />
               <DataGridTextColumn Header="Watt/Day"
                                   Binding="{Binding Watt_Day}"
-                                  Width="60" />
+                                  Width="65" />
               <DataGridTextColumn Header="BTC/Day"
                                   Binding="{Binding BTC_Day}"
                                   Width="60" />

@@ -1,4 +1,4 @@
-$Debug = $true
+$Debug = $false
 $global:Config = [hashtable]::Synchronized(@{})
 $global:Config.ADD("Dir",(Split-Path (Split-Path $script:MyInvocation.MyCommand.Path)))
 Set-Location $global:config.Dir
