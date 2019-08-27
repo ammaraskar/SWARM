@@ -3,7 +3,7 @@ Function Global:Invoke-UpdateData {
     $Timer.IsEnabled = $False
     if (test-path ".\build\txt\bestminers.txt") { $C_Data = Get-Content ".\build\txt\bestminers.txt" | ConvertFrom-Json }
     if (test-path ".\build\txt\json_stats.txt") { $D_Data = Get-Content ".\build\txt\json_stats.txt" | ConvertFrom-Json }
-    if (test-path ".\build\txt\json_stats.txt") { $Rates = Get-Content ".\build\txt\Rates.txt" | ConvertFrom-Json }
+    if (test-path ".\build\txt\json_stats.txt") { $Rates = Get-Content ".\build\txt\rates.txt" | ConvertFrom-Json }
     $Data_Objects = @()
     
     if ($D_Data) {
