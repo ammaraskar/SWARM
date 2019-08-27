@@ -5,7 +5,6 @@
         mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
         Width="900"
         Height="600"
-        x:Class="SWARM_GUI.MainWindow"
         Title="SWARM_GUI">
   
   <Window.Styles>
@@ -82,7 +81,38 @@
             <TextBlock Foreground="White" FontWeight="Bold" Text="Rigname" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="80,40"/>
           </Grid>
 
-          <DataGrid Name="Tab1_Row6" RowBackground="White" AlternatingRowBackground="LightGray" GridLinesVisibility="All" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black" HorizontalAlignment="Left" Grid.Row="5" MinWidth="722" AutoGenerateColumns="True" MaxWidth="722" IsReadOnly="True" />
+          <DataGrid AutoGenerateColumns="False" RowBackground="White" AlternatingRowBackground="LightGray" GridLinesVisibility="All" Name="Tab1_Row6" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black" HorizontalAlignment="Left" Grid.Row="5" MinWidth="722" MaxWidth="722" IsReadOnly="True" Items="{Binding Stats}">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="Type"
+                                  Binding="{Binding Type}"
+                                  Width="55" />
+              <DataGridTextColumn Header="Miner"
+                                  Binding="{Binding Miner}"
+                                  Width="110" />
+              <DataGridTextColumn Header="Symbol"
+                                  Binding="{Binding Item}"
+                                  Width="110" />
+              <DataGridTextColumn Header="Hashrate"
+                                  Binding="{Binding HashRate}"
+                                  Width="75" />
+              <DataGridTextColumn Header="Watt/Day"
+                                  Binding="{Binding Watt_Day}"
+                                  Width="60" />
+              <DataGridTextColumn Header="BTC/Day"
+                                  Binding="{Binding BTC_Day}"
+                                  Width="60" />
+              <DataGridTextColumn Header="Coin/Day"
+                                  Binding="{Binding Coin_Day}"
+                                  Width="100" />
+              <DataGridTextColumn Header="Fiat/Day"
+                                  Binding="{Binding Fiat_Day}"
+                                  Width="75" />
+              <DataGridTextColumn Header="Pool"
+                                  Binding="{Binding Pool}"
+                                  Width="*" />
+            </DataGrid.Columns>
+
+          </DataGrid>
         </Grid>
       </TabItem>
       

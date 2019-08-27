@@ -1,50 +1,30 @@
-class Data_Object {
-    [string]$Type
-    [string]$Miner
-    [string]$Item
-    [string]$HashRate
-    [string]$Watt_Day
-    [String]$BTC_Day
-    [string]$Coin_Day
-    [String]$Fiat_Day
-    [string]$Pool
-    
-    Data_Object([string]$Type, [String]$miner, [string]$Item, [String]$HashRate, [String]$Watt_Day, [String]$BTC_Day, [string]$Coin_Day, [String]$Fiat_Day, [String]$Pool) {
-        [string]$this.Type = $Type
-        [string]$this.Miner = $Miner
-        [string]$this.Item = $Item
-        [string]$this.HashRate = $HashRate
-        [string]$this.Watt_Day = $Watt_Day
-        [string]$this.BTC_Day = $BTC_Day
-        [string]$this.Coin_Day = $Coin_Day
-        [string]$this.Fiat_Day = $Fiat_Day
-        [string]$this.Pool = $Pool
-    }
-}
-
 Function Global:Invoke-UpdateData {
     $Timer.Stop()
     $Timer.IsEnabled = $False
     if (test-path ".\build\txt\bestminers.txt") { $C_Data = Get-Content ".\build\txt\bestminers.txt" | ConvertFrom-Json }
     if (test-path ".\build\txt\json_stats.txt") { $D_Data = Get-Content ".\build\txt\json_stats.txt" | ConvertFrom-Json }
     if (test-path ".\build\txt\json_stats.txt") { $Rates = Get-Content ".\build\txt\Rates.txt" | ConvertFrom-Json }
-
     $Data_Objects = @()
     
     if ($D_Data) {
-        $C_Data | ForEach-Object {
+        $C_Data | Sort-Object -Property Type | ForEach-Object {
             $Sel = $_
             $HashRate = $D_Data.TypeHashes.$($Sel.Type) | ConvertTo-Hash
-            $WattDay = $($($_.Power_Day) | ForEach-Object { if ($null -ne $_) { ($_ * $Rates.Rate).ToString("N2") }else { "Bench" } })
+            $WattDay = $($($_.Power) | ForEach-Object { if ($null -ne $_) { ($_ * $Rates.Rate).ToString("N2") }else { "Bench" } })
             $BTCDay = $($($_.Profit) | ForEach-Object { if ($null -ne $_) { $_.ToString("N5") }else { "Bench" } })
             $CoinDay = $($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ / $Rates.Exchange).ToString("N5") }else { "Bench" } } )
             $CurDay = $($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ * $Rates.Rate).ToString("N2") }else { "Bench" } })
-            $Data_Objects += [Data_Object]::New($Sel.Type, $Sel.Name, $Sel.Symbol, $HashRate, $WattDay, $BTCDay, $CoinDay, $CurDay, $Sel.MInerPool)
+            $Data_Objects += [stat]::New($Sel.Type, $Sel.Name, $Sel.Symbol, $HashRate, $WattDay, $BTCDay, $CoinDay, $CurDay, $Sel.MInerPool)
+            $Config.window.DataContext.Change_Stat($Data_Objects)
+            $Config.Window.DataContext.Change_Greeting("This is a Test")
         }
+        $Data_Grid.Columns[6].Header = "$($Rates.Coin)/Day"
+        $Data_Grid.Columns[7].Header = "$($Rates.Currency)/Day"
     } else {
-        $Data_Objects += [Data_Object]::New("Waiting For Data...", "None", "None", "None", "None", "None", "None", "None","None")
+        $Data_Objects += [stat]::New("Waiting For Data...", "None", "None", "None", "None", "None", "None", "None","None")
+        $Config.window.DataContext.Change_Stat($Data_Objects)
+        $Config.Window.DataContext.Change_Greeting("This is a Test")
     }
-    $Data_Grid.Items = $Data_Objects
     [int32]$RefreshInterval = 10
     $Timer.Interval = New-Timespan -Seconds ($RefreshInterval -as [int32])
     $Timer.IsEnabled = $True

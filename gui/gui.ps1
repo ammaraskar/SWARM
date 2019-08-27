@@ -1,4 +1,4 @@
-$Debug = $false
+$Debug = $true
 $global:Config = [hashtable]::Synchronized(@{})
 $global:Config.ADD("Dir",(Split-Path (Split-Path $script:MyInvocation.MyCommand.Path)))
 Set-Location $global:config.Dir
@@ -22,9 +22,7 @@ if($IsWindows){$Config.Window.Icon = ".\build\apps\icons\SWARM.ico"}
 ## Load View Models
 . .\gui\build\viewmodelbase.ps1
 
-$ViewModel = [MainWindowViewModel]::New()
-
-$config.Window.DataContext = $ViewModel
+$config.Window.DataContext = $MainWindowViewModel
 
 ## PARAMETERS 
 if (test-path ".\config\parameters\newarguments.json") { $Config.Add("Param",(Get-Content ".\config\parameters\newarguments.json" | ConvertFrom-Json)) } 
