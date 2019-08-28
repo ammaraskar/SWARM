@@ -25,8 +25,8 @@
         <MenuItem Header="_Exit" Name="Exit"/>
       </MenuItem>
     </Menu>    
-    <TabControl TabStripPlacement="Left" FontWeight="Bold" DockPanel.Dock="Top">
-      <TabItem Classes="h1" BorderBrush="Black" Width="190" BorderThickness="2" Header="BASIC SETTINGS" Background="White" Foreground="Black">
+    <TabControl TabStripPlacement="Left" DockPanel.Dock="Top">
+      <TabItem FontWeight="Bold" BorderBrush="Black" Width="190" BorderThickness="2" Header="BASIC SETTINGS" Background="White" Foreground="Black">
         <Grid Name="Tab1_Main" RowDefinitions="40,5,30,200,40,225,40">
           
           <Grid Name="Tab1_Row1" Grid.Row="0" RowDefinitions="40" ColumnDefinitions="5,130,5,55,5,365,25,120,Auto">
