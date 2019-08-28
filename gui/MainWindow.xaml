@@ -76,18 +76,18 @@
               <DropDownItem Name="Rigname3" Content="Rigname3" ></DropDownItem>
             </DropDown>
             <TextBox Name="Rig" ZIndex="1" Margin="55,110" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="100" MaxWidth="100" MinHeight="25" MaxHeight="30" BorderBrush="Gray" BorderThickness="2" Watermark="Nickname" AcceptsReturn="False" TextWrapping="NoWrap"/>
-            <TextBlock ZIndex="1" Text="Enter Name For Group1" Foreground="Black" Name="Rig_Text" Margin="44,135" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBlock ZIndex="1" Text="Enter Name For Group1" Foreground="Black" Name="Rig_Text" Margin="44,137" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <Button ZIndex="1" Name="Save_Rig" Margin="45,155" FontWeight="Bold" BorderBrush="Gray" BorderThickness="2" HorizontalAlignment="Left" VerticalAlignment="Top" MaxHeight="30" MinHeight="30" MinWidth="120" MaxWidth="120" Content="Save Rig Name"/>
             <TextBlock Foreground="White" FontWeight="Bold" Text="Rigname" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="80,40"/>
           </Grid>
 
-          <Grid Grid.Row="4" ColumnDefinitions="20,Auto,0,Auto,20,Auto,75,Auto,0,Auto,15,Auto" RowDefinitions="Auto">
-            <TextBlock ZIndex="1" Grid.Row="0" Grid.Column="1" Margin="20,12" HorizontalAlignment="Left" Text="Coin Exchange" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" />
-            <Rectangle Grid.Row="0" Grid.Column="1" Fill="Black" HorizontalAlignment="Left" VerticalAlignment="Center" MaxHeight="30" MinHeight="30" ZIndex="0" MaxWidth="120" MinWidth="120" Grid.ColumnSpan="2" />
+          <Grid Grid.Row="4" ColumnDefinitions="20,120,0,Auto,20,Auto,75,120,0,Auto,15,Auto" RowDefinitions="40">
+            <TextBlock ZIndex="1" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Text="Coin Exchange" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" />
+            <Rectangle Grid.Row="0" Grid.Column="1" Fill="Black" HorizontalAlignment="Left" VerticalAlignment="Center" MaxHeight="30" MinHeight="30" ZIndex="0" MaxWidth="120" MinWidth="120" />
             <TextBox Name="Coin_Day_Symbol" Grid.Row="0" Grid.Column="3" Margin="-5,0" MaxHeight="30" MinHeight="30" BorderBrush="Gray" BorderThickness="2" MaxWidth="55" MinWidth="55" Watermark="Symbol"/>
             <Button Name="Save_Coin_Day" Grid.Row="0" Grid.Column="5" MinWidth="100" MinHeight="30" MaxWidth="100" MaxHeight="30" Content="Save Coin/Day" FontWeight="Bold" Background="DarkGray" BorderBrush="Gray" BorderThickness="2"/>
             
-            <TextBlock ZIndex="1" Grid.Row="0" Grid.Column="7" Margin="20,12" HorizontalAlignment="Left" Text="Fiat Exchange" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" />
+            <TextBlock ZIndex="1" Grid.Row="0" Grid.Column="7" HorizontalAlignment="Center" Text="Fiat Exchange" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" />
             <Rectangle Grid.Row="0" Grid.Column="7" Fill="Black" HorizontalAlignment="Left" VerticalAlignment="Center" MaxHeight="30" MinHeight="30" ZIndex="0" MaxWidth="120" MinWidth="120" Grid.ColumnSpan="2" />
             <TextBox Name="Fiat_Day_Symbol" Grid.Row="0" Grid.Column="9" BorderBrush="Gray" BorderThickness="2" MaxHeight="30" MinHeight="30" MaxWidth="55" MinWidth="55" Watermark="Symbol"/>
             <Button Name="Save_Fiat_Day" Grid.Row="0" Grid.Column="11" MinWidth="100" MinHeight="30" MaxWidth="100" MaxHeight="30" Content="Save Fiat/Day" FontWeight="Bold" Background="DarkGray" BorderBrush="Gray" BorderThickness="2"/>
