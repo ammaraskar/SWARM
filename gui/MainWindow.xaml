@@ -81,16 +81,16 @@
             <TextBlock Foreground="White" FontWeight="Bold" Text="Rigname" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="80,40"/>
           </Grid>
 
-          <Grid Grid.Row="4" ColumnDefinitions="20,120,0,Auto,20,Auto,75,120,0,Auto,15,Auto" RowDefinitions="40">
+          <Grid Grid.Row="4" ColumnDefinitions="20,120,0,Auto,20,110,75,120,0,Auto,15,110" RowDefinitions="40">
             <TextBlock ZIndex="1" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Text="Coin Exchange" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" />
             <Rectangle Grid.Row="0" Grid.Column="1" Fill="Black" HorizontalAlignment="Left" VerticalAlignment="Center" MaxHeight="30" MinHeight="30" ZIndex="0" MaxWidth="120" MinWidth="120" />
             <TextBox Name="Coin_Day_Symbol" Grid.Row="0" Grid.Column="3" Margin="-5,0" MaxHeight="30" MinHeight="30" BorderBrush="Gray" BorderThickness="2" MaxWidth="55" MinWidth="55" Watermark="Symbol"/>
-            <Button Name="Save_Coin_Day" Grid.Row="0" Grid.Column="5" MinWidth="100" MinHeight="30" MaxWidth="110" MaxHeight="30" Content="Save Coin/Day" FontWeight="Bold" Background="DarkGray" BorderBrush="Gray" BorderThickness="2"/>
+            <Button Name="Save_Coin_Day" Grid.Row="0" Grid.Column="5" MinWidth="110" MinHeight="30" MaxWidth="110" MaxHeight="30" Content="Save Coin/Day" FontWeight="Bold" Background="DarkGray" BorderBrush="Gray" BorderThickness="2"/>
             
             <TextBlock ZIndex="1" Grid.Row="0" Grid.Column="7" HorizontalAlignment="Center" Text="Fiat Exchange" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" />
             <Rectangle Grid.Row="0" Grid.Column="7" Fill="Black" HorizontalAlignment="Left" VerticalAlignment="Center" MaxHeight="30" MinHeight="30" ZIndex="0" MaxWidth="120" MinWidth="120" Grid.ColumnSpan="2" />
             <TextBox Name="Fiat_Day_Symbol" Grid.Row="0" Grid.Column="9" BorderBrush="Gray" BorderThickness="2" MaxHeight="30" MinHeight="30" MaxWidth="55" MinWidth="55" Watermark="Symbol"/>
-            <Button Name="Save_Fiat_Day" Grid.Row="0" Grid.Column="11" MinWidth="100" MinHeight="30" MaxWidth="110" MaxHeight="30" Content="Save Fiat/Day" FontWeight="Bold" Background="DarkGray" BorderBrush="Gray" BorderThickness="2"/>
+            <Button Name="Save_Fiat_Day" Grid.Row="0" Grid.Column="11" MinWidth="110" MinHeight="30" MaxWidth="110" MaxHeight="30" Content="Save Fiat/Day" FontWeight="Bold" Background="DarkGray" BorderBrush="Gray" BorderThickness="2"/>
           </Grid>
           
           <DataGrid AutoGenerateColumns="False" RowBackground="White" Margin="0,0" AlternatingRowBackground="LightGray" GridLinesVisibility="All" Name="Tab1_Row6" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black" HorizontalAlignment="Left" Grid.Row="5" MinWidth="722" MaxWidth="722" IsReadOnly="True" Items="{Binding Stats}">
