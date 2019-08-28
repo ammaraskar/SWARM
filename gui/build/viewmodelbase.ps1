@@ -1,11 +1,6 @@
-using namespace System.ComponentModel
-
 Import-Module ".\gui\PSAvalonia\1.0\PSAvalonia.psd1"
 
-class ViewModelbase : ReactiveUI.ReactiveObject {
-
-}
-
+## Stat Class for Data Feed.
 class stat {
     [string]$Type
     [string]$Miner
@@ -30,6 +25,10 @@ class stat {
     }
 }
 
+## Build a class for Reactive
+class ViewModelbase : ReactiveUI.ReactiveObject {}
+
+## View Models For Main window
 class MainWindowViewModel : ViewModelbase {
     [String]                 $Greeting = "Hello World"
     [stat[]]                 $Stats

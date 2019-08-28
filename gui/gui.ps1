@@ -37,19 +37,22 @@ else { $Config.Add("Param",(Get-Content ".\config\parameters\default.json" | Con
 $Tab1 = Win "Tab1_Main"
 
 ## Wallets
-. .\gui\build\wallets.ps1
+. .\gui\build\tab1\wallets.ps1
 
 ## Location
-. .\gui\build\location.ps1
+. .\gui\build\tab1\location.ps1
 
 ## RigName
-. .\gui\build\rigname.ps1
+. .\gui\build\tab1\rigname.ps1
 
 ## Pools
-. .\gui\build\pools.ps1
+. .\gui\build\tab1\pools.ps1
+
+## Symobs
+. .\gui\build\tab1\symbols.ps1
 
 ## Data_Feed
-. .\gui\build\datafeed.ps1
+. .\gui\build\tab1\datafeed.ps1
 
 
 ## NVIDIA Checkboxes##Type Parameters

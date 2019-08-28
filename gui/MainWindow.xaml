@@ -25,13 +25,13 @@
         <MenuItem Header="_Exit" Name="Exit"/>
       </MenuItem>
     </Menu>    
-    <TabControl TabStripPlacement="Left" DockPanel.Dock="Top">
-      <TabItem Classes="h1" Header="BASIC SETTINGS" Background="White" Foreground="Black">
-        <Grid Name="Tab1_Main" RowDefinitions="40,5,30,95,110,500">
+    <TabControl TabStripPlacement="Left" FontWeight="Bold" DockPanel.Dock="Top">
+      <TabItem Classes="h1" BorderBrush="Black" Width="190" BorderThickness="2" Header="BASIC SETTINGS" Background="White" Foreground="Black">
+        <Grid Name="Tab1_Main" RowDefinitions="40,5,30,200,40,225,40">
           
-          <Grid Name="Tab1_Row1" Grid.Row="0" RowDefinitions="40" ColumnDefinitions="5,125,5,55,5,365,25,120,Auto">
+          <Grid Name="Tab1_Row1" Grid.Row="0" RowDefinitions="40" ColumnDefinitions="5,130,5,55,5,365,25,120,Auto">
             <Rectangle Fill="Black" Grid.Column="0" HorizontalAlignment="Left" MinWidth="722" Grid.ColumnSpan="9" MaxWidth="722" MinHeight="40" MaxHeight="40" ZIndex="0"/>
-            <DropDown Grid.Column="1" SelectedIndex="0" ZIndex="1" Background="White" MaxHeight="30" BorderBrush="Black" HorizontalAlignment="Left" Name="Wallet_List" MaxWidth="125" MinWidth="125">
+            <DropDown Grid.Column="1" SelectedIndex="0" ZIndex="1" Background="White" MaxHeight="30" BorderBrush="Black" HorizontalAlignment="Left" Name="Wallet_List" MaxWidth="130" MinWidth="130">
               <DropDownItem Name="Wallet1" Content="Wallet1" />
               <DropDownItem Name="Wallet2" Content="Wallet2" ></DropDownItem>
               <DropDownItem Name="Wallet3" Content="Wallet3" ></DropDownItem>
@@ -43,8 +43,8 @@
               <DropDownItem Name="NiceHash_Wallet3" Content="NiceHash_Wallet3" ></DropDownItem>
               <DropDownItem Name="ETH" Content="ETH" ></DropDownItem>
             </DropDown>
-            <TextBox Name="Symbol" Grid.Column="3" ZIndex="1" MinWidth="55" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5" MaxWidth="55" MinHeight="30" MaxHeight="30" BorderBrush="Black" Watermark="Symbol" AcceptsReturn="False" TextWrapping="NoWrap"/>
-            <TextBox Name="Address" Grid.Column="5" ZIndex="1" Margin="0,5" HorizontalAlignment="Left" VerticalAlignment="Top" MaxHeight="30" MinWidth="365" MaxWidth="365" MinHeight="30" BorderBrush="Black" Watermark="Enter Address Here. Used With AMD1/NVIDIA1/CPU1/AUTO" AcceptsReturn="False" TextWrapping="NoWrap"/>
+            <TextBox Name="Symbol" Grid.Column="3" ZIndex="1" MinWidth="55" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5" MaxWidth="55" MinHeight="30" MaxHeight="30" BorderBrush="Gray" BorderThickness="2" Watermark="Symbol" AcceptsReturn="False" TextWrapping="NoWrap"/>
+            <TextBox Name="Address" Grid.Column="5" ZIndex="1" Margin="0,5" HorizontalAlignment="Left" VerticalAlignment="Top" MaxHeight="30" MinWidth="365" MaxWidth="365" MinHeight="30" BorderBrush="Gray" BorderThickness="2" Watermark="Enter Address Here. Used With AMD1/NVIDIA1/CPU1/AUTO" AcceptsReturn="False" TextWrapping="NoWrap"/>
             <Button Name="Save_Wallet" Grid.Column="7" ZIndex="1" Margin="0,6" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" MinWidth="100" MaxWidth="100" MaxHeight="30" Content="Save Wallet" BorderThickness="2" BorderBrush="Gray" />
            </Grid>
           
@@ -69,19 +69,31 @@
             <Button Name="Add_Pool_Button" ZIndex="1" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="404,30" Height="27" Width="113" BorderBrush="Gray" BorderThickness="2" Content="Add Pool =&gt;"/>
             <Button Name="Remove_Pool_Button" ZIndex="1" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="404,105" Height="27" Width="113" BorderBrush="Gray" BorderThickness="2" Content="&lt;= Remove"/>
             <Rectangle Fill="Black" ZIndex="0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,35" MaxWidth="210" MinWidth="210" MaxHeight="30" MinHeight="30" />
-            <Rectangle Fill="White" ZIndex="0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,65" MaxWidth="210" MinWidth="210" MaxHeight="130" MinHeight="130" Height="210" />
+            <Rectangle Fill="White" ZIndex="0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,65" MaxWidth="210" MinWidth="210" MaxHeight="135" MinHeight="130" Height="210" />
             <DropDown SelectedIndex="0" ZIndex="1" Margin="60,75" Background="White" MinHeight="30" MaxHeight="30" BorderBrush="Black" VerticalAlignment="Top" HorizontalAlignment="Left" Name="Rig_List" MaxWidth="90" MinWidth="90">
               <DropDownItem Name="Rigname1" Content="Rigname1" />
               <DropDownItem Name="Rigname2" Content="Rigname2" ></DropDownItem>
               <DropDownItem Name="Rigname3" Content="Rigname3" ></DropDownItem>
             </DropDown>
-            <TextBox Name="Rig" ZIndex="1" Margin="55,110" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="100" MaxWidth="100" MinHeight="25" MaxHeight="30" BorderBrush="Black" Watermark="Nickname" AcceptsReturn="False" TextWrapping="NoWrap"/>
+            <TextBox Name="Rig" ZIndex="1" Margin="55,110" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="100" MaxWidth="100" MinHeight="25" MaxHeight="30" BorderBrush="Gray" BorderThickness="2" Watermark="Nickname" AcceptsReturn="False" TextWrapping="NoWrap"/>
             <TextBlock ZIndex="1" Text="Enter Name For Group1" Foreground="Black" Name="Rig_Text" Margin="44,135" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <Button ZIndex="1" Name="Save_Rig" Margin="45,155" FontWeight="Bold" BorderBrush="Gray" BorderThickness="2" HorizontalAlignment="Left" VerticalAlignment="Top" MaxHeight="30" MinHeight="30" MinWidth="120" MaxWidth="120" Content="Save Rig Name"/>
             <TextBlock Foreground="White" FontWeight="Bold" Text="Rigname" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="80,40"/>
           </Grid>
 
-          <DataGrid AutoGenerateColumns="False" RowBackground="White" AlternatingRowBackground="LightGray" GridLinesVisibility="All" Name="Tab1_Row6" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black" HorizontalAlignment="Left" Grid.Row="5" MinWidth="722" MaxWidth="722" IsReadOnly="True" Items="{Binding Stats}">
+          <Grid Grid.Row="4" ColumnDefinitions="20,Auto,0,Auto,20,Auto,75,Auto,0,Auto,15,Auto" RowDefinitions="Auto">
+            <TextBlock ZIndex="1" Grid.Row="0" Grid.Column="1" Margin="20,12" HorizontalAlignment="Left" Text="Coin Exchange" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" />
+            <Rectangle Grid.Row="0" Grid.Column="1" Fill="Black" HorizontalAlignment="Left" VerticalAlignment="Center" MaxHeight="30" MinHeight="30" ZIndex="0" MaxWidth="120" MinWidth="120" Grid.ColumnSpan="2" />
+            <TextBox Name="Coin_Day_Symbol" Grid.Row="0" Grid.Column="3" Margin="-5,0" MaxHeight="30" MinHeight="30" BorderBrush="Gray" BorderThickness="2" MaxWidth="55" MinWidth="55" Watermark="Symbol"/>
+            <Button Name="Save_Coin_Day" Grid.Row="0" Grid.Column="5" MinWidth="100" MinHeight="30" MaxWidth="100" MaxHeight="30" Content="Save Coin/Day" FontWeight="Bold" Background="DarkGray" BorderBrush="Gray" BorderThickness="2"/>
+            
+            <TextBlock ZIndex="1" Grid.Row="0" Grid.Column="7" Margin="20,12" HorizontalAlignment="Left" Text="Fiat Exchange" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" />
+            <Rectangle Grid.Row="0" Grid.Column="7" Fill="Black" HorizontalAlignment="Left" VerticalAlignment="Center" MaxHeight="30" MinHeight="30" ZIndex="0" MaxWidth="120" MinWidth="120" Grid.ColumnSpan="2" />
+            <TextBox Name="Fiat_Day_Symbol" Grid.Row="0" Grid.Column="9" BorderBrush="Gray" BorderThickness="2" MaxHeight="30" MinHeight="30" MaxWidth="55" MinWidth="55" Watermark="Symbol"/>
+            <Button Name="Save_Fiat_Day" Grid.Row="0" Grid.Column="11" MinWidth="100" MinHeight="30" MaxWidth="100" MaxHeight="30" Content="Save Fiat/Day" FontWeight="Bold" Background="DarkGray" BorderBrush="Gray" BorderThickness="2"/>
+          </Grid>
+          
+          <DataGrid AutoGenerateColumns="False" RowBackground="White" Margin="0,0" AlternatingRowBackground="LightGray" GridLinesVisibility="All" Name="Tab1_Row6" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black" HorizontalAlignment="Left" Grid.Row="5" MinWidth="722" MaxWidth="722" IsReadOnly="True" Items="{Binding Stats}">
             <DataGrid.Columns>
               <DataGridTextColumn Header="Type"
                                   Binding="{Binding Type}"
@@ -91,7 +103,7 @@
                                   Width="110" />
               <DataGridTextColumn Header="Symbol"
                                   Binding="{Binding Item}"
-                                  Width="110" />
+                                  Width="85" />
               <DataGridTextColumn Header="Hashrate"
                                   Binding="{Binding HashRate}"
                                   Width="75" />
@@ -103,7 +115,7 @@
                                   Width="60" />
               <DataGridTextColumn Header="Coin/Day"
                                   Binding="{Binding Coin_Day}"
-                                  Width="100" />
+                                  Width="80" />
               <DataGridTextColumn Header="Fiat/Day"
                                   Binding="{Binding Fiat_Day}"
                                   Width="75" />
@@ -111,8 +123,11 @@
                                   Binding="{Binding Pool}"
                                   Width="*" />
             </DataGrid.Columns>
-
           </DataGrid>
+
+          <Button Name="Tab1_Stop_Button" FontWeight="Bold" Background="DarkGray" BorderBrush="Gray" BorderThickness="2" Margin="0,0" Content="Stop SWARM" Grid.Row="6" Height="30" MinWidth="120" VerticalAlignment="Center" HorizontalAlignment="Left" />
+          <Button Name="Tab1_Start_Button" FontWeight="Bold" Background="DarkGray" BorderBrush="Gray" BorderThickness="2" Margin="550,0" Content="Start SWARM" Grid.Row="6" Height="30" MinWidth="120" VerticalAlignment="Center" HorizontalAlignment="Left" />
+
         </Grid>
       </TabItem>
       
