@@ -32,7 +32,7 @@ Function Global:Invoke-UpdateData {
         $Data_Grid.Columns[6].Header = "$($Rates.Coin)/Day"
         $Data_Grid.Columns[7].Header = "$($Rates.Currency)/Day"
     } else {  ## Build Generic Table Letting User Know We Are Waiting For Stats.
-        $Data_Objects += [stat]::New("Waiting" "For", "Incoming", "Data", "None", "None", "None", "None","None")
+        $Data_Objects += [stat]::New("Waiting", "For", "Incoming", "Data", "None", "None", "None", "None","None")
         $Config.window.DataContext.Change_Stat($Data_Objects)
     }
 
