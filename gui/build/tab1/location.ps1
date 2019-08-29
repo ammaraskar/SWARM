@@ -6,7 +6,7 @@ $USA = Win "USA"
 $ASIA = Win "ASIA"
 $EUROPE = WIn "EUROPE"
 
-## Change Param Location
+## Change Param Locations With Each Radio Button.
 $Change = {
     if($Config.Param.Location -ne "USA"){
         $Config.Param.Location = "USA"

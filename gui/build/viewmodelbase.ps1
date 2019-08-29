@@ -37,11 +37,6 @@ class MainWindowViewModel : ViewModelbase {
         $This.Stats = $Data
         $this.RaisePropertyChanged("Stats")
     }
-
-    [void] Change_Greeting([String]$Value) {
-        $this.Greeting = $Value
-        $this.RaisePropertyChanged("Greeting")
-    }
 }
 
 $MainWindowViewModel = [MainWindowViewModel]::New()
