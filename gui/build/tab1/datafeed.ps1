@@ -7,7 +7,7 @@ Function Global:Invoke-UpdateData {
     ## Gather Various Stat Params
     if (test-path ".\build\txt\bestminers.txt") { $C_Data = Get-Content ".\build\txt\bestminers.txt" | ConvertFrom-Json }
     if (test-path ".\build\txt\json_stats.txt") { $D_Data = Get-Content ".\build\txt\json_stats.txt" | ConvertFrom-Json }
-    if (test-path ".\build\txt\json_stats.txt") { $Rates = Get-Content ".\build\txt\rates.txt" | ConvertFrom-Json }
+    if (test-path ".\build\txt\rates.txt") { $Rates = Get-Content ".\build\txt\rates.txt" | ConvertFrom-Json }
 
     $Data_Objects = @()
     
@@ -31,6 +31,7 @@ Function Global:Invoke-UpdateData {
         ## Change the Headers For The Data Grid
         $Data_Grid.Columns[6].Header = "$($Rates.Coin)/Day"
         $Data_Grid.Columns[7].Header = "$($Rates.Currency)/Day"
+
     } else {  ## Build Generic Table Letting User Know We Are Waiting For Stats.
         $Data_Objects += [stat]::New("Waiting", "For", "Incoming", "Data", "None", "None", "None", "None","None")
         $Config.window.DataContext.Change_Stat($Data_Objects)
