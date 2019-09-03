@@ -41,12 +41,12 @@ function Global:Start-Webcommand {
             $method = "message"
             $messagetype = "success"
             $Data = "Autofan config applied"
-            $Command.result.autofan | ConvertTo-Json -Depth 10 | Set-Content ".\build\txt\autofan.txt"
-            $DoResponse = Set-Response -Method $method -messagetype $messagetype -Data $data -Site $WebSite
+            $Command.result.autofan | ConvertTo-Json -Depth 10 | Set-Content ".\config\parameters\autofan.json"
+            $DoResponse = Global:Set-Response -Method $method -messagetype $messagetype -Data $data -Site $WebSite
             $DoResponse = $DoResponse | ConvertTo-JSon -Depth 1
             $SendResponse = Invoke-RestMethod "$($global:config.$Param.Mirror)/worker/api" -TimeoutSec 10 -Method POST -Body $DoResponse -ContentType 'application/json'
             $trigger = "exec"
-            $Enabled = $(cat ".\build\txt\autofan.txt" | ConvertFrom-Json | ConvertFrom-StringData).ENABLED
+            $Enabled = $(cat ".\config\parameters\autofan.json" | ConvertFrom-Json | ConvertFrom-StringData).ENABLED
             if ($Enabled -eq 1) {
                 $ID = ".\build\pid\autofan.txt"
                 if (Test-Path $ID) { $Agent = Get-Content $ID }
@@ -79,7 +79,7 @@ function Global:Start-Webcommand {
             $method = "message"
             $messagetype = "warning"
             $data = $swarm_message
-            $DoResponse = Set-Response -Method $method -messagetype $messagetype -Data $data -Site $WebSite
+            $DoResponse = Global:Set-Response -Method $method -messagetype $messagetype -Data $data -Site $WebSite
             $DoResponse = $DoResponse | ConvertTo-JSon -Depth 1
             $SendResponse = Invoke-RestMethod "$($global:config.$Param.Mirror)/worker/api" -TimeoutSec 10 -Method POST -Body $DoResponse -ContentType 'application/json'
             $trigger = "exec"
@@ -91,7 +91,7 @@ function Global:Start-Webcommand {
             $method = "message"
             $messagetype = "success"
             $data = "Rebooting"
-            $DoResponse = Set-Response -Method $method -messagetype $messagetype -Data $data -CommandID $command.result.id -Site $WebSite
+            $DoResponse = Global:Set-Response -Method $method -messagetype $messagetype -Data $data -CommandID $command.result.id -Site $WebSite
             $DoResponse = $DoResponse | ConvertTo-JSon -Depth 1
             $SendResponse = Invoke-RestMethod "$($global:config.$Param.Mirror)/worker/api" -TimeoutSec 10 -Method POST -Body $DoResponse -ContentType 'application/json'
             Write-Host $method $messagetype $data
@@ -114,7 +114,7 @@ function Global:Start-Webcommand {
             $line = @()
             $payload | foreach { $line += "$_`n" }
             $payload = $line
-            $DoResponse = Set-Response -Method $method -messagetype $messagetype -Data $data -CommandID $command.result.id -Payload $payload -Site $WebSite
+            $DoResponse = Global:Set-Response -Method $method -messagetype $messagetype -Data $data -CommandID $command.result.id -Payload $payload -Site $WebSite
             $DoResponse = $DoResponse | ConvertTo-JSon -Depth 1
             $SendResponse = Invoke-RestMethod "$($global:config.$Param.Mirror)/worker/api" -TimeoutSec 15 -Method POST -Body $DoResponse -ContentType 'application/json'
             Write-Host $method $messagetype $data
@@ -129,7 +129,7 @@ function Global:Start-Webcommand {
             $line = @()
             $getpayload | foreach { $line += "$_`n" }
             $payload = $line
-            $DoResponse = Set-Response -Method $method -messagetype $messagetype -Data $data -CommandID $command.result.id -Payload $payload -Site $WebSite
+            $DoResponse = Global:Set-Response -Method $method -messagetype $messagetype -Data $data -CommandID $command.result.id -Payload $payload -Site $WebSite
             $DoResponse = $DoResponse | ConvertTo-JSon -Depth 1
             $SendResponse = Invoke-RestMethod "$($global:config.$Param.Mirror)/worker/api" -TimeoutSec 15 -Method POST -Body $DoResponse -ContentType 'application/json'
             Write-Host $method $messagetype $data
@@ -145,7 +145,7 @@ function Global:Start-Webcommand {
             $line = @()
             $getpayload | foreach { $line += "$_`n" }
             $payload = $line
-            $DoResponse = Set-Response -Method $method -messagetype $messagetype -Data $data -CommandID $command.result.id -Payload $payload -Site $WebSite
+            $DoResponse = Global:Set-Response -Method $method -messagetype $messagetype -Data $data -CommandID $command.result.id -Payload $payload -Site $WebSite
             $DoResponse = $DoResponse | ConvertTo-JSon -Depth 1
             $SendResponse = Invoke-RestMethod "$($global:config.$Param.Mirror)/worker/api" -TimeoutSec 15 -Method POST -Body $DoResponse -ContentType 'application/json'
             Write-Host $method $messagetype $data
@@ -165,14 +165,14 @@ function Global:Start-Webcommand {
                 $NewHiveKeys.Add("Password", "$Pass")
                 $NewHiveKeys.Add("Id", "$hiveWorkerID")
                 $NewHiveKeys.Add("Mirror", "$mirror")
-                if (Test-Path ".\build\txt\$($Param)_keys.txt") { $OldHiveKeys = Get-Content ".\build\txt\$($Param)_keys.txt" | ConvertFrom-Json }
+                if (Test-Path ".\config\parameters\$($Param)_keys.json") { $OldHiveKeys = Get-Content ".\config\parameters\$($Param)_keys.json" | ConvertFrom-Json }
                 if ($OldHiveKeys) {
                     if ($NewHiveKeys.Password -ne $OldHiveKeys.Password) {
                         Write-Warning "Detected New Password"
                         $method = "message"
                         $messagetype = "warning"
                         $data = "Password change received, wait for next message..."
-                        $DoResponse = Set-Response -Method $method -messagetype $messagetype -Data $data -CommandID $command.result.id -Site $WebSite
+                        $DoResponse = Global:Set-Response -Method $method -messagetype $messagetype -Data $data -CommandID $command.result.id -Site $WebSite
                         $DoResponse = $DoResponse | ConvertTo-JSon -Depth 1
                         $SendResponse = Invoke-RestMethod "$($global:config.$Param.Mirror)/worker/api" -TimeoutSec 15 -Method POST -Body $DoResponse -ContentType 'application/json'
                         $SendResponse
@@ -181,7 +181,7 @@ function Global:Start-Webcommand {
                         $Send2Response = Invoke-RestMethod "$($global:config.$Param.Mirror)/worker/api" -TimeoutSec 15 -Method POST -Body $DoResponse -ContentType 'application/json'
                     }
                 }
-                $NewHiveKeys | ConvertTo-Json | Set-Content ".\build\txt\$($Param)_keys.txt"        
+                $NewHiveKeys | ConvertTo-Json | Set-Content ".\config\parameters\$($Param)_keys.json"        
             }
   
             if ($Command.result.wallet) {
@@ -240,7 +240,7 @@ function Global:Start-Webcommand {
                     }
                 }
   
-                $DoResponse = Set-Response -Method $method -messagetype $messagetype -Data $data -CommandID $command.result.id -Site $WebSite
+                $DoResponse = Global:Set-Response -Method $method -messagetype $messagetype -Data $data -CommandID $command.result.id -Site $WebSite
                 $DoResponse = $DoResponse | ConvertTo-JSon -Depth 1
                 $SendResponse = Invoke-RestMethod "$($global:config.$Param.Mirror)/worker/api" -TimeoutSec 15 -Method POST -Body $DoResponse -ContentType 'application/json'
                 $SendResponse

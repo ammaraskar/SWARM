@@ -941,7 +941,22 @@ to test new Expiremental features.
 * Autofan for HiveOS now works in Windows!
   * This is a expiremental beta implementation
     please notify if you have issues.
+* AMD Memtweak settings from HiveOS added
+  to OC in Windows.
 
 ## Updates
 * Gminer - added 125/4 for AMD.
+* Bminer
 
+## Fixes
+* Made it so you don't have to enters
+  Hive_Hash every time you run ``swarm_help``.
+* Fixed typo in nvidia oc, which caused an issue
+  if you set a singular value for one oc, but multiple
+  values for another in HiveOS.
+* Fixed/updated install.ps1/install.sh
+  * wolfamdctrl symlink error fix.
+  * ./help.sh guided help start fix. (path moved).
+  * typo with $dir path in one of the install transfers.
+* Adjusted nvidia oc Pl to work as watts, not % in Windows
+  * This means it matches HiveOS's website interface.

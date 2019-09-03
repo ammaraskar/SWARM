@@ -51,6 +51,7 @@ if (Test-Path ".\build\bash\view") {
 }
 
 if (Test-Path ".\build\apps\wolfamdctrl\wolfamdctrl") {
+    Copy-Item ".\build\apps\wolfamdctrl" -Destination "/usr/bin" -force | Out-Null
     $proc = Start-Process ln -ArgumentList "-s $dir/build/apps/wolfamdctrl/wolfamdctrl /usr/bin/wolfamdctrl/wolfamdctrl" -PassThru
     $proc | Wait-Process
     Set-Location "/usr/bin"
@@ -109,7 +110,7 @@ if (Test-Path ".\build\export\libcurl.so.3.0.0") {
     $Proc = Start-Process ln -ArgumentList "-s $dir/build/export/libcurl.so.3.0.0 $dir/build/export/libcurl.so.3" -PassThru
     $Proc | Wait-Process
     Set-Location "/"
-    Set-Location $($(vars).dir)     
+    Set-Location $Dir    
 }
 
 if (Test-Path ".\build\export\libcudart.so.10.1.105") {

@@ -20,6 +20,10 @@ function Global:Start-NVIDIAOC($NewOC) {
     $OCCount = Get-Content ".\build\txt\oclist.txt" | ConvertFrom-JSon
     $FansArgs = @()
 
+    ## Get Power limits
+    $Max_Power = invoke-expression "nvidia-smi --query-gpu=power.max_limit --format=csv" | ConvertFrom-CSV
+    $Max_Power = $Max_Power.'power.max_limit [W]'| % {$_ = $_ -replace " W",""; $_}
+
     $HiveNVOC.Keys | % {
         $key = $_
         Switch ($key) {
@@ -81,7 +85,7 @@ function Global:Start-NVIDIAOC($NewOC) {
                 $NVOCCore = $HiveNVOC.CLOCK -replace "`"", ""
                 if ([string]$NVOCCore -ne "") {
                     $NVOCCore = $NVOCCore -split " "
-                    if ($NVOCMem.Count -eq 1) {
+                    if ($NVOCCore.Count -eq 1) {
                         for ($i = 0; $i -lt $OCCount.NVIDIA.PSObject.Properties.Value.Count; $i++) {
                             $OCArgs += "-setBaseClockOffset:$($OCCount.NVIDIA.$i),0,$($NVOCCore) "
                             $ocmessage += "Setting GPU $($OCCount.NVIDIA.$i) Clock Offset To $($NVOCCore)"
@@ -99,16 +103,22 @@ function Global:Start-NVIDIAOC($NewOC) {
                 $NVOCPL = $HiveNVOC.PLIMIT -replace "`"", ""
                 if ([string]$NVOCPL -ne "") {
                     $NVOCPL = $NVOCPL -split " "
-                    if ($NVOCMem.Count -eq 1) {
+                    if ($NVOCPL.Count -eq 1) {
                         for ($i = 0; $i -lt $OCCount.NVIDIA.PSObject.Properties.Value.Count; $i++) {
-                            $OCArgs += "-setPowerTarget:$($OCCount.NVIDIA.$i),$($NVOCPL) "
-                            $ocmessage += "Setting GPU $($OCCount.NVIDIA.$i) Power Limit To $($NVOCPL)"
+                            [Double]$Max = $Max_Power[$i]
+                            [Double]$Value = $NVOCPL | %{iex $_}  ## String to double/int issue.
+                            [Double]$Limit = [math]::Round(($Value/$Max) * 100, 0)
+                            $OCArgs += "-setPowerTarget:$($OCCount.NVIDIA.$i),$($Limit) "
+                            $ocmessage += "Setting GPU $($OCCount.NVIDIA.$i) Power Limit To $($Limit)%"
                         }
                     }
                     else {
-                        for ($i = 0; $i -lt $NVOCPL.Count; $i++) {
-                            $OCArgs += "-setPowerTarget:$($i),$($NVOCPL[$i]) "
-                            $ocmessage += "Setting GPU $i Power Limit To $($NVOCPL[$i])"
+                            for($i=0; $i -lt $NVOCPL.Count; $i++){
+                            [Double]$Max = $Max_Power[$i]
+                            [Double]$Value = $NVOCPL[$i] | %{iex $_} ## String to double/int issue.
+                            [Double]$Limit = [math]::Round(($Value/$Max) * 100, 0)
+                            $OCArgs += "-setPowerTarget:$($i),$($Limit) "
+                            $ocmessage += "Setting GPU $i Power Limit To $($Limit)%"
                         }
                     }
                 }
@@ -169,6 +179,8 @@ function Global:Start-AMDOC($NewOC) {
     $AMDOCV = $AMDOC.CORE_VDDC -replace "`"", ""
     $AMDOCV = $AMDOCV -split " "
     $AMDAgg = $AMDOC.AGGRESSIVE
+    $AMDREF = $AMDOC.REF -replace "`"",""
+    $AMDREF = $AMDREF -split " "
   
     for ($i = 0; $i -lt $AMDCount; $i++) {
         $Select = $OCCount.AMD.PSOBject.Properties.Name
@@ -258,7 +270,19 @@ function Global:Start-AMDOC($NewOC) {
                             }          
                         }
                     }
-                }        
+                } 
+                "REF"{
+                    if ([String]$AMDREF -ne "") {
+                        if ($AMDREF.Count -eq 1) {
+                        $REF = Invoke-Expression ".\build\apps\amdtweak\WinAMDTweak.exe --gpu $i --REF $AMDREF"
+                        $OCmessage += "Setting GPU $($OCCount.AMD.$i) memory REF to $AMDREF"
+                        }
+                        else{
+                            $Ref = Invoke-Expression ".\build\apps\amdtweak\WinAMDTweak.exe --gpu $i --REF $($AMDREF[$i])" | Tee-Object -Variable Out
+                            $OCmessage += "Setting GPU $($OCCount.AMD.$i) memory REF to $($AMDREF[$i])"
+                        }
+                    }
+                }
             }
         }
     }
