@@ -59,6 +59,7 @@ function Global:start-update {
         $PreviousVersions += "SWARM.2.6.5"
         $PreviousVersions += "SWARM.2.6.6"
         $PreviousVersions += "SWARM.2.6.7"
+        $PreviousVersions += "SWARM.2.6.8"
 
         $StatsOnly = $null
 
@@ -641,7 +642,6 @@ Setting Path Variable For Commands: May require reboot to use.
         $newpath = "$($(vars).dir)\build\cmd"
         Global:Set-NewPath "add" $newpath
     }
-    $newpath = "$oldpath;$($(vars).dir)\build\cmd"
     log "Stopping Previous Agent"
     $ID = ".\build\pid\background_pid.txt"
     if (Test-Path $ID) { $Agent = Get-Content $ID }
