@@ -96,7 +96,7 @@ function Global:Get-Miners {
     if ($Note) { 
         $Note | ForEach-Object { 
             log "$($_)" -ForegroundColor Magenta 
-            } 
+        } 
         log "To clear bans- Run command 'benchmark timeout', or delete timeout folder" -ForegroundColor Magenta
     }
     $GetMiners
@@ -127,22 +127,22 @@ function Global:Get-CoinMiners {
 }
 
 function Global:Confirm-Backup {
-    if($(vars).No_Miners -ge 10 -and $(arg).startup -eq "Yes") {
+    if ($(vars).No_Miners -ge 10 -and $(arg).startup -eq "Yes") {
         log "No Miners Last 10 Intervals- Migrating Backup And Then Restarting" -Foreground DarkRed
-        if(test-path ".\Backup"){
+        if (test-path ".\Backup") {
             $backup_stats = Get-ChildItem ".\backup" | Where BaseName -like "*hashrate*"
             $backup_stats | % {
                 $backup = Join-Path $(vars).dir "backup\test.txt"
                 Copy-Item -Path $backup -Destination ".\stats" -Force
                 log "All backup stats loaded to stats folder, rebooting in 5 seconds." -Foreground Yellow
                 Start-Sleep -S 5
-                if($Islinux) {
-                    Invoke-Expression "reboot"
-                }
-                elseif($IsWindows) {
-                    Restart-Computer
-                }
             }
+        }
+        if ($Islinux) {
+            Invoke-Expression "reboot"
+        }
+        elseif ($IsWindows) {
+            Restart-Computer
         }
     }
 }
