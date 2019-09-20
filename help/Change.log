@@ -943,6 +943,11 @@ to test new Expiremental features.
     please notify if you have issues.
 * AMD Memtweak settings from HiveOS added
   to OC in Windows.
+* ``swarm_batch`` can accept -windows or -linux
+    to specify specific OS.
+    * example:
+      * ``swarm_batch get stats -linux``
+        * Will only run ``get stats`` in linux rigs.
 
 ## Updates
 * Gminer - added 125/4 for AMD.
@@ -960,3 +965,20 @@ to test new Expiremental features.
   * typo with $dir path in one of the install transfers.
 * Adjusted nvidia oc Pl to work as watts, not % in Windows
   * This means it matches HiveOS's website interface.
+
+# SWARM 2.6.9
+
+## Updates
+* Gminer updated
+* bminer updated
+* xmrig updated
+* phoenix miner updated
+* nbminer updated
+
+## fixes
+* Users stated they were having some Issues
+  with whalesburg pool- It was fixed. Updated
+  pool to new pool class like rest.
+
+* ethminer should work on whalesburg (optional miner)
+* updated phoenix miner arguments.
