@@ -132,12 +132,11 @@ function Global:Confirm-Backup {
         if (test-path ".\Backup") {
             $backup_stats = Get-ChildItem ".\backup" | Where BaseName -like "*hashrate*"
             $backup_stats | % {
-                $backup = Join-Path $(vars).dir "backup\test.txt"
-                Copy-Item -Path $backup -Destination ".\stats" -Force
-                log "All backup stats loaded to stats folder, rebooting in 5 seconds." -Foreground Yellow
-                Start-Sleep -S 5
+                Copy-Item $_ -Destination ".\stats" -Force
             }
         }
+        log "All backup stats loaded to stats folder, rebooting in 5 seconds." -Foreground Yellow
+        Start-Sleep -S 5
         if ($Islinux) {
             Invoke-Expression "reboot"
         }
