@@ -966,6 +966,9 @@ to test new Expiremental features.
 * Adjusted nvidia oc Pl to work as watts, not % in Windows
   * This means it matches HiveOS's website interface.
 
+############################################
+############################################
+
 # SWARM 2.6.9
 
 ## Updates
@@ -983,20 +986,187 @@ to test new Expiremental features.
 * ethminer should work on whalesburg (optional miner)
 * updated phoenix miner arguments.
 
+############################################
+############################################
 
 # SWARM 2.7.0
 
+## Guided Help
+* Windows: Run SWARM.bat
+* Linux: Run ./swarm
+* HiveOS: Specify SWARM as custom miner
+  * extra config arguments no longer mandatory.
+* SWARM should now run guided help
+on first launch if no arguments
+are specified. Simply answer the
+very simple questions, and you
+are mining!
+
 ## Updates
-* gminer 1.65
+* gminer 1.66
 * tt-miner moved from optional to
   regular miner in linux.
-
+* tt-miner updated
+* teamredminer updated
+* z-enemy updated
+* t-rex updated
+* SWARM is x16rv2 ready
+* xmrig (cpu) updated.
 
 ## Fixes
 * Found bug regarding auto-restart
   after 10 bad intervals- It was
   resolved. Should migrate backups,
   clear, bans, and automatically restart
-  if 10 bad intervals of no hash.
+  if 10 consecutive bad intervals of no hash.
+* Some mismatched algo names in teamredminer config.
+  Is now fixed.
 
+## What's New?
+* Shortened "cryptonight" to "cnight" to
+  help with fitting stats on screen.
+* ``get stats`` will sort device groups by name.
+* nlpool divisor is no correct on some algos-
+  manually adjusted them until fixed.
+* SWARM will run --help by default if no arguments
+  are specified.
 
+############################################
+############################################
+
+# SWARM 2.7.2
+
+## Guided Help
+* Windows: Run SWARM.bat
+* Linux: Run ./swarm
+* HiveOS: Specify SWARM as custom miner
+  * extra config arguments no longer mandatory.
+* SWARM should now run guided help
+on first launch if no arguments
+are specified. Simply answer the
+very simple questions, and you
+are mining!
+
+## What's New?
+* Made it so that arguments.json is ALWAYS
+  overidden by newarguments.json. arguments.json
+  is local config, while newarguments.json is a config
+  created either by guided help or remotely (HiveOS).
+* Force initial params to be user_params. In some rare
+  circumstances if you ran guided help, it would load
+  defaults initially (must have taken a specific course
+  of action). user_params are now force overidden by default.
+* ``-CPUthreads`` param is not overidden if leaving SWARM to autodetect
+  system (no ``-Type`` parameter used).
+* added sample of adding args to ./swarm and ./swarm.bat,
+  since initial arguments are removed (to initiate guided help).
+
+## Updates
+* TeamRedMiner x16rv2 added.
+* tt-miner
+
+## Fixes
+* Desktop for Windows to add a SWARM_Terminal link will be
+  set, even if user is using one drive.
+* Removed Nvidia table-add error if cpu mining only
+
+############################################
+############################################
+
+# SWARM 2.7.3
+
+# What's New?
+* ``benchmark`` command has been changed to
+  ``bench``. Wiki will be updated soon to
+  reflect this.
+* ``bench timeout`` is now ``bench bans``.
+
+## Updates
+* tt-miner was updated.
+
+############################################
+############################################
+
+# SWARM 2.7.4
+
+THIS IS A CRITICAL UPDATE- IF USING 2.7.0
+OR NEWER- UPDATE IMMEDIATELY.
+
+## Fixes
+* Powershell changed slightly how syncronized hashtables
+  worked in 6.2.3 (or maybe I found bug). This can a potential 
+  issue with donation parameters vs user parameters! I have 
+  created a workaround to update from the new change.
+
+## What's New?
+* Per user request - Added BTC/Day on main screen.
+* cpuminer jayddee updated.
+* gminer updated (good RTX cuckaroo29d improvement)
+
+############################################
+############################################
+
+# SWARM 2.7.5
+
+## What's New?
+* SWARM should not run oc programs if no
+  oc is set through HiveOS.
+
+## Fixes
+* Fixed miniz- equihash_96/5 was removed,
+  added it back.
+
+## Updates
+* Added x16rv2 to pool-algos.json, this means
+  it will start attempting to mine it. You can
+  ban it until ready with ``-Bans x16rv2:Poolname``
+
+############################################
+############################################
+
+# SWARM 2.7.6
+
+## NOTE: There is some larger Windows
+   changes in this release. If using
+   Windows, and have issues, let me know
+   and I will fix asap. So far I have been
+   unable to find any issues.
+
+## What's New?
+* Moved cc-rfv2 to optional miners
+  * Was causing high CPU issues.
+  * Was getting "invalid arguments"
+    CUDA errors.
+* -no-nvml added to nbminer
+* -log added to nbminer,
+   SWARM logging is removed in Windows.
+* Windows now start miners without
+  application lost of focus.
+  * Added custom launchcode.dll in apps folder.
+* Removed extra console launch in Windows version.
+  * cmd.exe isn't used anymore in SWARM.
+  * everything works directly from pwsh.exe
+* Add more console info.
+   * notifies user test batch files are made
+     to test miners, and location
+   * notifies user that SWARM attempt to
+     record difficulty and intensity for
+     them.
+   * veil warning.
+* Fixed cc-rfv2 link.
+  * moved to optional folder-
+    Cuda error: invalid params.
+* SWARM now not only generates batch/bash
+  files for testing, but one for each algorithm.
+  * It uses same environment params as SWARM itself.
+
+## Fixes
+* Fixed AMD errors for autofan in Windows
+  if only using NVIDIA.
+* Removed cuckaroo from nbminer.
+  * cuckaroo29d still present.
+* Rare error that arguments aren't saved
+  after first time connection to HiveOS
+  when user used guided help.
+* Missed port for x16rv2 on nicehash- fixed.
+* T-rex x16rv instead of x16rv2 - fixed.

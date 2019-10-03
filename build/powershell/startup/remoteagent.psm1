@@ -60,6 +60,18 @@ function Global:start-update {
         $PreviousVersions += "SWARM.2.6.6"
         $PreviousVersions += "SWARM.2.6.7"
         $PreviousVersions += "SWARM.2.6.8"
+        $PreviousVersions += "SWARM.2.6.9"
+        $PreviousVersions += "SWARM.2.7.0"
+        $PreviousVersions += "SWARM.2.7.1"
+        $PreviousVersions += "SWARM.2.7.2"
+        $PreviousVersions += "SWARM.2.7.3"
+        $PreviousVersions += "SWARM.2.7.4"
+        $PreviousVersions += "SWARM.2.7.5"
+
+        $PreviousVersions | ForEach-Object {
+            $PreviousVersions += "$($_).linux"
+            $PreviousVersions += "$($_).windows"
+        }
 
         $StatsOnly = $null
 
@@ -180,6 +192,30 @@ function Global:start-update {
                                         }
                                     }
                                 }
+
+                                if ($ChangeFile -eq "cryptodredge.json") {
+                                    $Data | Get-Member -MemberType NoteProperty | Select -ExpandProperty Name | foreach {
+                                        if ($_ -ne "name") {
+                                            $Data.$_.commands | Add-Member "x16rv2" "" -ErrorAction SilentlyContinue
+                                            $Data.$_.difficulty | Add-Member "x16rv2" "" -ErrorAction SilentlyContinue 
+                                            $Data.$_.naming | Add-Member "x16rv2" "x16rv2" -ErrorAction SilentlyContinue
+                                            $Data.$_.fee | Add-Member "x16rv2" 1 -ErrorAction SilentlyContinue
+                                        }
+                                    }
+                                }
+
+                                
+                                if ($ChangeFile -eq "z-enemy.json") {
+                                    $Data | Get-Member -MemberType NoteProperty | Select -ExpandProperty Name | foreach {
+                                        if ($_ -ne "name") {
+                                            $Data.$_.commands | Add-Member "x16rv2" "" -ErrorAction SilentlyContinue
+                                            $Data.$_.difficulty | Add-Member "x16rv2" "" -ErrorAction SilentlyContinue 
+                                            $Data.$_.naming | Add-Member "x16rv2" "x16rv2" -ErrorAction SilentlyContinue
+                                            $Data.$_.fee | Add-Member "x16rv2" 1 -ErrorAction SilentlyContinue
+                                        }
+                                    }
+                                }
+
                                 if ($ChangeFile -eq "bminer.json") {
                                     $Data | Get-Member -MemberType NoteProperty | Select -ExpandProperty Name | foreach {
                                         if ($_ -ne "name") {
@@ -339,6 +375,11 @@ function Global:start-update {
                                             $Data.$_.naming | Add-Member "x16r" "x16r" -ErrorAction SilentlyContinue
                                             $Data.$_.fee | Add-Member "x16r" 2.5 -ErrorAction SilentlyContinue
 
+                                            $Data.$_.commands | Add-Member "x16rv2" "" -ErrorAction SilentlyContinue
+                                            $Data.$_.difficulty | Add-Member "x16rv2" "" -ErrorAction SilentlyContinue 
+                                            $Data.$_.naming | Add-Member "x16rv2" "x16rv2" -ErrorAction SilentlyContinue
+                                            $Data.$_.fee | Add-Member "x16rv2" 2.5 -ErrorAction SilentlyContinue
+
                                             $Data.$_.commands | Add-Member "x16s" "" -ErrorAction SilentlyContinue
                                             $Data.$_.difficulty | Add-Member "x16s" "" -ErrorAction SilentlyContinue 
                                             $Data.$_.naming | Add-Member "x16s" "x16s" -ErrorAction SilentlyContinue
@@ -358,6 +399,11 @@ function Global:start-update {
                                             $Data.$_.difficulty | Add-Member "mtp" "" -ErrorAction SilentlyContinue 
                                             $Data.$_.naming | Add-Member "mtp" "mtp" -ErrorAction SilentlyContinue
                                             $Data.$_.fee | Add-Member "mtp" 2.5 -ErrorAction SilentlyContinue
+
+                                            $Data.$_.commands | Add-Member "cuckarood29d" "" -ErrorAction SilentlyContinue
+                                            $Data.$_.difficulty | Add-Member "cuckarood29d" "" -ErrorAction SilentlyContinue 
+                                            $Data.$_.naming | Add-Member "cuckarood29d" "cuckarood29" -ErrorAction SilentlyContinue
+                                            $Data.$_.fee | Add-Member "cuckarood29d" 2.5 -ErrorAction SilentlyContinue
                                         }
                                     }
                                 }
@@ -374,6 +420,11 @@ function Global:start-update {
                                             $Data.$_.difficulty | Add-Member "honeycomb" "" -ErrorAction SilentlyContinue 
                                             $Data.$_.naming | Add-Member "honeycomb" "honeycomb" -ErrorAction SilentlyContinue
                                             $Data.$_.fee | Add-Member "honeycomb" 1 -ErrorAction SilentlyContinue
+
+                                            $Data.$_.commands | Add-Member "x16rv2" "" -ErrorAction SilentlyContinue
+                                            $Data.$_.difficulty | Add-Member "x16rv2" "" -ErrorAction SilentlyContinue 
+                                            $Data.$_.naming | Add-Member "x16rv2" "x16rv2" -ErrorAction SilentlyContinue
+                                            $Data.$_.fee | Add-Member "x16rv2" 1 -ErrorAction SilentlyContinue
                                         }
                                     }
                                 }
@@ -391,6 +442,7 @@ function Global:start-update {
  
                                 if($ChangeFile -eq "pool-algos.json") {
                                     $Data | add-Member "x25x" @{alt_names = @("x25x"); exclusions = @("add pool or miner here","comma seperated")} -ErrorAction SilentlyContinue
+                                    $Data | add-Member "x16rv2" @{alt_names = @("x16rv2"); exclusions = @("add pool or miner here","comma seperated")} -ErrorAction SilentlyContinue
                                     $Data | add-Member "lyra2z330" @{alt_names = @("lyra2z330"); exclusions = @("add pool or miner here","comma seperated")} -ErrorAction SilentlyContinue
                                     $Data | add-Member "cuckaroo29d" @{alt_names = @("cuckaroo29d","grincuckaroo29d"); exclusions = @("add pool or miner here","comma seperated")} -ErrorAction SilentlyContinue
                                     $Data | add-Member "bmw512" @{alt_names = @("bmw512"); exclusions = @("add pool or miner here","comma seperated")} -ErrorAction SilentlyContinue

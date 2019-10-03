@@ -1,16 +1,25 @@
+<#
+SWARM is open-source software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+SWARM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#>
+
 function Global:Start-Background {
-  
-    $BackgroundTimer = New-Object -TypeName System.Diagnostics.Stopwatch
-    $command = Start-Process "pwsh" -WorkingDirectory "$($(vars).dir)\build\powershell\scripts" -ArgumentList "-executionpolicy bypass -NoExit -windowstyle minimized -command `"&{`$host.ui.RawUI.WindowTitle = `'Background Agent`'; &.\Background.ps1 -WorkingDir `'$($(vars).dir)`'}`"" -WindowStyle Minimized -PassThru -Verb Runas
-    $command.ID | Set-Content ".\build\pid\background_pid.txt"
-    $BackgroundTimer.Restart()
-    do {
-        Start-Sleep -S 1
-        log "Getting Process ID for Background Agent"
-        $ProcessId = if (Test-Path ".\build\pid\background_pid.txt") { Get-Content ".\build\pid\background_pid.txt" }
-        if ($ProcessID -ne $null) { $Process = Get-Process $ProcessId -ErrorAction SilentlyContinue }
-    }until($ProcessId -ne $null -or ($BackgroundTimer.Elapsed.TotalSeconds) -ge 10)  
-    $BackgroundTimer.Stop()
+    $start = [launchcode]::New()
+    $FilePath = "$PSHome\pwsh.exe"
+    $CommandLine = '"' + $FilePath + '"'
+    $arguments = "-executionpolicy bypass -command `".\build\powershell\scripts\background.ps1 -WorkingDir $($(vars).Dir)`""
+    $CommandLine += " " + $arguments
+    $New_Miner = $start.New_Miner($filepath,$CommandLine,$(vars).Dir)
+    $Process = Get-Process -id $New_Miner.dwProcessId -ErrorAction Ignore
+    $Process.ID | Set-Content ".\build\pid\background_pid.txt"
 }
 
 function Global:Set-NewPath {

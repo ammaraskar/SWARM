@@ -291,16 +291,16 @@ clear_watts
         Clears all watt files
         Resets power.json
 
-benchmark
+bench
         USAGE:
             [miner or algorithm] [name]
             [timeout]
 
-        benchmark miner [name] 
+        bench miner [name] 
             will clear all benchmarks for that miner
-        benchmark algorithm [name] 
+        bench algorithm [name] 
             will clear all benchmarks for that algorithm
-        becchmark timeout 
+        bench bans
             will clear all bans
 
 nview
@@ -450,13 +450,13 @@ https://github.com/MaynardMiner/SWARM/wiki/HiveOS-management
                 $Stat_Table | ForEach-Object { if ([Double]$_.Volume -gt 0) { $VolumeTable = $True } }            
                 $Type = $Stat_table.Type | Select -Unique
                 $Test = "$me[${white}mMiner${me}[0m"
-                $Type | ForEach-Object {
+                $Type | Sort-Object | ForEach-Object {
                     $Miner_Table = $Stat_Table | Where Type -eq $_
                     if ($Argument2) { $Miner_Table = $Miner_Table | Sort-Object -Property Profit -Descending | Select -First ([int]$Argument2) }
                     $global:index = 0
                     if ($WattTable -and $ShareTable -and $VolumeTable) {
                         $Get += $Miner_Table | Sort-Object -Property Profit -Descending | Format-Table -GroupBy Type (
-                            @{Label = "Miner`|Coin"; Expression = { "$me[${white}m$($global:index) $($_.Name)${me}[0m`|$me[${green}m$($_.ScreenName)${me}[0m"; $global:index += 1 }; Align = 'left' },
+                            @{Label = "Miner`|Coin"; Expression = { "$me[${white}m$($global:index) $($_.Name)${me}[0m`|$me[${green}m$($_.ScreenName.replace("cryptonight","cnight"))${me}[0m"; $global:index += 1 }; Align = 'left' },
                             @{Label = "Speed`|Watt/Day"; Expression = { "$me[${white}m$($($_.HashRates) | ForEach-Object { if ($null -ne $_) { "$($_ | Global:ConvertTo-Hash)/s" }else { "Bench" } })${me}[0 m`| $me[${green}m$($($_.Power_Day) | ForEach-Object { if ($null -ne $_) { ($_ * $Rates.Rate).ToString("N2") }else { "Bench" } })${me}[0m" }; Align = 'left' },
                             @{Label = "BTC`|$($Rates.Coin)`|$($Rates.Currency)/Day"; Expression = { "$me[${white}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { $_.ToString("N5") }else { "Bench" } })${me}[0m`|$me[${cyan}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ / $Rates.Exchange).ToString("N5") }else { "Bench" } } )${me}[0m`|$me[${green}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ * $Rates.Rate).ToString("N2") }else { "Bench" } })${me}[0m" }; Align = 'center' },
                             @{Label = "Pool"; Expression = { 
@@ -483,7 +483,7 @@ https://github.com/MaynardMiner/SWARM/wiki/HiveOS-management
                     }
                     elseif ($WattTable -and $ShareTable) {
                         $Get += $Miner_Table | Sort-Object -Property Profit -Descending | Format-Table -GroupBy Type (
-                            @{Label = "Miner`|Coin"; Expression = { "$me[${white}m$($global:index) $($_.Name)${me}[0m`|$me[${green}m$($_.ScreenName)${me}[0m"; $global:index += 1 }; Align = 'left' },
+                            @{Label = "Miner`|Coin"; Expression = { "$me[${white}m$($global:index) $($_.Name)${me}[0m`|$me[${green}m$($_.ScreenName.replace("cryptonight","cnight"))${me}[0m"; $global:index += 1 }; Align = 'left' },
                             @{Label = "Speed`|Watt/Day"; Expression = { "$me[${white}m$($($_.HashRates) | ForEach-Object { if ($null -ne $_) { "$($_ | Global:ConvertTo-Hash)/s" }else { "Bench" } })${me}[0m`|$me[${green}m$($($_.Power_Day) | ForEach-Object { if ($null -ne $_) { ($_ * $Rates.Rate).ToString("N2") }else { "Bench" } })${me}[0m" }; Align = 'left' },
                             @{Label = "BTC`|$($Rates.Coin)`|$($Rates.Currency)/Day"; Expression = { "$me[${white}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { $_.ToString("N5") }else { "Bench" } })${me}[0m`|$me[${cyan}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ / $Rates.Exchange).ToString("N5") }else { "Bench" } } )${me}[0m`|$me[${green}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ * $Rates.Rate).ToString("N2") }else { "Bench" } })${me}[0m" }; Align = 'center' },
                             @{Label = "Pool"; Expression = { 
@@ -509,7 +509,7 @@ https://github.com/MaynardMiner/SWARM/wiki/HiveOS-management
                     }
                     elseif ($WattTable -and $VolumeTable) {
                         $Get += $Miner_Table | Sort-Object -Property Profit -Descending | Format-Table -GroupBy Type (
-                            @{Label = "Miner`|Coin"; Expression = { "$me[${white};m$($global:index) $($_.Name)${me}[0m`|$me[${green};m$($_.ScreenName)${me}[0m"; $global:index += 1 }; Align = 'left' },
+                            @{Label = "Miner`|Coin"; Expression = { "$me[${white};m$($global:index) $($_.Name)${me}[0m`|$me[${green};m$($_.ScreenName.replace("cryptonight","cnight"))${me}[0m"; $global:index += 1 }; Align = 'left' },
                             @{Label = "Speed`|Watt/Day"; Expression = { "$me[${white};m$($($_.HashRates) | ForEach-Object { if ($null -ne $_) { "$($_ | Global:ConvertTo-Hash)/s" }else { "Bench" } })${me}[0m`|$me[${green};m$($($_.Power_Day) | ForEach-Object { if ($null -ne $_) { ($_ * $Rates.Rate).ToString("N2") }else { "Bench" } })${me}[0m" }; Align = 'left' },
                             @{Label = "BTC`|$($Rates.Coin)`|$($Rates.Currency)/Day"; Expression = { "$me[${white}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { $_.ToString("N5") }else { "Bench" } })${me}[0m`|$me[${cyan}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ / $Rates.Exchange).ToString("N5") }else { "Bench" } } )${me}[0m`|$me[${green}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ * $Rates.Rate).ToString("N2") }else { "Bench" } })${me}[0m" }; Align = 'center' },
                             @{Label = "Pool"; Expression = { 
@@ -535,7 +535,7 @@ https://github.com/MaynardMiner/SWARM/wiki/HiveOS-management
                     }
                     elseif ($WattTable) {
                         $Get += $Miner_Table | Sort-Object -Property Profit -Descending | Format-Table -GroupBy Type (
-                            @{Label = "Miner`|Coin"; Expression = { "$me[${white}m$($global:index) $($_.Name)${me}[0m`|$me[${green}m$($_.ScreenName)${me}[0m"; $global:index += 1 }; Align = 'left' },
+                            @{Label = "Miner`|Coin"; Expression = { "$me[${white}m$($global:index) $($_.Name)${me}[0m`|$me[${green}m$($_.ScreenName.replace("cryptonight","cnight"))${me}[0m"; $global:index += 1 }; Align = 'left' },
                             @{Label = "Speed`|Watt/Day"; Expression = { "$me[${white}m$($($_.HashRates) | ForEach-Object { if ($null -ne $_) { "$($_ | Global:ConvertTo-Hash)/s" }else { "Bench" } })${me}[0m`|$me[${green}m$($($_.Power_Day) | ForEach-Object { if ($null -ne $_) { ($_ * $Rates.Rate).ToString("N2") }else { "Bench" } })${me}[0m" }; Align = 'left' },
                             @{Label = "BTC`|$($Rates.Coin)`|$($Rates.Currency)/Day"; Expression = { "$me[${white}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { $_.ToString("N5") }else { "Bench" } })${me}[0m`|$me[${cyan}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ / $Rates.Exchange).ToString("N5") }else { "Bench" } } )${me}[0m`|$me[${green}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ * $Rates.Rate).ToString("N2") }else { "Bench" } })${me}[0m" }; Align = 'center' },
                             @{Label = "Pool"; Expression = { 
@@ -560,7 +560,7 @@ https://github.com/MaynardMiner/SWARM/wiki/HiveOS-management
                     }
                     elseif ($ShareTable -and $VolumeTable) {
                         $Get += $Miner_Table | Sort-Object -Property Profit -Descending | Format-Table -GroupBy Type (
-                            @{Label = "Miner`|Coin"; Expression = { "$me[${white}m$($global:index) $($_.Name)${me}[0m`|$me[${green}m$($_.ScreenName)${me}[0m"; $global:index += 1 }; Align = 'left' },
+                            @{Label = "Miner`|Coin"; Expression = { "$me[${white}m$($global:index) $($_.Name)${me}[0m`|$me[${green}m$($_.ScreenName.replace("cryptonight","cnight"))${me}[0m"; $global:index += 1 }; Align = 'left' },
                             @{Label = "Speed"; Expression = { $($_.HashRates) | ForEach-Object { if ($null -ne $_) { "$me[${white}m$($_ | Global:ConvertTo-Hash)/s${me}[0m" }else { "$me[${white}mBench${me}[0m" } } }; Align = 'left' },
                             @{Label = "BTC`|$($Rates.Coin)`|$($Rates.Currency)/Day"; Expression = { "$me[${white}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { $_.ToString("N5") }else { "Bench" } })${me}[0m`|$me[${cyan}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ / $Rates.Exchange).ToString("N5") }else { "Bench" } } )${me}[0m`|$me[${green}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ * $Rates.Rate).ToString("N2") }else { "Bench" } })${me}[0m" }; Align = 'center' },
                             @{Label = "Pool"; Expression = { 
@@ -587,7 +587,7 @@ https://github.com/MaynardMiner/SWARM/wiki/HiveOS-management
                     }
                     elseif ($ShareTable) {
                         $Get += $Miner_Table | Sort-Object -Property Profit -Descending | Format-Table -GroupBy Type (
-                            @{Label = "Miner`|Coin"; Expression = { "$me[${white}m$($global:index) $($_.Name)${me}[0m`|$me[${green}m$($_.ScreenName)${me}[0m"; $global:index += 1 }; Align = 'left' },
+                            @{Label = "Miner`|Coin"; Expression = { "$me[${white}m$($global:index) $($_.Name)${me}[0m`|$me[${green}m$($_.ScreenName.replace("cryptonight","cnight"))${me}[0m"; $global:index += 1 }; Align = 'left' },
                             @{Label = "Speed"; Expression = { $($_.HashRates) | ForEach-Object { if ($null -ne $_) { "$me[${white}m$($_ | Global:ConvertTo-Hash)/s${me}[0m" }else { "$me[${white}mBench${me}[0m" } } }; Align = 'left' },
                             @{Label = "BTC`|$($Rates.Coin)`|$($Rates.Currency)/Day"; Expression = { "$me[${white}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { $_.ToString("N5") }else { "Bench" } })${me}[0m`|$me[${cyan}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ / $Rates.Exchange).ToString("N5") }else { "Bench" } } )${me}[0m`|$me[${green}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ * $Rates.Rate).ToString("N2") }else { "Bench" } })${me}[0m" }; Align = 'center' },
                             @{Label = "Pool"; Expression = { 
@@ -613,7 +613,7 @@ https://github.com/MaynardMiner/SWARM/wiki/HiveOS-management
                     }
                     elseif ($VolumeTable) {
                         $Get += $Miner_Table | Sort-Object -Property Profit -Descending | Format-Table -GroupBy Type (
-                            @{Label = "Miner`|Coin"; Expression = { "$me[${white}m$($global:index) $($_.Name)${me}[0m`|$me[${green}m$($_.ScreenName)${me}[0m"; $global:index += 1 }; Align = 'left' },
+                            @{Label = "Miner`|Coin"; Expression = { "$me[${white}m$($global:index) $($_.Name)${me}[0m`|$me[${green}m$($_.ScreenName.replace("cryptonight","cnight"))${me}[0m"; $global:index += 1 }; Align = 'left' },
                             @{Label = "Speed"; Expression = { $($_.HashRates) | ForEach-Object { if ($null -ne $_) { "$me[${white}m$($_ | Global:ConvertTo-Hash)/s${me}[0m" }else { "$me[${white}mBench${me}[0m" } } }; Align = 'left' },
                             @{Label = "BTC`|$($Rates.Coin)`|$($Rates.Currency)/Day"; Expression = { "$me[${white}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { $_.ToString("N5") }else { "Bench" } })${me}[0m`|$me[${cyan}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ / $Rates.Exchange).ToString("N5") }else { "Bench" } } )${me}[0m`|$me[${green}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ * $Rates.Rate).ToString("N2") }else { "Bench" } })${me}[0m" }; Align = 'center' },
                             @{Label = "Pool"; Expression = { 
@@ -639,7 +639,7 @@ https://github.com/MaynardMiner/SWARM/wiki/HiveOS-management
                     }
                     else {
                         $Get += $Miner_Table | Sort-Object -Property Profit -Descending | Format-Table -GroupBy Type (
-                            @{Label = "Miner`| Coin"; Expression = { "$me[${white}m$($global:index) $($_.Name)${me}[0m`|$me[${green}m$($_.ScreenName)${me}[0m"; $global:index += 1 }; Align = 'left' },
+                            @{Label = "Miner`| Coin"; Expression = { "$me[${white}m$($global:index) $($_.Name)${me}[0m`|$me[${green}m$($_.ScreenName.replace("cryptonight","cnight"))${me}[0m"; $global:index += 1 }; Align = 'left' },
                             @{Label = "Speed"; Expression = { $($_.HashRates) | ForEach-Object { if ($null -ne $_) { "$me[${white}m$($_ | Global:ConvertTo-Hash)/s${me}[0m" }else { "$me[${white}mBench${me}[0m" } } }; Align = 'left' },
                             @{Label = "BTC`|$($Rates.Coin)`|$($Rates.Currency)/Day"; Expression = { "$me[${white}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { $_.ToString("N5") }else { "Bench" } })${me}[0m`|$me[${cyan}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ / $Rates.Exchange).ToString("N5") }else { "Bench" } } )${me}[0m`|$me[${green}m$($($_.Profit) | ForEach-Object { if ($null -ne $_) { ($_ * $Rates.Rate).ToString("N2") }else { "Bench" } })${me}[0m" }; Align = 'center' },
                             @{Label = "Pool"; Expression = { 
@@ -810,7 +810,7 @@ https://github.com/MaynardMiner/SWARM/wiki/HiveOS-management
 
                 $BaseDir = (Split-Path $Dir)
                 $FileName = join-path "$Dir" "x64\SWARM.$VersionNumber.windows.zip"
-                $DLFileName = Join-Path "$Dir" "x64\SWARM.$VersionNumber"
+                $DLFileName = Join-Path "$Dir" "x64\SWARM.$VersionNumber.windows"
 
                 $URI = "https://github.com/MaynardMiner/SWARM/releases/download/v$versionNumber/SWARM.$VersionNumber.windows.zip"
                 Write-Host "URI should be $URI"
@@ -824,17 +824,17 @@ https://github.com/MaynardMiner/SWARM/wiki/HiveOS-management
                     $Proc | Wait-Process
                     Start-Sleep -S 3
 
-                    $Search = Get-ChildItem -Path ".\x64\SWARM.$VersionNumber" -Filter "SWARM.bat" -Recurse -ErrorAction SilentlyContinue
+                    $Search = Get-ChildItem -Path ".\x64\SWARM.$VersionNumber.windows" -Filter "SWARM.bat" -Recurse -ErrorAction SilentlyContinue
                     if (-not $Search) { Write-Host "NEW SWARM Was Not Found" -ForegroundColor DarkRed; break }        
                     $Contents = $Search.Directory.FullName | Select-Object -First 1
                     Move-Item -Path $Contents -Destination "$BaseDir" -Force | Out-Null; Start-Sleep -S 1
                     $DirName = Join-Path $BaseDir $(Split-Path $Contents -Leaf)
-                    if($DirName -ne (Join-Path $BaseDir "SWARM.$VersionNumber")){
-                    Rename-Item -Path "$DirName" -NewName "SWARM.$VersionNumber" -Force | Out-Null
+                    if($DirName -ne (Join-Path $BaseDir "SWARM.$VersionNumber.windows")){
+                    Rename-Item -Path "$DirName" -NewName "SWARM.$VersionNumber.windows" -Force | Out-Null
                     }
                     if(Test-Path $DLFileName) { Remove-Item $DLFileName -Recurse -Force }
 
-                    $NewDIR = Join-Path $BaseDir "SWARM.$($VersionNumber)"
+                    $NewDIR = Join-Path $BaseDir "SWARM.$($VersionNumber).windows"
 
                     $MinerFile = "$Dir\build\pid\miner_pid.txt"
                     if (Test-Path $MinerFile) { $MinerId = Get-Process -Id (Get-Content $MinerFile) -ErrorAction SilentlyContinue }

@@ -1,3 +1,16 @@
+<#
+SWARM is open-source software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+SWARM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#>
+
 function Global:Get-Bans {
     Write-Host "Doing Bans"
     Start-Sleep -S 3
@@ -5,7 +18,7 @@ function Global:Get-Bans {
         $Multi = $false
         if ( $(vars).Config.Bans ) { $Bans = $(vars).Config.Bans }else { $Bans = @() }
         do {
-            Clear-Host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
             $single = Read-Host -Prompt "Your current bans are:
         
 $($Bans -join "`n")
@@ -19,7 +32,7 @@ Answer"
             $Check = Global:Confirm-Answer $single @("1", "2")
         }While ($Check -eq 1)
         do {
-            clear-host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
             $ans1 = Read-Host -Prompt "It appears a miner/algorithm/pool is giving you trouble.
 
 Please specify what you wish to ban
@@ -62,7 +75,7 @@ Answer"
                         $Num++;      
                     }
                     do {
-                        clear-host
+                        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                         $ans2 = Read-Host -Prompt "Please select the miner you wish to set a ban for
 $($Get -join "`n")
 
@@ -80,7 +93,7 @@ Number"
                         $Num++;
                     }
                     do {
-                        clear-host
+                        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                         $ans2 = Read-Host -Prompt "Please select the pool you wish to set a ban for
 
 $($Get -join "`n")
@@ -131,7 +144,7 @@ Number"
                 $Num++;      
             }
             do {
-                clear-host
+                if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                 $ans3 = Read-Host -Prompt "Please select the miner you wish to set a ban for
 $($Get -join "`n")
 
@@ -141,7 +154,7 @@ Number"
         }
         if ($ans1 -eq "4" -or $Multi -eq $true) {
             do {
-                Clear-Host
+                if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                 $List = Get-Content ".\config\pools\pool-algos.json" | ConvertFrom-Json
 
                 $Num = 1
@@ -161,7 +174,7 @@ Number"
         if ($multi -eq $false) {
             if ($ans3) { $Sel = $Table.$ans3 }else { $Sel = $Algos.$ans4 }
             do {
-                Clear-Host
+                if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                 switch ($single) {
                     "1" { $bans = @($Bans) + $Sel }
                     "2" { $bans = $Sel }
@@ -216,7 +229,7 @@ function Global:Get-Ban_GLT {
     Write-Host "Doing Ban_GLT"
     Start-Sleep -S 3
     do {
-        Clear-Host
+        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
         $ans = Read-Host -Prompt "Ban_GLT         
         
 [Yes or No]         
@@ -248,7 +261,7 @@ function Global:Get-PoolBanCount {
     Write-Host "Doing PoolBanCount"
     Start-Sleep -S 3
     do {
-        Clear-Host
+        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
         $ans = Read-Host -Prompt "PoolBanCount    
         
 [0-10]             
@@ -264,7 +277,7 @@ How many benchmarks need to be bad before SWARM bans a pool?
 Answer"
     
         do {
-            clear-host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
             $Confirm = Read-Host -Prompt "You have entered $ans.
             
 Is this correct
@@ -283,7 +296,7 @@ function Global:Get-AlgoBanCount {
     Write-Host "Doing AlgoBanCount"
     Start-Sleep -S 3
     do {
-        Clear-Host
+        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
         $ans = Read-Host -Prompt "AlgoBanCount    
         
 [0-10]             
@@ -299,7 +312,7 @@ How many benchmarks need to be bad before SWARM bans a pool?
 Answer"
     
         do {
-            clear-host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
             $Confirm = Read-Host -Prompt "You have entered $ans.
             
 Is this correct
@@ -318,7 +331,7 @@ function Global:Get-Threshold {
     Write-Host "Doing Threshold"
     Start-Sleep -S 3
     do {
-        Clear-Host
+        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
         $ans = Read-Host -Prompt "Threshold     
 
 [.0001 - 100000]	    
@@ -331,7 +344,7 @@ to be specified if you wish it to be different than .02 btc/day
 
 Please enter new threshold"
         do {
-            Clear-Host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
             $Confirm = Read-Host -Prompt "You have entered $ans as new threshold. 
             
 Is this correct
@@ -350,7 +363,7 @@ function Global:Get-Rejections {
     Write-Host "Doing Rejections"
     Start-Sleep -S 3
     do {
-        Clear-Host
+        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
         $ans = Read-Host -Prompt "Rejections 	    
         
 [0-100]	    
@@ -360,7 +373,7 @@ consider background miner as timing out.
 
 Please enter new rejection percent"
         do {
-            Clear-Host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
             $Confirm = Read-Host -Prompt "You have entered a rejection percent of $ans
 
 Is This Correct?
@@ -379,7 +392,7 @@ function Global:Get-Optional {
     Write-Host "Doing Optional"
     Start-Sleep -S 3
     do {
-        Clear-Host
+        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
         $Num = 1
         $table = [ordered]@{ }
         $Get = @()
@@ -398,7 +411,7 @@ Answer"
         $ans = $ans.split(",")
         $ans = $ans | % { $Table.$_ } 
         do {
-            clear-Host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
             $Confirm = Read-Host -Prompt "You have entered the following miners
         
 $($ans -join "`n")
@@ -419,7 +432,7 @@ function Global:Get-XNSub {
     Write-Host "Doing XNSub"
     Start-Sleep -S 3
     do{
-        Clear-Host
+        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
         $ans = Read-Host -Prompt "Xnsub          
     
 [Yes or No]            
@@ -454,7 +467,7 @@ function Global:Get-Admin {
     }
 
     do {
-        clear-host
+        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
         $Confirm = Read-Host -Prompt "Do You Wish To Continue?
     
 1 Yes

@@ -14,9 +14,9 @@
     "type": "cpu",
     "CPU": ".\\bin\\xmrig-cpu-1\\xmrig.exe",
     "minername": "xmrig.exe",
-    "version": "2.99.6",
+    "version": "4.0.1",
     "optional": "No",
-    "uri": "https://github.com/xmrig/xmrig/releases/download/v2.99.6-beta/xmrig-2.99.6-beta-msvc-win64.zip"
+    "uri": "https://github.com/xmrig/xmrig/releases/download/v4.0.1-beta/xmrig-4.0.1-beta-gcc-win64.zip"
   },
   "sugarchain": {
     "name": "sugarchain",
@@ -32,9 +32,9 @@
     "type": "cpu",
     "CPU": ".\\bin\\jayddee-1\\cpuminer-avx2.exe",
     "minername": "cpuminer-avx2.exe",
-    "version": "3.9.7",
+    "version": "3.9.8",
     "optional": "No",
-    "uri": "https://github.com/JayDDee/cpuminer-opt/releases/download/v3.9.7/cpuminer-opt-3.9.7-windows.zip"
+    "uri": "https://github.com/JayDDee/cpuminer-opt/releases/download/v3.9.8/cpuminer-opt-3.9.8-windows.zip"
   },
   "cpupower": {
     "name": "cpupower",

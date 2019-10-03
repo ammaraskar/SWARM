@@ -1,3 +1,16 @@
+<#
+SWARM is open-source software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+SWARM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#>
+
 ## Confirm Answer Is Correct
 $Global:config = @{ }
 $Global:Config.Add("vars", @{ })
@@ -27,7 +40,7 @@ function Global:Confirm-Answer($Answer, $Possibilities) {
 ##CPU Question- Asked in multiple locations
 function Start-CPU_Question {
     do {
-        Clear-Host
+        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
         $ans3 = Read-Host -Prompt "Would you like to CPU mine with this machine as well?
   
  1 Yes
@@ -39,13 +52,13 @@ function Start-CPU_Question {
   
     if ($ans3 -eq "1") {
         do {
-            Clear-Host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
             $ans4 = Read-Host -Prompt "How many cpu threads would you like to use?
   
   Enter number of threads"
   
             do {
-                clear-host
+                if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                 $ans5 = Read-Host -Prompt "You have entered $ans4 threads. Is this correct?
   
   1 Yes
@@ -64,7 +77,7 @@ function Start-CPU_Question {
 
 function Global:Get-Advanced_Settings {
     do {
-        Clear-Host
+        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
         $ans = Read-Host -Prompt "These are advanced configs. More information regarding advanced parameters can be found here:
     
 https://github.com/MaynardMiner/SWARM/blob/master/help/SWARM_help.txt
@@ -145,7 +158,7 @@ Answer"
     $ans
 }
 
-Clear-Host
+if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
 
 Write-Host "Hello! Welcome to SWARM's guided setup!" -ForegroundColor Green
 Start-Sleep -S 3
@@ -173,12 +186,12 @@ Write-Host "
 You deserve it." -ForegroundColor Green
 Start-Sleep -S 3
 
-Clear-Host
+if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
 $DoBasic = $true
 
 if (Test-Path ".\config\parameters\newarguments.json") {
     do {
-        Clear-Host
+        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
         $ans = Read-Host -Prompt "It seems you have previous configs saved.
 Would you like to load them, and skip basic configuration?
 
@@ -198,7 +211,7 @@ Answer"
 
 if ($DoBasic -ne $false) {
     do {
-        clear-host
+        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
         $tutorial = Read-Host -Prompt "First We Need To Determine What You Are Mining With.
 
 Are you GPU mining or mining with an ASIC?
@@ -214,9 +227,9 @@ Answer"
 
     if ($tutorial -eq "1" -or $tutorial -eq "3") {
         do {
-            Clear-Host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
             do {
-                clear-host
+                if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                 $ans = Read-Host -Prompt "Okay, Now we need to know what kind of GPUs
      
 1. I have NVIDIA GPUs
@@ -230,7 +243,7 @@ Answer"
             switch ($ans) {
                 "1" {
                     do {
-                        Clear-Host
+                        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                         $ans2 = Read-Host -Prompt "NVIDIA GPUs can be divided, and separated into different device groups. 
                 
 How many groups would you like to have?
@@ -250,13 +263,13 @@ Answer"
                     }
 
                     if ($(vars).config.Type.Count -gt 1) {
-                        Clear-Host
+                        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                         Write-Host "You have chosed to divide rig. You must specify GPUs for each group"
 
                         $(vars).config.Type | Foreach {
                             $Group = $_ -replace "NVIDIA", ""
                             $ans2 = Read-Host -Prompt "
-3Please specify devices used for Group $Group
+Please specify devices used for Group $Group
 
 Example: To use first, second, and third GPUs:
 
@@ -272,10 +285,10 @@ Answer"
                 "3" { $(vars).config.Add("Type", @("AMD1", "NVIDIA2")); Start-CPU_Question }
             }
     
-            clear-host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
 
             do {
-                clear-host
+                if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                 $(vars).config
                 $Confirm = Read-Host "
 
@@ -300,7 +313,7 @@ Okay, let's try again."
             }
         }while ($Confirm -ne 1)
 
-        clear-host
+        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
 
     }
     ## DO ASIC
@@ -313,7 +326,7 @@ Okay, let's try again."
         
         do {
             do {
-                Clear-Host
+                if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                 $ans = Read-Host -Prompt "Okay, Now we need gather informationa about ASICS.
 
 Before we continue- It should be noted that SWARM does not work with all ASICS. If it
@@ -332,7 +345,7 @@ Answer"
                 try { [int]$ans }catch { Write-Host "Answer must be a number"; Start-Sleep -S 3; continue }
 
                 do {
-                    Clear-Host
+                    if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                     $Confirm = Read-Host -Prompt "You have specified $ans ASICS. Is this correct?
             
 1 Yes
@@ -353,17 +366,17 @@ Answer"
 
             for ($i = 0; $i -lt [int]$ans; $i++) {
                 do {
-                    clear-host
+                    if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                     Write-Host "Lets Do ASIC `#$($i+1)
 "
                     $ans1 = Read-Host -Prompt "What is IP of ASIC `#$($i+1)?
 
 Answer"
-                    clear-host
+                    if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                     $ans2 = Read-Host -Prompt "What is Nickname of ASIC `#$($i+1)
 
 Answer"
-                    clear-host
+                    if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                     $ans3 = Read-Host -Prompt "You have specified:
 ASIC `#$($i+1) IP: $ans1
 ASIC `#$($i+1) Nickname: $ans2
@@ -386,7 +399,7 @@ Answer"
             }
 
             do {
-                Clear-Host
+                if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                 $(vars).config.ASIC_IP
 
                 $Confirm = Read-Host -Prompt "
@@ -410,7 +423,7 @@ Answer"
         }while ($Confirm -eq "2")
 
         do {
-            Clear-Host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
             $ans = Read-Host -Prompt "Now we must determine ASIC mining algorithms.
 
 Please specify algorithms you wish to use. These name should match the pools
@@ -442,9 +455,9 @@ Answer"
 
     ## Location Question
     do {
-        Clear-Host
+        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
         do {
-            Clear-Host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
             $ans = Read-Host -Prompt "Next where are you located?
 
 1 EUROPE
@@ -460,9 +473,9 @@ Answer"
             "2" { $choice = "US" }
             "3" { $choice = "ASIA" }
         }
-        Clear-Host
+        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
         do {
-            Clear-Host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
             $ans2 = Read-Host -Prompt "Your Location is $choice. Is this correct?
   
 1 Yes
@@ -478,11 +491,11 @@ Answer"
 
     ## BTC Wallet Addresses
     do {
-        Clear-Host
+        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
         $Max_Wallets = ($(vars).config.Type | Where { $_ -like "*NVIDIA*" }).Count
         if ( $Max_Wallets -gt 1 ) {
             for ($i = 0; $i -lt $Max_Wallets; $i++ ) {
-                Clear-Host
+                if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                 $ans = Read-Host -Prompt "Please Enter BTC Wallet For Device Group $($i+1)"
                 $(vars).config.Add("Wallet$($i+1)", $ans)
             }
@@ -497,7 +510,7 @@ Answer"
             $(vars).config.Add("Wallet1", $ans)
         }
         do {
-            Clear-Host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
             $(vars).config
             $Confirm = Read-Host -Prompt "
 
@@ -521,7 +534,7 @@ Answer"
     ## Pools
 
     do {
-        clear-host
+        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
         $PoolList = [ordered]@{ }
         $Num = 0
         Get-ChildItem ".\algopools" | ForEach-Object { $PoolList.Add("$($_.BaseName)", $Num); $Num++ }
@@ -549,7 +562,7 @@ Answer"
         catch { Write-Host "Failed To Parse Selection, Try Again" -Foreground Red; Start-Sleep -S 3; continue }
 
         do {
-            Clear-Host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
             $Confirm = Read-Host -Prompt "The pools you have chosen are:
  
 $($Pools -join "`n")
@@ -573,7 +586,7 @@ Answer"
 
     if ("whalesburg" -in $Pools) {
         do {
-            clear-host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
             Write-Host "You have specified the custom pool whalesburg.
 In order to mine there- Two things are neccessary:
 
@@ -591,7 +604,7 @@ please enter your whalesburg worker name"
 please enter your ETH address"
 
             do {
-                clear-host
+                if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                 $Confirm = Read-Host -Prompt "
 Whalesburg Worker = $ans1
 ETH Address = $ans2
@@ -617,10 +630,10 @@ Answer"
 
     if ("nicehash" -in $Pools) {
         do {
-            clear-Host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
 
             do {
-                clear-host
+                if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                 $ans = Read-Host -Prompt "You have specified Nicehash as a pool.
 Would you like to add your nicehash wallet?
 
@@ -633,10 +646,10 @@ Answer"
 
             if ($ans -eq "1") {
                 do {
-                    clear-Host
+                    if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                     $nice = Read-Host -Prompt "Please Enter Your Nicehash Address"
                     do {
-                        clear-host
+                        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                         $Confirm = Read-Host -Prompt "You enetered $nice
 Is This Correct?
 
@@ -670,7 +683,7 @@ Answer"
 
     if ($IsWindows) {
         do {
-            Clear-Host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
             $ans = Read-Host -Prompt "SWARM has detected this is a Windows OS.
 
 Would you like to use HiveOS web dashboard for online statistics and remote control?
@@ -688,14 +701,14 @@ Answer"
             }
             "1" {
                 do {
-                    Clear-Host
+                    if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                     $ans1 = Read-Host -Prompt "Okay. Please go to HiveOS.farm, and create an account.
 
 You will receive a farm hash for your farm there. You can go to Farm > Settings, and it will be listed there.
 
 Please Enter Your Farm Hash"
 
-                    Clear-Host
+                    if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
 
                     $ans2 = Read-Host -Prompt "You have entered $ans1
 Is this correct
@@ -723,7 +736,7 @@ if ($P -notlike "$($(vars).dir)\build\powershell\help*") {
 }            
 
 do {
-    Clear-Host
+    if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
     Add-Module "$hd\choices.psm1"
     $Confirm = Global:Get-Choices
     Global:Remove-Modules
@@ -733,13 +746,14 @@ do {
         $Defaults.PSObject.Properties.Name | % { if ($_ -notin $(vars).config.keys) { $(vars).config.Add("$($_)", $Defaults.$_) } }
         $(vars).config | ConvertTo-Json | Set-Content ".\config\parameters\newarguments.json"
         Start-Sleep -S 2
+        Write-Host "If you ever wish to manually override this config with arguments locally (not through HiveOS), delete newarguments.json first!"
         Write-Host "Settings Saved to `".\config\parameter\newarguments.json`" ! You can Run SWARM.bat (windows) or ./swarm (linux as root) to start SWARM!"
     }
     if ($Confirm -eq "2") {
         do {
-            Clear-Host
+            if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
             do {
-                Clear-Host
+                if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                 Write-Host "These are your current settings:
                 "
                 Start-Sleep -S 2
@@ -819,7 +833,7 @@ Answer"
                 }
                 "2" {
                     do {
-                        Clear-Host
+                        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                         $Num = 0
                         $Table = @{ }
                         $List = @()
@@ -832,7 +846,7 @@ Answer"
                         $Check = Global:Confirm-Answer $ans @(1 .. ($Num - 1))
                     }while ($Check -eq 1)
                     do {
-                        clear-host
+                        if($IsWindows){Clear-Host} elseif($IsLinux){$Host.UI.Write("`e[3;J`e[H`e[2J")}
                         $Confirm = Read-Host -Prompt "Here is Parameter $($Table.$Ans):
                 
 $( $(vars).Config.$($Table.$Ans) -join "`n" )

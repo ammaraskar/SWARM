@@ -1,3 +1,16 @@
+<#
+SWARM is open-source software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+SWARM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#>
+
 Function Global:Get-PCISlot($X) { 
 
     switch ($X) {
@@ -174,29 +187,25 @@ function Global:Get-GPUCount {
         }
     }
 
-    $TypeArray = @("NVIDIA1", "NVIDIA2", "NVIDIA3", "AMD1")
-    $TypeArray | ForEach-Object { if ($_ -in $(arg).Type) { $NoType = $false } }
-    if ($NoType -eq $true) {
-        log "Searching GPU Types" -ForegroundColor Yellow
-        $(arg).Type = @()
+    if ([string]$(arg).type -eq "") {
+        log "Searching For Mining Types" -ForegroundColor Yellow
+        $types = @()
         if ($GN -and $GA) {
             log "AMD and NVIDIA Detected" -ForegroundColor Magenta
-            $(arg).Type += "AMD1,NVIDIA2" 
+            $types += "AMD1,NVIDIA2" 
         }
         elseif ($GN) {
             log "NVIDIA Detected: Adding NVIDIA" -ForegroundColor Magenta
-            $(arg).Type += "NVIDIA1" 
+            $types += "NVIDIA1" 
         }
         elseif ($GA) {
             log "AMD Detected: Adding AMD" -ForegroundColor Magenta
-            $(arg).Type += "AMD1" 
+            $types += "AMD1" 
         }
-        elseif ($(arg).Type -ne "ASIC") {
-            log "No GPU's Detected- Using CPU"
-            $(arg).Type += "CPU"
-            ## Get Threads:
-            $(arg).CPUThreads = $(Get-CimInstance -ClassName 'Win32_Processor' | Select-Object -Property 'NumberOfCores').NumberOfCores;
-        }
+        log "Adding CPU"
+        if([string]$(arg).CPUThreads -eq ""){ $(arg).CPUThreads = $(Get-CimInstance -ClassName 'Win32_Processor' | Select-Object -Property 'NumberOfCores').NumberOfCores;}
+        log "Using $($(arg).CPUThreads) for mining"
+        $(arg).type = $types
     }
     
     if ($(arg).Type -like "*CPU*") { for ($i = 0; $i -lt $(arg).CPUThreads; $i++) { $DeviceList.CPU.Add("$($i)", $i) } }
@@ -231,8 +240,8 @@ function Global:Start-WindowsConfig {
     }
     
     ##Create a CMD.exe shortcut for SWARM on desktop
-    $CurrentUser = $env:UserName
-    $Desk_Term = "C:\Users\$CurrentUser\desktop\SWARM-TERMINAL.bat"
+    $Desktop = [Environment]::GetFolderPath("Desktop")
+    $Desk_Term = "$Desktop\SWARM-TERMINAL.bat"
     if (-Not (Test-Path $Desk_Term)) {
         log "
             
@@ -379,17 +388,14 @@ function Global:Start-WindowsConfig {
         $Enabled = $(cat ".\config\parameters\autofan.json" | ConvertFrom-Json | ConvertFrom-StringData).ENABLED
         if ($Enabled -eq 1) {
             log "Starting Autofan" -ForeGroundColor Cyan
-            $BackgroundTimer = New-Object -TypeName System.Diagnostics.Stopwatch
-            $command = Start-Process "pwsh" -WorkingDirectory "$($(vars).dir)\build\powershell\scripts" -ArgumentList "-executionpolicy bypass -NoExit -windowstyle minimized -command `"&{`$host.ui.RawUI.WindowTitle = `'AutoFan`'; &.\autofan.ps1 -WorkingDir `'$($(vars).dir)`'}`"" -WindowStyle Minimized -PassThru -Verb Runas
-            $command.ID | Set-Content ".\build\pid\autofan.txt"
-            $BackgroundTimer.Restart()
-            do {
-                Start-Sleep -S 1
-                log "Getting Process ID for AutoFan"
-                $ProcessId = if (Test-Path ".\build\pid\autofan.txt") { Get-Content ".\build\pid\autofan.txt" }
-                if ($ProcessID -ne $null) { $Process = Get-Process $ProcessId -ErrorAction SilentlyContinue }
-            }until($ProcessId -ne $null -or ($BackgroundTimer.Elapsed.TotalSeconds) -ge 10)  
-            $BackgroundTimer.Stop()    
+            $start = [launchcode]::New()
+            $FilePath = "$PSHome\pwsh.exe"
+            $CommandLine = '"' + $FilePath + '"'
+            $arguments = "-executionpolicy bypass -command `".\build\powershell\scripts\autofan.ps1`""
+            $CommandLine += " " + $arguments
+            $New_Miner = $start.New_Miner($filepath,$CommandLine,$global:Dir)
+            $Process = Get-Process -id $New_Miner.dwProcessId -ErrorAction Ignore
+            $Process.ID | Set-Content ".\build\pid\autofan.txt"
         }
     }
     ## Aaaaannnnd...Que that sexy logo. Go Time.

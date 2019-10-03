@@ -30,6 +30,8 @@ $env:Path += ";$($(vars).dir)\build\cmd"
 
 ## Window Security Items
 if ($IsWindows) {
+    $Host.UI.RawUI.BackgroundColor = 'Black'
+    $Host.UI.RawUI.ForegroundColor = 'White'
     try { Get-ChildItem $($(vars).dir) -Recurse | Unblock-File } catch { }
     ## Exclusion Windows Defender
     try { 
@@ -38,7 +40,6 @@ if ($IsWindows) {
         } 
     }
     catch { }
-
     ## Set Firewall Rule
     try { 
         $Net = Get-NetFireWallRule 
@@ -56,6 +57,9 @@ if ($IsWindows) {
 
     ## Windows Icon
     Start-Process "powershell" -ArgumentList "Set-Location `'$($(vars).dir)`'; .\build\powershell\scripts\icon.ps1 `'$($(vars).dir)\build\apps\icons\SWARM.ico`'" -NoNewWindow
+
+    ## Add .dll
+    Add-Type -Path ".\build\apps\launchcode.dll"
 }
 
 ## Debug Mode- Allow you to run with last known arguments or arguments.json.
@@ -245,6 +249,10 @@ $(vars).Add("All_AltWallets", $Null)
 Global:Get-Wallets
 if ([String]$(arg).Admin_Fee -eq 0) { if (test-Path ".\admin") { Remove-Item ".\admin" -Recurse -Force | Out-Null } }
 
+## Stop stray miners from previous run before loop
+Global:Add-Module "$($(vars).control)\stray.psm1"
+if($IsWindows) { Global:Stop-StrayMiners -Startup }
+
 ##Get Optional Miners
 Global:Get-Optional
 Global:Add-LogErrors
@@ -371,7 +379,7 @@ While ($true) {
         Global:Add-Module "$($(vars).pool)\initial.psm1"
         Global:Get-PoolTables
         Global:Remove-BanHashrates
-        if($(vars).Options -eq 1){
+        if ($(vars).Options -eq 1) {
             . .\build\data\json.ps1
             Global:Get-Message
         }
@@ -475,9 +483,6 @@ While ($true) {
         $(vars).Watts = $null
         remove CoinPools 
         remove AlgoPools 
-        remove amd 
-        remove nvidia 
-        remove cpu 
         remove SWARMAlgorithm
         remove BanHammer
         remove ASICTypes
@@ -518,12 +523,16 @@ While ($true) {
         Global:Get-BestActiveMiners
         Global:Get-ActivePricing
 
-        ## Start / Stop / Restart Miners
-        ## Handle OC
+        ## Start / Stop / Restart Miners        
         Global:Add-Module "$($(vars).control)\run.psm1"
         Global:Add-Module "$($(vars).control)\launchcode.psm1"
         Global:Add-Module "$($(vars).control)\config.psm1"
+        Global:Add-Module "$($(vars).control)\stray.psm1"
+        ## Stop miners that need to be stopped
         Global:Stop-ActiveMiners
+        ## Attack Stray Miners, if they are running
+        if($IsWindows) { Global:Stop-StrayMiners }
+        ## Start New Miners
         Global:Start-NewMiners -Reason "Launch"
 
         ## Determing Interval

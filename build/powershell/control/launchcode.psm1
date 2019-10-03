@@ -53,6 +53,8 @@ function Global:Remove-ASICPools {
 
 function Global:Start-LaunchCode($MinerCurrent, $AIP) {
 
+    
+
     if ($MinerCurrent.Type -notlike "*ASIC*") {
         ##Remove Old PID FIle
         $MinerTimer = New-Object -TypeName System.Diagnostics.Stopwatch
@@ -208,13 +210,12 @@ function Global:Start-LaunchCode($MinerCurrent, $AIP) {
                 Start-Sleep -S .5
 
                 ##Make Test.bat for users
-                if (-not (Test-Path "$WorkingDirectory\swarm-start.bat")) {
-                    $minerbat = @()
-                    $minerbat += "CMD /r pwsh -ExecutionPolicy Bypass -command `".\swarm-start.ps1`""
-                    $minerbat += "cmd.exe"
-                    $miner_bat = Join-Path $WorkingDirectory "swarm-start.bat"
-                    $minerbat | Set-Content $miner_bat
-                }
+                $Algo = ($MinerCurrent.Algo).Replace("`/", "_")
+                $minerbat = @()
+                ## pwsh to launch powershell window to fully emulate SWARM launching
+                $minerbat += "pwsh -ExecutionPolicy Bypass -command `"Start-Process pwsh -ArgumentList `"`"-noexit -executionpolicy Bypass -Command `"`"`"`".\swarm_start_$($Algo).ps1`"`"`"`"`"`""
+                $miner_bat = Join-Path $WorkingDirectory "swarm_start_$($Algo).bat"
+                $minerbat | Set-Content $miner_bat
 
                 try { 
                     $Net = Get-NetFireWallRule | Where DisplayName -eq "SWARM $($MinerCurrent.MinerName)"
@@ -226,69 +227,90 @@ function Global:Start-LaunchCode($MinerCurrent, $AIP) {
                 catch { }
 
                 ##Build Start Script
-                $script = @()
-                $script += "`$OutputEncoding = [System.Text.Encoding]::ASCII"
-                $script += "Start-Process `"powershell`" -ArgumentList `"Set-Location ``'$($(vars).dir)``'; .\build\powershell\scripts\icon.ps1 ``'$($(vars).dir)\build\apps\icons\miner.ico``'`" -NoNewWindow"
-                $script += "`$host.ui.RawUI.WindowTitle = `'$($MinerCurrent.Name) - $($MinerCurrent.Algo)`';"
-                $MinerCurrent.Prestart | ForEach-Object {
-                    if ($_ -notlike "export LD_LIBRARY_PATH=$($(vars).dir)\build\export") {
-                        $setx = $_ -replace "export ", "set "
-                        $setx = $setx -replace "=", " "
-                        $script += "$setx"
+                if ($MinerCurrent.Prestart) {
+                    $Prestart = @()
+                    $MinerCurrent.Prestart | ForEach-Object {
+                        if ($_ -notlike "export LD_LIBRARY_PATH=$($(vars).dir)\build\export") {
+                            $setx = $_ -replace "export ", "set "
+                            $setx = $setx -replace "=", " "
+                            $Prestart += "$setx`n"
+                        }
                     }
                 }
                 ##Determine if Miner needs logging
                 if ($MinerCurrent.Log -ne "miner_generated") {
                     Switch ($MinerCurrent.API) {
                         "lolminer" {
-                            $script += "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
+                            $start = "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
                         }
                         "ccminer" {
-                            $script += "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
+                            $start = "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
                         }
                         "cpuminer" {
-                            $script += "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
+                            $start = "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
                         }
                         "claymore" {
-                            $script += "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
+                            $start = "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
                         }
                         "xmrstak" {
-                            $script += "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
+                            $start = "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
                         }
                         "xmrig-opt" {
-                            $script += "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
+                            $start = "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
                         }
                         "wildrig" {
-                            $script += "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
+                            $start = "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
                         }
                         "sgminer-gm" {
-                            $script += "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
+                            $start = "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
                         }
                         "multiminer" {
-                            $script += "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
-                        }
-                        "nebutech" {
-                            $script += "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
+                            $start = "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output = `$_ -replace `"\\[\d+(;\d+)?m`"; `$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host;}`'" 
                         }
                         default { 
-                            $script += "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output += `$_ -replace `"\\[\d+(;\d+)?m`"; if(`$Output -cmatch `"`\n`"){`$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host; `$Output = `$null}}`'" 
+                            $start = "Invoke-Expression `'.\$($MinerCurrent.MinerName) $($MinerArguments) *>&1 | %{`$Output += `$_ -replace `"\\[\d+(;\d+)?m`"; if(`$Output -cmatch `"`\n`"){`$OutPut | Out-File -FilePath ""$Logs"" -Append; `$Output | Out-Host; `$Output = `$null}}`'" 
                         }
                     }
                 }
+                else { $start += "Invoke-Expression "".\$($MinerCurrent.MinerName) $MinerArguments""" }
 
-                else { $script += "Invoke-Expression "".\$($MinerCurrent.MinerName) $MinerArguments""" }            
-                $script | Out-File "$WorkingDirectory\swarm-start.ps1"
+                $script = 
+
+                "
+`#`# Window Title
+`$host.ui.RawUI.WindowTitle = `'$($MinerCurrent.Name) - $($MinerCurrent.Algo)`';
+`#`# set encoding for logging
+`$OutputEncoding = [System.Text.Encoding]::ASCII
+`#`# Has to be powershell 5.0 to set icon
+ `$proc = Start-Process `"powershell`" -ArgumentList `"Set-Location ``'$($(vars).dir)``'; .\build\powershell\scripts\icon.ps1 ``'$($(vars).dir)\build\apps\icons\miner.ico``'`" -NoNewWindow -Passthru
+ `$proc | Wait-Process
+ remove-variable `$proc -ErrorAction Ignore
+`#`# Start Miner - Logging if needed.
+$Prestart
+$start
+"
+
+                $script | Out-File "$WorkingDirectory\swarm_start_$($Algo).ps1"
                 Start-Sleep -S .5
 
                 ##Start Miner Job
-                $Job = Start-Job -ArgumentList $PID, $WorkingDirectory {
-                    param($ControllerProcessID, $WorkingDirectory)
+                $Job = Start-Job -ArgumentList $PID, $WorkingDirectory, (Convert-Path ".\build\apps\launchcode.dll"), ".\swarm_start_$($Algo).ps1" {
+                    param($ControllerProcessID, $WorkingDirectory, $dll, $ps1)
                     Set-Location $WorkingDirectory
                     $ControllerProcess = Get-Process -Id $ControllerProcessID
-                    if ($ControllerProcess -eq $null) { return }
-                    $Process = Start-Process "CMD" -ArgumentList "/c pwsh -executionpolicy bypass -command "".\swarm-start.ps1""" -PassThru -WindowStyle Minimized
-                    if ($Process -eq $null) { [PSCustomObject]@{ProcessId = $null }; return
-                    };
+                    if ($null -eq $ControllerProcess) { return }
+                    Add-Type -Path $dll
+                    $start = [launchcode]::New()
+                    $FilePath = "$PSHome\pwsh.exe"
+                    $CommandLine = '"' + $FilePath + '"'
+                    $arguments = "-executionpolicy bypass -command `"$ps1`""
+                    $CommandLine += " " + $arguments
+                    $New_Miner = $start.New_Miner($filepath, $CommandLine, $WorkingDirectory)
+                    $Process = Get-Process -id $New_Miner.dwProcessId -ErrorAction Ignore
+                    if ($null -eq $Process) { 
+                        [PSCustomObject]@{ProcessId = $null }
+                        return
+                    }            
                     [PSCustomObject]@{ProcessId = $Process.Id; ProcessHandle = $Process.Handle };
                     $ControllerProcess.Handle | Out-Null; $Process.Handle | Out-Null; 
                     do { if ($ControllerProcess.WaitForExit(1000)) { $Process.CloseMainWindow() | Out-Null } }while ($Process.HasExited -eq $false)
@@ -331,9 +353,6 @@ function Global:Start-LaunchCode($MinerCurrent, $AIP) {
 
             ##Build Daemon
             $Daemon = "start-stop-daemon --start --make-pidfile --chdir $MinerDir --pidfile $PIDPath --exec $MinerEXE -- $MinerArgs"
-
-            ##Test config -- Allows users to test miner settings written in miner dir
-            $TestConfigPath = Join-Path $MinerDir "config.sh"
 
             ##Actual Config - config.sh has already +x chmod from git.
             $Daemon | Set-Content ".\build\bash\config.sh" -Force
@@ -386,16 +405,17 @@ function Global:Start-LaunchCode($MinerCurrent, $AIP) {
                     if ($proc.HasExited -eq $false) {
                         log "Still Waiting For Port To Clear..." -ForegroundColor Cyan
                         $warn += 5 
-                    } else{ $warn = $(arg).time_wait }
+                    }
+                    else { $warn = $(arg).time_wait }
                 }while ($warn -lt $(arg).time_wait)
                 
-                if($warn -eq 2) { 
+                if ($warn -eq 2) { 
                     log "Warning: Port still listed as TIME_WAIT, but launching anyway" -ForegroundColor Yellow 
-                    if($Proc.HasExited -eq $false) {
+                    if ($Proc.HasExited -eq $false) {
                         kill $Proc.Id -ErrorAction Ignore
                     }
                 } 
-                elseif($Warn -eq 10) {log "Port Was Cleared" -ForegroundColor Cyan}
+                elseif ($Warn -eq 10) { log "Port Was Cleared" -ForegroundColor Cyan }
             }
             ##Notification To User That Miner Is Attempting To start
             log "Starting $($MinerCurrent.Name) Mining $($MinerCurrent.Symbol) on $($MinerCurrent.Type)" -ForegroundColor Cyan
@@ -438,7 +458,9 @@ function Global:Start-LaunchCode($MinerCurrent, $AIP) {
 
             ##Write Both Scripts
             $Script | Set-Content ".\build\bash\startup.sh"
-            $TestScript | Set-Content "$MinerDir\startup.sh"
+            ## Test config for users.
+            $Algo = ($MinerCurrent.Algo).Replace("`/", "_")
+            $TestScript | Set-Content "$MinerDir/swarm_start_$($Algo).sh"
     
             ## .5 Second Delay After Read/Write Of Config Files. For Slower Drives.
             Start-Sleep -S .5
@@ -446,7 +468,7 @@ function Global:Start-LaunchCode($MinerCurrent, $AIP) {
             ##chmod again, to be safe.
             $Proc = Start-Process "chmod" -ArgumentList "+x build/bash/startup.sh" -PassThru
             $Proc | Wait-Process
-            $Proc = Start-Process "chmod" -ArgumentList "+x $MinerDir/startup.sh" -PassThru
+            $Proc = Start-Process "chmod" -ArgumentList "+x $MinerDir/swarm_start_$($Algo).sh" -PassThru
             $Proc | Wait-Process
 
             ##chmod miner (sometimes they don't set permissions correctly)
@@ -485,7 +507,8 @@ function Global:Start-LaunchCode($MinerCurrent, $AIP) {
         log "Switching To New Pool"
         $Commands = "switchpool|1"
         $response = Global:Get-TCP -Server $AIP -Port $MinerCurrent.Port -Timeout 10 -Message $Commands
-        if ($response) { $MinerProcess = @{StartTime = (Get-Date); HasExited = $false }
+        if ($response) {
+            $MinerProcess = @{StartTime = (Get-Date); HasExited = $false }
         }
         $MinerProcess
     }

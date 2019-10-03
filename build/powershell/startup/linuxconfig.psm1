@@ -1,3 +1,15 @@
+<#
+SWARM is open-source software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+SWARM is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#>
 
 function Global:Get-Data {
 
@@ -204,10 +216,10 @@ function Global:Get-Data {
         Set-Location $($(vars).dir)     
     }
 
-    if (Test-Path ".\build\bash\benchmark") {
-        Copy-Item ".\build\bash\benchmark" -Destination "/usr/bin" -force | Out-Null
+    if (Test-Path ".\build\bash\bench") {
+        Copy-Item ".\build\bash\bench" -Destination "/usr/bin" -force | Out-Null
         Set-Location "/usr/bin"
-        Start-Process "chmod" -ArgumentList "+x benchmark"
+        Start-Process "chmod" -ArgumentList "+x bench"
         Set-Location "/"
         Set-Location $($(vars).dir)     
     }
@@ -275,10 +287,10 @@ function Global:Get-GPUCount {
     ## GPU Bus Hash Table
     $DoBus = $true
     if ($(arg).Type -like "*CPU*" -or $(arg).Type -like "*ASIC*") {
-        if("AMD1" -notin $(arg).type -and "NVIDIA1" -notin $(arg).type -and "NVIDIA2" -notin $(arg).type -and "NVIDIA3" -notin $(arg).type) {
-        $Dobus = $false
+        if ("AMD1" -notin $(arg).type -and "NVIDIA1" -notin $(arg).type -and "NVIDIA2" -notin $(arg).type -and "NVIDIA3" -notin $(arg).type) {
+            $Dobus = $false
+        }
     }
-}
 
     
     if ($DoBus -eq $true) {
@@ -314,29 +326,25 @@ function Global:Get-GPUCount {
             $GA = $true
         }
 
-        $TypeArray = @("NVIDIA1", "NVIDIA2", "NVIDIA3", "AMD1")
-        $TypeArray | ForEach-Object { if ($_ -in $(arg).Type) { $NoType = $false } }
-        if ($NoType -eq $true) {
-            log "Searching GPU Types" -ForegroundColor Yellow
-            $(arg).Type = @()
+        if ([string]$(arg).type -eq "") {
+            log "Searching For Mining Types" -ForegroundColor Yellow
+            $types = @()
             if ($GN -and $GA) {
                 log "AMD and NVIDIA Detected" -ForegroundColor Magenta
-                $(arg).Type += "AMD1,NVIDIA2" 
+                $types += "AMD1,NVIDIA2" 
             }
             elseif ($GN) { 
                 log "NVIDIA Detected: Adding NVIDIA" -ForegroundColor Magenta
-                $(arg).Type += "NVIDIA1" 
+                $types += "NVIDIA1" 
             }
             elseif ($GA) {
                 log "AMD Detected: Adding AMD" -ForegroundColor Magenta
-                $(arg).Type += "AMD1" 
+                $types += "AMD1" 
             }
-            elseif ("ASIC" -notin $(arg).Type) {
-                log "No GPU's Detected- Using CPU"
-                $(arg).Type += "CPU"
-                ## Get Threads:
-                $(arg).CPUThreads = grep -c ^processor /proc/cpuinfo;
-            }
+            log "Adding CPU"
+            if([string]$(arg).CPUThreads -eq ""){ $(arg).CPUThreads = $(Get-CimInstance -ClassName 'Win32_Processor' | Select-Object -Property 'NumberOfCores').NumberOfCores;}
+            log "Using $($(arg).CPUThreads) for mining"
+            $(arg).type = $types
         }
 
         $GetBus | Foreach {

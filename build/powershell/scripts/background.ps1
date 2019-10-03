@@ -17,6 +17,7 @@ Param (
 )
 
 [cultureinfo]::CurrentCulture = 'en-US'
+if($IsWIndows) { $host.ui.RawUI.WindowTitle = "Background Agent" }
 #$WorkingDir = "C:\Users\Mayna\Documents\GitHub\SWARM"
 #$WorkingDir = "/root/hive/miners/custom/SWARM"
 Set-Location $WorkingDir
@@ -67,6 +68,7 @@ Import-Module "$($(vars).global)\stats.psm1" -Scope Global
 Import-Module "$($(vars).global)\hashrates.psm1" -Scope Global
 Import-Module "$($(vars).global)\gpu.psm1" -Scope Global
 Global:Add-Module "$($(vars).background)\startup.psm1"
+if($IsWIndows) { Add-Type -Path ".\build\apps\launchcode.dll" }
 
 ## Get Parameters
 Global:Get-Params

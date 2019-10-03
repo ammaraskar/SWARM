@@ -84,9 +84,9 @@
         "NVIDIA2": ".\\bin\\gminer-2\\miner.exe",
         "NVIDIA3": ".\\bin\\gminer-3\\miner.exe",
         "minername": "miner.exe",
-        "version": "1.65",
+        "version": "1.67",
         "optional": "No",
-        "uri": "https://github.com/develsoftware/GMinerRelease/releases/download/1.65/gminer_1_65_windows64.zip"
+        "uri": "https://github.com/develsoftware/GMinerBetaRelease/releases/download/1.67/gminer_1_67_windows64.zip"
     },
     "claymore": {
         "name": "claymore",
@@ -106,9 +106,9 @@
         "NVIDIA2": ".\\bin\\cryptodredge-2\\CryptoDredge.exe",
         "NVIDIA3": ".\\bin\\cryptodredge-3\\CryptoDredge.exe",
         "minername": "CryptoDredge.exe",
-        "version": "0.21.0",
+        "version": "0.22.0",
         "optional": "No",
-        "uri": "https://github.com/technobyl/CryptoDredge/releases/download/v0.21.0/CryptoDredge_0.21.0_cuda_10.1_windows.zip"
+        "uri": "https://github.com/technobyl/CryptoDredge/releases/download/v0.22.0/CryptoDredge_0.22.0_cuda_10.1_windows.zip"
     },
     "dstm": {
         "name": "dstm",
@@ -128,7 +128,7 @@
         "NVIDIA2": ".\\bin\\z-enemy-2\\z-enemy.exe",
         "NVIDIA3": ".\\bin\\z-enemy-3\\z-enemy.exe",
         "minername": "z-enemy.exe",
-        "version": "2.1",
+        "version": "2.2",
         "optional": "No",
         "uri": "https://github.com/MaynardMiner/MM.Compiled-Miners/releases/download/v.3.0/z-enemy-windows.zip"
     },
@@ -216,9 +216,9 @@
         "NVIDIA2": ".\\bin\\trex-2\\t-rex.exe",
         "NVIDIA3": ".\\bin\\trex-3\\t-rex.exe",
         "minername": "t-rex.exe",
-        "version": "0.13.2",
+        "version": "0.14.4",
         "optional": "No",
-        "uri": "https://github.com/trexminer/T-Rex/releases/download/0.13.2/t-rex-0.13.2-win-cuda10.0.zip"
+        "uri": "https://github.com/trexminer/T-Rex/releases/download/0.14.4/t-rex-0.14.4-win-cuda10.0.zip"
     },
     "zjazz": {
         "name": "zjazz",
@@ -238,7 +238,7 @@
         "NVIDIA2": ".\\bin\\tt-miner-2\\TT-Miner.exe",
         "NVIDIA3": ".\\bin\\tt-miner-3\\TT-Miner.exe",
         "minername": "TT-Miner.exe",
-        "version": "3.0.5",
+        "version": "3.0.9",
         "optional": "No",
         "uri": "https://tradeproject.de/download/Miner/TT-Miner.zip"
     },
