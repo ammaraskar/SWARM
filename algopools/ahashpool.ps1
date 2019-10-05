@@ -28,10 +28,10 @@ param(
     [PSCustomObject]$Pool_Algos     ## pool-algos.json (argument modified)
 )
 
+if ("ahashpool" -notin $Pools) { return 1 }
 $Name = "ahashpool"
 $Link = "https://www.ahashpool.com/api/status"
 if ($xnsub -eq "Yes") { $X = "#xnsub" }
-if ("ahashpool" -notin $Pools) { return 1 }
 
 ## Connnect To Pool, Add Data
 try { 
