@@ -557,7 +557,16 @@
   },
   "phi2": {
     "alt_names": [
-      "phi2",
+      "phi2"
+    ],
+    "exclusions": [
+      "add pool or miner here",
+      "comma seperated"
+    ]
+  },
+  "phi2-lux": {
+    "alt_names": [
+      "phi2-lux",
       "lux"
     ],
     "exclusions": [
@@ -685,6 +694,15 @@
   "x11evo": {
     "alt_names": [
       "x11evo"
+    ],
+    "exclusions": [
+      "add pool or miner here",
+      "comma seperated"
+    ]
+  },
+  "x12": {
+    "alt_names": [
+      "x12"
     ],
     "exclusions": [
       "add pool or miner here",
