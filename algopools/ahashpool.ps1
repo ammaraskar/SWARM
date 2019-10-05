@@ -1,93 +1,141 @@
+using module "..\build\powershell\global\stats.psm1"
 
-$Name = Get-Item $MyInvocation.MyCommand.Path | Select-Object -ExpandProperty BaseName 
-$Pool_Request = [PSCustomObject]@{ } 
+## return values
+## return 1 = "Pool Not Specified"
+## return 2 = "SWARM contacted ($Name) but there was no response."
+## return 3 = "SWARM contacted ($Name) but ($Name) the response was empty."
 
-if ($(arg).xnsub -eq "Yes") { $X = "#xnsub" } 
+## TODO
+# Add wallet to rigname
+# Add volume hashrate to pools
+# Add percent value of hashrate volume to pools / sort
+# New get wallets features / by rig
 
-if ($Name -in $(arg).PoolName) {
-    try { $Pool_Request = Invoke-RestMethod "https://www.ahashpool.com/api/status" -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop } 
-    catch { log "SWARM contacted ($Name) but there was no response."; return }
- 
-    if (($Pool_Request | Get-Member -MemberType NoteProperty -ErrorAction Ignore | Measure-Object Name).Count -le 1) { 
-        log "SWARM contacted ($Name) but ($Name) the response was empty." 
-        return 
-    }
+param(
+    ## Direct User Parameters
+    [string[]]$Pools,               ## poolname parameter
+    [string]$xnsub = "no",          ## xnsub parameter
+    [Double]$Historical_Bias = 0,   ## historical_bias parameter
+    [string]$stat_level,            ## stat_algo parameter
+    [string]$interval,              ## interval parameter
+    [string]$Max_Periods,           ## max_periods parameter
 
-    $Algos = @()
-    $Algos += $(vars).Algorithm
-    $Algos += $(arg).ASIC_ALGO
-    $Algos = $Algos | ForEach-Object { if ($Bad_pools.$_ -notcontains $Name) { $_ } }
+    ## Internal Data
+    [string[]]$Algorithms,          ## GPU & CPU algos
+    [string[]]$Asic_Algorithms,     ## ASIC algos
+    [hashtable]$Wallets,            ## User Wallets
+    [string[]]$Bans,                ## Global Bans
+    [PSCustomObject]$Pool_Algos     ## pool-algos.json (argument modified)
+)
 
-    ## Only get algos we need & convert name to universal schema
-    $Pool_Sorted = $Pool_Request.PSobject.Properties.Value | Where-Object {[Double]$_.estimate_current -gt 0} | ForEach-Object { 
-        $N = $_.Name;
-        $_ | Add-Member "Original_Algo" $N
-        $_.Name = $global:Config.Pool_Algos.PSObject.Properties.Name | Where { $N -in $global:Config.Pool_Algos.$_.alt_names };
-        if ($_.Name) { if ($_.Name -in $Algos -and $Name -notin $global:Config.Pool_Algos.$($_.Name).exclusions -and $_.Name -notin $(vars).BanHammer) { $_ } }
+$Name = "ahashpool"
+$Link = "https://www.ahashpool.com/api/status"
+if ($xnsub -eq "Yes") { $X = "#xnsub" }
+if ("ahashpool" -notin $Pools) { return 1 }
+
+## Connnect To Pool, Add Data
+try { 
+    $Pool_Request = Invoke-RestMethod $Link -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
+}  catch { return 2 }
+if ( ($Pool_Request | Get-Member -MemberType NoteProperty -ErrorAction Ignore).Count -eq 0) { 
+    return 3 
+}
+
+## Determine What Algo Data To Grab
+[array]$Algos += $Algorithms, $Asic_Algorithms
+
+## Only get algos we need & convert original name to a universal naming schema
+$Pool_Sorted = $Pool_Request.PSobject.Properties.Value | 
+    Where-Object { [Double]$_.estimate_current -gt 0 } | 
+    ForEach-Object { 
+        $Algo_Name = $_.Name;
+        $_ | Add-Member "Original_Algo" $Algo_Name
+        $_.Name = $Pool_Algos.PSObject.Properties.Name | Where { $Algo_Name -in $Pool_Algos.$_.alt_names };
+        if ($_.Name -in $Algos -and $Name -notin $Pool_Algos.$($_.Name).exclusions -and $($_.Name) -notin $Bans) { $_ }
     }
   
-    $Pool_Sorted | ForEach-Object {
-        $Day_Estimate = [Double]$_.estimate_last24h;
-        $Day_Return = [Double]$_.actual_last24h;
-        $Raw = shuffle $Day_Estimate $Day_Return
-        $_ | Add-Member "deviation" $Raw
-        $StatAlgo = $_.Name -replace "`_", "`-"
-        $StatPath = "$($Name)_$($StatAlgo)_profit"
-        if (-not (test-Path ".\stats\$StatPath") ) { $Estimate = [Double]$_.estimate_last24h }
-        else { $Estimate = [Double]$_.estimate_current }
-    
-        $Pool_Port = $_.port
-        $Pool_Host = "$($_.Original_Algo).mine.ahashpool.com$X"
-        $Divisor = 1000000 * $_.mbtc_mh_factor
-        $Hashrate = $_.hashrate
-        if([double]$HashRate -eq 0){ $Hashrate = 1 }  ## Set to prevent volume dividebyzero error
-        $previous = [Math]::Max(([Double]$_.actual_last24h * 0.001) / $Divisor * (1 - ($_.fees / 100)), $SmallestValue)
-    
-        $Deviation = $_.Deviation
-        $Stat = Global:Set-Stat -Name $StatPath -HashRate $HashRate -Value ( $Estimate / $Divisor * (1 - ($_.fees / 100))) -Shuffle $Deviation
-        if (-not $(vars).Pool_Hashrates.$($_.Name)) { $(vars).Pool_Hashrates.Add("$($_.Name)", @{ }) }
-        if (-not $(vars).Pool_Hashrates.$($_.Name).$Name) { $(vars).Pool_Hashrates.$($_.Name).Add("$Name", @{HashRate = "$($Stat.HashRate)"; Percent = "" })}
-        
-        $Level = $Stat.$($(arg).Stat_Algo)
-        if ($(arg).Historical_Bias -gt 0) {
-            $SmallestValue = 1E-20 
-            $Level = [Math]::Max($Level + ($Level * $Stat.Deviation), $SmallestValue)
-        }
+## Create Values From Algo Data
+$Pool_Sorted | ForEach-Object {
 
-        $Pass1 = $global:Wallets.Wallet1.Keys
-        $User1 = $global:Wallets.Wallet1.$($(arg).Passwordcurrency1).address
-        $Pass2 = $global:Wallets.Wallet2.Keys
-        $User2 = $global:Wallets.Wallet2.$($(arg).Passwordcurrency2).address
-        $Pass3 = $global:Wallets.Wallet3.Keys
-        $User3 = $global:Wallets.Wallet3.$($(arg).Passwordcurrency3).address
+    ## Deviation of estimates vs returns
+    $Day_Estimate = [Double]$_.estimate_last24h;
+    $Day_Return = [Double]$_.actual_last24h;
+    $_ | Add-Member "deviation" (Global:Start-Shuffle $Day_Estimate $Day_Return)
+
+    ## Naming
+    $StatAlgo = $_.Name -replace "`_", "`-"
+    $StatPath = "$($Name)_$($StatAlgo)_profit"
+
+    ## Determine Starting Estimate
+    if (-not (test-Path ".\stats\$StatPath") ) { $Estimate = [Double]$_.estimate_last24h }
+    else { $Estimate = [Double]$_.estimate_current }
+    
+    ## Connection Info
+    $Pool_Port = $_.port
+    $Pool_Host = "$($_.Original_Algo).mine.ahashpool.com$X"
+
+    ## Hashrate Volume
+    $Hashrate = $_.hashrate
+    if ([double]$HashRate -eq 0) { $Hashrate = 1 }  ## Set to prevent volume dividebyzero error
+
+    ## Estimate Info/Stat
+    $Divisor = 1000000 * $_.mbtc_mh_factor
+    $previous = [Math]::Max(([Double]$_.actual_last24h * 0.001) / $Divisor * (1 - ($_.fees / 100)), $SmallestValue)
+
+    ## Make New Stat
+    $Stat = [pool_stat]::new(
+        "$($Name)_$($StatAlgo)_profit", ## Name of Stat File
+        $interval, ## Current Interval Param
+        ($Estimate / $Divisor * (1 - ($_.fees / 100))), ## Stat value
+        $Max_Periods, ## Current Max_Periods Param
+        $Hashrate, ## Pool Current Hashrate
+        $_.Deviation                                    ## 24 estimate vs. 24 actual     
+    )
+        
+    ## Historical Bias Penalty To Incoming Estimate
+    $Level = $Stat.$stat_level
+    if ($Historical_Bias -gt 0) { $Level = [Math]::Max($Level + ($Level * $Stat.Deviation), 1E-20) }
+
+    ## Set Wallet Values
+    $Pass1 = $Wallets.Wallet1.Keys
+    $User1 = $Wallets.Wallet1.Pass1.address
+    $Rig1   = $Wallets.Wallet1.Rigname
+    $Pass2 = $Wallets.Wallet2.Keys
+    $User2 = $Wallets.Wallet2.Pass2.address
+    $Rig2   = $Wallets.Wallet2.Rigname
+    $Pass3 = $Wallets.Wallet3.Keys
+    $User3 = $Wallets.Wallet3.Pass3.address
+    $Rig3   = $Wallets.Wallet3.Rigname
                     
-        [Pool]::New(
-            ## Symbol
-            "$($_.Name)-Algo",
-            ## Algorithm
-            "$($_.Name)",
-            ## Level
-            $Level,
-            ## Stratum
-            "stratum+tcp",
-            ## Pool_Host
-            $Pool_Host,
-            ## Pool_Port
-            $Pool_Port,
-            ## User1
-            $User1,
-            ## User2
-            $User2,
-            ## User3
-            $User3,
-            ## Pass1
-            "c=$Pass1,id=$($(arg).RigName1)",
-            ## Pass2
-            "c=$Pass2,id=$($(arg).RigName2)",
-            ## Pass3
-            "c=$Pass3,id=$($(arg).RigName3)",
-            ## Previous
-            $previous
-        )
-    }
+    ## Create a New Pool Value
+    [Pool]::New(
+        ## Symbol
+        "$($_.Name)-Algo",
+        ## Algorithm
+        "$($_.Name)",
+        ## Level
+        $Level,
+        ## Stratum
+        "stratum+tcp",
+        ## Pool_Host
+        $Pool_Host,
+        ## Pool_Port
+        $Pool_Port,
+        ## User1
+        $User1,
+        ## User2
+        $User2,
+        ## User3
+        $User3,
+        ## Pass1
+        "c=$Pass1,id=$Rig1",
+        ## Pass2
+        "c=$Pass2,id=$Rig2",
+        ## Pass3
+        "c=$Pass3,id=$Rig3",
+        ## Previous
+        $previous,
+        ## Average Pool Hashrate
+        $Stat.volume_hashrate
+    )
 }
