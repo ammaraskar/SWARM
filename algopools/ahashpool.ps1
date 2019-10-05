@@ -84,11 +84,11 @@ $Pool_Sorted | ForEach-Object {
 
     ## Make New Stat
     $Stat = [pool_stat]::new(
-        "$($Name)_$($StatAlgo)_profit", ## Name of Stat File
-        $interval, ## Current Interval Param
+        "$($Name)_$($StatAlgo)_profit",                 ## Name of Stat File
+        $interval,                                      ## Current Interval Param
         ($Estimate / $Divisor * (1 - ($_.fees / 100))), ## Stat value
-        $Max_Periods, ## Current Max_Periods Param
-        $Hashrate, ## Pool Current Hashrate
+        $Max_Periods,                                   ## Current Max_Periods Param
+        $Hashrate,                                      ## Pool Current Hashrate
         $_.Deviation                                    ## 24 estimate vs. 24 actual     
     )
         
@@ -109,33 +109,19 @@ $Pool_Sorted | ForEach-Object {
                     
     ## Create a New Pool Value
     [Pool]::New(
-        ## Symbol
-        "$($_.Name)-Algo",
-        ## Algorithm
-        "$($_.Name)",
-        ## Level
-        $Level,
-        ## Stratum
-        "stratum+tcp",
-        ## Pool_Host
-        $Pool_Host,
-        ## Pool_Port
-        $Pool_Port,
-        ## User1
-        $User1,
-        ## User2
-        $User2,
-        ## User3
-        $User3,
-        ## Pass1
-        "c=$Pass1,id=$Rig1",
-        ## Pass2
-        "c=$Pass2,id=$Rig2",
-        ## Pass3
-        "c=$Pass3,id=$Rig3",
-        ## Previous
-        $previous,
-        ## Average Pool Hashrate
-        $Stat.volume_hashrate
+        "$($_.Name)-Algo",    ## Symbol
+        "$($_.Name)",         ## Algorithm
+        $Level,               ## Level
+        "stratum+tcp",        ## Stratum
+        $Pool_Host,           ## Pool_Host
+        $Pool_Port,           ## Pool_Port
+        $User1,               ## User1
+        $User2,               ## User2
+        $User3,               ## User3
+        "c=$Pass1,id=$Rig1",  ## Pass1
+        "c=$Pass2,id=$Rig2",  ## Pass2
+        "c=$Pass3,id=$Rig3",  ## Pass3
+        $previous,            ## Previous
+        $Stat.volume_hashrate ## Average Pool Hashrate
     )
 }
