@@ -15,122 +15,68 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #######                      Startup                                    ######
 ##############################################################################
 
-## Set Current Path
-$Global:config = [hashtable]::Synchronized(@{ })
+## Modules
+using module ".\build\powershell\variables.psm1"
+using module ".\build\powershell\parameters.psm1"
+using module ".\build\powershell\configs.psm1"
+using module ".\build\powershell\methods.psm1"
+using module ".\build\powershell\logging.psm1"
+
+## Culture Info
 [cultureinfo]::CurrentCulture = 'en-US'
+$global:Dir = "$(Split-Path $script:MyInvocation.MyCommand.Path)".replace("/var/tmp", "root")
 
-$Global:Config.Add("vars", @{ })
-$Global:Config.vars.Add( "dir", (Split-Path $script:MyInvocation.MyCommand.Path) )
-$Global:Config.vars.dir = $Global:Config.vars.dir -replace "/var/tmp", "/root"
-Set-Location $Global:Config.vars.dir
+## Build Config Table
+$Global:config = [hashtable]::Synchronized(
+    @{
+        parameters = [parameters]::New($dir)
+        variables  = [variables]::New($dir)
+        configs = [configs]::New($dir)
+    }
+)
 
-##filepath dir
-. .\build\powershell\global\modules.ps1
-$env:Path += ";$($(vars).dir)\build\cmd"
+## Set Aliases
+. .\build\powershell\scripts\aliases.ps1
 
-## Window Security Items
+## Just in Case- Set Location
+Set-Location $Dir
+
+## Clear log
+[log]::clear()
+
+##PATH
+if($IsWindows) { $env:Path += ";$(Join-Path $Dir ".\build\cmd")" }
+if($IsLinux) { $env:Path += ";$(Join-Path $Dir ".\build\bash")" }
+
+## Window Items
 if ($IsWindows) {
-    $Host.UI.RawUI.BackgroundColor = 'Black'
-    $Host.UI.RawUI.ForegroundColor = 'White'
-    try { Get-ChildItem $($(vars).dir) -Recurse | Unblock-File } catch { }
-    ## Exclusion Windows Defender
-    try { 
-        if ((Get-MpPreference).ExclusionPath -notcontains (Convert-Path .)) { 
-            Start-Process "powershell" -Verb runAs -ArgumentList "Add-MpPreference -ExclusionPath `'$($(vars).dir)`'" -WindowStyle Minimized 
-        } 
-    }
-    catch { }
-    ## Set Firewall Rule
-    try { 
-        $Net = Get-NetFireWallRule 
-        if ($Net) {
-            try { 
-                if ( -not ( $Net | Where { $_.DisplayName -like "*swarm.ps1*" } ) ) { 
-                    New-NetFirewallRule -DisplayName 'swarm.ps1' -Direction Inbound -Program "$($(vars).dir)\swarm.ps1" -Action Allow | Out-Null
-                } 
-            }
-            catch { }
-        }
-    }
-    catch { }
-    Remove-Variable -name Net -ErrorAction Ignore
-
-    ## Windows Icon
-    Start-Process "powershell" -ArgumentList "Set-Location `'$($(vars).dir)`'; .\build\powershell\scripts\icon.ps1 `'$($(vars).dir)\build\apps\icons\SWARM.ico`'" -NoNewWindow
-
-    ## Add .dll
-    Add-Type -Path ".\build\apps\launchcode.dll"
+    ## Windows Security Items & Pre-Launch
+    . .\build\powershell\scripts\win_security.ps1
+    ## Add launch .dll
+    Add-Type -Path "$Dir\build\apps\launchcode.dll"
 }
 
 ## Debug Mode- Allow you to run with last known arguments or arguments.json.
-$(vars).Add("debug", $false)
-if ($global:config.vars.debug -eq $True) {
-    Start-Transcript ".\logs\debug.log"
+$Config.variables.debug = $false
+if ($config.variables.debug -eq $True) {
+    Start-Transcript "$Dir\logs\debug.log"
     if (($IsWindows)) { Set-ExecutionPolicy Bypass -Scope Process }
 }
 
-## Load Modules
-$(vars).Add("startup", "$($(vars).dir)\build\powershell\startup")
-$(vars).Add("web", "$($(vars).dir)\build\api\web")
-$(vars).Add("global", "$($(vars).dir)\build\powershell\global")
-$(vars).Add("build", "$($(vars).dir)\build\powershell\build")
-$(vars).Add("pool", "$($(vars).dir)\build\powershell\pool")
-$(vars).Add("miner", "$($(vars).dir)\build\powershell\miner")
-$(vars).Add("control", "$($(vars).dir)\build\powershell\control")
-$(vars).Add("run", "$($(vars).dir)\build\powershell\run")
-$(vars).Add("benchmark", "$($(vars).dir)\build\powershell\benchmark")
-
-$p = [Environment]::GetEnvironmentVariable("PSModulePath")
-if ($P -notlike "*$($(vars).dir)\build\powershell*") {
-    $P += ";$($(vars).startup)";
-    $P += ";$($(vars).web)";
-    $P += ";$($(vars).global)";
-    $P += ";$($(vars).build)";
-    $P += ";$($(vars).pool)";
-    $P += ";$($(vars).miner)";
-    $P += ";$($(vars).control)";
-    $P += ";$($(vars).run)";
-    $P += ";$($(vars).benchmark)";
-    [Environment]::SetEnvironmentVariable("PSModulePath", $p)
-    Write-Host "Modules Are Loaded" -ForegroundColor Green
-}
-Remove-Variable -name P -ErrorAction Ignore
-
-$(vars).Add("Modules", @())
-
 ## Get Parameters
-Global:Add-Module "$($(vars).startup)\parameters.psm1"
-Global:Get-Parameters
-$(arg).TCP_Port | Out-File ".\build\txt\port.txt"
+$config.parameters.get_parameters()
+$config.parameters.get_hive_parameters()
+$config.parameters.get_swarm_parameters()
 
-##Insert Single Modules Here
-
-## Startup Modules
-Import-Module "$($(vars).global)\stats.psm1" -Scope Global
-Import-Module "$($(vars).global)\hashrates.psm1" -Scope Global
-Import-Module "$($(vars).global)\gpu.psm1" -Scope Global
-. .\build\powershell\global\classes.ps1
-
-if ($IsWindows -and [string]$Global:config.hive_params.MINER_DELAY -ne "") {
-    Write-Host "Miner Delay Specified- Sleeping for $($Global:config.hive_params.MINER_DELAY)"
-    $Sleep = [Double]$Global:config.hive_params.MINER_DELAY
-    Start-Sleep -S $Sleep
-    Remove-Variable -Name Sleep -ErrorAction Ignore
-}
+## Get Configs
+$config.configs.get_configs()
 
 ## Crash Reporting
-Global:Add-Module "$($(vars).startup)\crashreport.psm1"
-Global:Start-CrashReporting
+[Booting]::CrashReporting()
 
-## Start The Log
-Global:Add-Module "$($(vars).startup)\startlog.psm1"
-$($(vars).dir) | Set-Content ".\build\bash\dir.sh";
-$Global:log_params = [hashtable]::Synchronized(@{ })
-$Global:log_params.Add("lognum", 1)
-$global:log_params.Add("logname", $null)
-$Global:log_params.Add( "dir", (Split-Path $script:MyInvocation.MyCommand.Path) )
-$Global:log_params.dir = $Global:Config.vars.dir -replace "/var/tmp", "/root"
-Global:Start-Log -Number $global:log_params.lognum;
+## Initialize methods
+$SWARM = [SWARM]::New()
+$SWARM.start_update()
 
 ## Initiate Update Check
 Global:Add-Module "$($(vars).startup)\remoteagent.psm1"
@@ -251,7 +197,7 @@ if ([String]$(arg).Admin_Fee -eq 0) { if (test-Path ".\admin") { Remove-Item ".\
 
 ## Stop stray miners from previous run before loop
 Global:Add-Module "$($(vars).control)\stray.psm1"
-if($IsWindows) { Global:Stop-StrayMiners -Startup }
+if ($IsWindows) { Global:Stop-StrayMiners -Startup }
 
 ##Get Optional Miners
 Global:Get-Optional
@@ -531,7 +477,7 @@ While ($true) {
         ## Stop miners that need to be stopped
         Global:Stop-ActiveMiners
         ## Attack Stray Miners, if they are running
-        if($IsWindows) { Global:Stop-StrayMiners }
+        if ($IsWindows) { Global:Stop-StrayMiners }
         ## Start New Miners
         Global:Start-NewMiners -Reason "Launch"
 
