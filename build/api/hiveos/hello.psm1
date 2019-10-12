@@ -65,7 +65,7 @@ function Global:Start-Hello($RigData) {
         $message = $response
     }
     catch [Exception] {
-        log "Exception: "$_.Exception.Message -ForegroundColor Red;
+        log "Exception: $($_.Exception.Message)" -ForegroundColor Red;
     }
         
     return $message
@@ -179,6 +179,9 @@ function Global:Start-WebStartup($response, $Site) {
                         $Params | convertto-Json | Out-File ".\config\parameters\newarguments.json"
 
                         ## Change parameters after getting them.
+                        ## First change -Type and -Cputhreads if empty
+                        if([string]$Params.Type -eq "") { $params.type = $(vars).types }
+                        if([string]$Params.CpuThreads -eq "") { $params.CpuThreads = $(vars).threads }
                         $global:Config.params = @{ }
                         $global:Config.user_params = @{ }
                         $params.keys | % {
