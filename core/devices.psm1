@@ -1,6 +1,8 @@
 Using namespace System;
 Using namespace System.Text;
+Using namespace System.Diagnostics;
 Using module ".\helper.psm1";
+Using module ".\process.psm1";
 
 if(-not $Global:DIR) { $Global:Dir = (Convert-Path ".")}
 
@@ -30,6 +32,9 @@ class RIG {
     [String]$kernel;
     [string[]]$ip
     [String]$boot_time;
+    [hashtable]$config;
+    [hashtable]$wallet;
+    [hashtable]$params;
 
     RIG() {
         ## Kernel
@@ -199,6 +204,7 @@ class CPU {
     [string]$model;
     [string]$cpu_id;
     [string]$cores;
+    [hashtable]$features = @{};
 
     CPU() {
         $this.Model = $(
@@ -222,8 +228,16 @@ class CPU {
                 Invoke-Expression "lscpu | grep `"`^Flags:`.`*aes`" | wc -l"
             }
             if ($global:IsWindows) {
-                $Get = $(Invoke-Expression ".\build\apps\features-win\features-win.exe" | Select-Object -Skip 1 | ConvertFrom-StringData)."AES-NI"
-                if ($Get -eq "Yes") { $HasAES = 1 }else { $HasAES = 0 }
+                $get_features = [Proc_Data]::Read("$env:SWARM_DIR\apps\features\features.exe",$null,$null,0);
+                $Get_AES = "No";
+                if($get_features.count -gt 0) {
+                    $get_features = $get_features | Select-Object -Skip 1 | ConvertFrom-StringData
+                    foreach($key in $get_features.keys) {
+                        $this.features.Add($key,$get_features.$key)
+                    }
+                    $Get_AES = $this.features."AES-NI"
+                }
+                if ($Get_AES -eq "Yes") { $HasAES = 1 }else { $HasAES = 0 }
                 $HasAES
             }
         )
@@ -384,7 +398,10 @@ class RIG_RUN {
 
     ## Get GPU information
     static [Array] get_gpus() {
+        ## this runs gpu-detect, which is a script that users can run.
         $gpus = @()
+
+        
         
         ## Insert Code Here
 
@@ -512,28 +529,6 @@ class RIG_RUN {
             $data.uid = $StringBuilder.ToString()     
         }
         return $data
-    }
-
-    ## Runs dmidecode. Is used for data
-    static [string[]] dmidecode($arguments = $null) {
-        [string[]] $dmidecode = @()
-        $info = [System.Diagnostics.ProcessStartInfo]::new()
-        $info.FileName = 'dmidecode'
-        $info.UseShellExecute = $false
-        $info.RedirectStandardOutput = $true
-        $info.Verb = "runas"
-        if($arguments) {$info.Arguments = $arguments}
-        $Proc = [System.Diagnostics.Process]::New()
-        $proc.StartInfo = $Info
-        $proc.Start() | Out-Null
-        $proc.WaitForExit(15000) | Out-Null
-        if ($proc.HasExited) {
-            while(-not $Proc.StandardOutput.EndOfStream){
-                $dmidecode += $Proc.StandardOutput.ReadLine()
-            }    
-        }
-        else { Stop-Process -Id $Proc.Id -ErrorAction Ignore }
-        return $dmidecode
     }
 }
 
