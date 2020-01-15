@@ -208,25 +208,42 @@ foreach ($card in $AMD_CARDS) {
     $GPUS += [AMD_CARD]::New($card, $subvendor, $memsize, $vbios, $memtype)
 }
 
-foreach($card in $OTHER_CARDS) {
+foreach ($card in $OTHER_CARDS) {
     $GPUS += $card
 }
 
 $GPUS = $GPUS | Sort-Object busid
 
+for ($i = 0; $i -lt $GPUS.count; $i++) { 
+    if ("PCI_SLOT" -in $GPUS[$i].PSOBject.Properties.Name) {
+        $GPUS[$i].PCI_SLOT = $i 
+    }
+}
+$count = 0;
+$GPUS | Where brand -eq "NVIDIA" | ForEach-Object {
+    $_.Device = $count
+    $count++
+}
+$count = 0;
+$GPUS | Where brand -eq "AMD" | ForEach-Object {
+    $_.Device = $count
+    $count++
+}
+
+
 ## Now that table is built, time to perform actions.
 
-if($args[0] -eq "list" -or $args[0] -eq "json") {
+if ($args[0] -eq "list" -or $args[0] -eq "json") {
     $tolist = $(
-        if($args[1] -eq "NVIDIA") {$GPUS | Where brand -eq "NVIDIA"}
-        elseif($args[1] -eq "AMD") {$GPUS | Where brand -eq "AMD"}
-        else{$GPUS}
+        if ($args[1] -eq "NVIDIA") { $GPUS | Where brand -eq "NVIDIA" }
+        elseif ($args[1] -eq "AMD") { $GPUS | Where brand -eq "AMD" }
+        else { $GPUS }
     )
 
-    if($args[0] -eq "list") {
-        for($i=0; $i -lt $tolist.count; $i++) {
+    if ($args[0] -eq "list") {
+        for ($i = 0; $i -lt $tolist.count; $i++) {
             $gpu = $tolist[$i]
-            switch($gpu.brand) {
+            switch ($gpu.brand) {
                 "NVIDIA" {
                     $color = $GREEN
                     $additional = "($($gpu.mem) $($gpu.plim_def))"
@@ -235,7 +252,7 @@ if($args[0] -eq "list" -or $args[0] -eq "json") {
                     $color = $RED
                     $additional = "($($gpu.mem) $($gpu.vbios) $($gpu.mem_type))"
                 }
-                "cpu" {$color = $YELLOW}
+                "cpu" { $color = $YELLOW }
             }
             Write-Host "${BLUE}$i${NOCOLOR} $($gpu.busid) ${color}$($gpu.name)${NOCOLOR} $additional"
         }
@@ -243,21 +260,21 @@ if($args[0] -eq "list" -or $args[0] -eq "json") {
         }
     }
 
-    if($args[0] -eq "json") {
-        $tolist | ConvertTo-Json | Out-Host
+    if ($args[0] -eq "json") {
+        $tolist | Select -ExcludeProperty PCI_SLOT, Device, Speed, Temp, Fan, Wattage | ConvertTo-Json | Out-Host
     }
 }
 
-if($args[0] -eq "count") {
+if ($args[0] -eq "count") {
     $tolist = $(
-        if($args[1] -eq "NVIDIA") {$GPUS | Where brand -eq "NVIDIA"}
-        elseif($args[1] -eq "AMD") {$GPUS | Where brand -eq "AMD"}
-        else{$GPUS}
+        if ($args[1] -eq "NVIDIA") { $GPUS | Where brand -eq "NVIDIA" }
+        elseif ($args[1] -eq "AMD") { $GPUS | Where brand -eq "AMD" }
+        else { $GPUS }
     )
     $tolist.count
 }
 
-if($args[0] -eq "swarm") {
+if ($args[0] -eq "swarm") {
     return $GPUS
 }
 

@@ -98,13 +98,15 @@ class RIG {
         $hello = @{}
         $get_cpu = $this.cpu;
         $get_cpu.cores = $get_cpu.cores.ToString();
+        $get_cpu = $get_cpu | Select -ExcludeProperty features
         $Hello.Add("cpu", $get_cpu);
         $Hello.Add("version", $this.version);
         $Hello.Add("nvidia_version", $this.nvidia_version);
         $Hello.Add("amd_version", $this.amd_version);
         $Hello.Add("gpu_count_nvidia", $this.gpu_count_nvidia);
         $Hello.Add("gpu_count_amd", $this.gpu_count_amd);
-        $Hello.Add("gpu", $this.gpus);
+        $get_gpu = $this.gpus | Select -ExcludeProperty PCI_SLOT, Device, Speed, Temp, Fan, Wattage
+        $Hello.Add("gpu", $get_gpu);
         $Hello.Add("uid", $this.uid);
         $Hello.Add("disk_model", $this.disk.disk_model);
         $Hello.Add("mb", $this.mb);
@@ -133,7 +135,7 @@ class DEVICE_GROUP {
     [Int]$Rej_Percent ## Rejection Percent
     [Array]$Devices = @() ## Can be AMD cards, NVIDIA cards, ASIC, CPU
 
-    Add_GPU([GPU]$GPU) {
+    Add_GPU($GPU) {
         $this.Devices += $GPU
         $this.Device = $GPU.Brand
     }

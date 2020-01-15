@@ -1,21 +1,3 @@
-## GPU class constructor for SWARM. These are cards used for mining.
-class GPU {
-    [String]$Brand;
-    [Int]$PCI_SLOT; #Denoted Order It Is On The Bus
-    [Int]$Device; #Denoted Order It Is Among Same Model Cards
-    [Decimal]$Speed; #Current Hashrate
-    [Int]$Temp = 0; #Current Temperature
-    [Int]$Fan = 0; #Current Fan Speed
-    [Int]$Wattage = 0; #Current Wattage
-
-    GPU([AMD_CARD]$gpu) {
-
-    }
-
-    GPU([NVIDIA_CARD]$gpu) {
-
-    }
-}
 
 ## Base class for video card
 class VIDEO_CARD {
@@ -41,6 +23,12 @@ class NVIDIA_CARD {
     [string]$plim_min;
     [string]$plim_def;
     [string]$plim_max;
+    [Int]$PCI_SLOT; #Denoted Order It Is On The Bus
+    [Int]$Device; #Denoted Order It Is Among Same Model Cards
+    [Decimal]$Speed; #Current Hashrate
+    [Int]$Temp = 0; #Current Temperature
+    [Int]$Fan = 0; #Current Fan Speed
+    [Int]$Wattage = 0; #Current Wattage
 
     NVIDIA_CARD (
         [VIDEO_CARD]$card, 
@@ -72,6 +60,12 @@ class AMD_CARD {
     [String]$mem
     [String]$vbios
     [String]$mem_type
+    [Int]$PCI_SLOT; #Denoted Order It Is On The Bus
+    [Int]$Device; #Denoted Order It Is Among Same Model Cards
+    [Decimal]$Speed; #Current Hashrate
+    [Int]$Temp = 0; #Current Temperature
+    [Int]$Fan = 0; #Current Fan Speed
+    [Int]$Wattage = 0; #Current Wattage
 
     AMD_CARD($card, $Subvendor, $Mem, $Vbios, $Mem_Type) {
         $this.busid = $card.Busid;

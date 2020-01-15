@@ -16,5 +16,7 @@ class SWARM {
         $Global:Log.screen('Building Rig Before Starting GUI...This can take a moment.')
         $Global:Data = [Hashtable]::Synchronized(@{})
         $Global:Data.Add('rig',[SWARM_RIG]::New())
+
+        . .\scripts\gpu_check.ps1 list
     }
 }
