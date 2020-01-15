@@ -88,14 +88,14 @@ class RIG {
 
         ## Get GPU Information
         $this.gpus = [RIG_RUN]::get_gpus();
-        $this.gpu_count_amd = ($this.gpus | Where {$_ -is [AMD_CARD]}).count
-        $this.gpu_count_nvidia = ($this.gpus | Where {$_ -is [NVIDIA_CARD]}).count
+        $this.gpu_count_amd = ($this.gpus | Where { $_ -is [AMD_CARD] }).count
+        $this.gpu_count_nvidia = ($this.gpus | Where { $_ -is [NVIDIA_CARD] }).count
 
     }
 
     ## Returns JSON for hello method.
     [string] hello () {
-        $hello = @{}
+        $hello = @{ }
         $get_cpu = $this.cpu;
         $get_cpu.cores = $get_cpu.cores.ToString();
         $get_cpu = $get_cpu | Select -ExcludeProperty features
@@ -270,5 +270,15 @@ class RIG_RUN {
             $data.uid = $StringBuilder.ToString()     
         }
         return $data
+    }
+
+    static [void] list_gpus() {
+        $data = [Proc_Data]::Read("$env:SWARM_DIR\win\gpu_check.bat", $null, "list", 0);
+        if ($Global:Log) {
+            $Global:log.screen($data);
+        } 
+        else {
+            $data | ForEach-Object { Write-Host $_};
+        }
     }
 }
