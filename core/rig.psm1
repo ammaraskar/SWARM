@@ -96,10 +96,6 @@ class RIG {
     ## Returns JSON for hello method.
     [string] hello () {
         $hello = @{}
-        $Hello.Add('method', "hello");
-        $Hello.Add('jsonrpc', '2.0');
-        $Hello.Add('id', "0");
-        $Hello.Add('params', @{ });
         $get_cpu = $this.cpu;
         $get_cpu.cores = $get_cpu.cores.ToString();
         $Hello.Add("cpu", $get_cpu);

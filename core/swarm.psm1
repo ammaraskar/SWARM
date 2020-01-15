@@ -13,7 +13,7 @@ class SWARM {
         [startup]::make_folders();
 
         ## Build Rig
-        $Global:Log.screen('Building Rig Before Starting GUI.')
+        $Global:Log.screen('Building Rig Before Starting GUI...This can take a moment.')
         $Global:Data = [Hashtable]::Synchronized(@{})
         $Global:Data.Add('rig',[SWARM_RIG]::New())
     }
