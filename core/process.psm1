@@ -15,7 +15,7 @@ class Proc_Data {
         $proc.StartInfo = $Info
         $proc.Start() | Out-Null
         if($wait -gt 0) {
-            $proc.WaitForExit($wait) | Out-Null
+            $proc.WaitForExit(($wait*1000)) | Out-Null
         }
         else{
             $proc.WaitForExit() | Out-Null
@@ -25,7 +25,12 @@ class Proc_Data {
                 $Data += $Proc.StandardOutput.ReadLine()
             }    
         }
-        else { Stop-Process -Id $Proc.Id -ErrorAction Ignore }
+        else { 
+            Stop-Process -Id $Proc.Id -ErrorAction Ignore 
+            $Message = "Error: $Path timed out. Attempting To Stop Manually."
+            if($Global:Log){$Global:Log.screen($Message,"Red")}
+            else{Write-Host $Message -ForegroundColor Red}
+        }
         return $data
     }
 }

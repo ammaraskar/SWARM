@@ -1,5 +1,6 @@
 Using namespace System;
 Using module "..\core\process.psm1";
+Using module "..\core\gpu.psm1";
 . .\core\colors.ps1
 
 $GPUZ = $false;
@@ -22,12 +23,7 @@ if ($IsWindows) {
         cat $lspci_file 
     }
 
-    $new_gpu_list = $lspci |
-    Where { $_ -like "*VGA*" -or $_ -like "*3D controller*" } |
-    Where { $_ -like "*Advanced Micro Devices*" -or $_ -like "*NVIDIA*" } |
-    Where { $_ -notlike "*RS880*" } |
-    Where { $_ -notlike "*Stoney*" } |
-    Where { $_ -notlike "*nForce*" }
+    $new_gpu_list = $lspci | Where { $_ -like "*VGA*" -or $_ -like "*3D controller*" }
 
     if ([string]$new_gpu_list -ne $old_gpu_list) {
         $GPUZ = $true;
@@ -93,7 +89,7 @@ if ($IsWindows) {
 }
 
 ## Build GPU hashtable
-$GPUS = @{ }
+$Video_Cards = @()
 
 $NVIDIA_CARDS = $lspci |
 Where { $_ -like "*VGA*" -or $_ -like "*3D controller*" } |
@@ -106,10 +102,162 @@ Where { $_ -like "*Advanced Micro Devices*" } |
 Where { $_ -notlike "*RS880*" } |
 Where { $_ -notlike "*Stoney*" }
 
-foreach ($card in $NVIDIA_CARDS) {
-    
+$OTHER_CARDS = $lspci |
+Where { $_ -like "*VGA*" -or $_ -like "*3D controller*" } |
+Where { $_ -notlike "*Advanced Micro Devices*" } |
+Where { $_ -notlike "*NVIDIA*" }
+
+
+foreach ($card in $NVIDIA_CARDS) { 
+    ## Get Name
+    $Regex = '\[(.*)\]';
+    $match = ([Regex]::Matches($card, $Regex).Value)
+    if ([string]$match -ne "") {
+        $name = ($match.replace('[', '')).replace(']', '')
+    }
+    else {
+        $name = $card.split('controller: ')[1]
+        $name = $name.split(' (')[0]
+    }
+
+    ##Get BusId
+    $busid = $card.split(' VGA')[0]
+    $busid = $busid.split(' 3D')[0]
+
+    $brand = "NVIDIA"
+
+    $Video_Cards += [VIDEO_CARD]::New($busid, $name, $brand);
+}
+
+foreach ($card in $AMD_CARDS) {
+    $busid = $card.split(' VGA')[0]
+    $busid = $busid.split(' 3D')[0]
+
+    if ($IsWindows) {
+        $Get_card = $data | Where location -eq $busid
+        $name = $Get_card.cardname
+    }
+
+    $brand = "AMD"
+
+    if ($IsLinux) {
+    }
+
+    $Video_Cards += [VIDEO_CARD]::New($busid, $name, $brand)
+}
+
+foreach ($card in $OTHER_CARDS) {
+    $busid = $card.split(' VGA')[0]
+    $busid = $busid.split(' 3D')[0]
+
+    $brand = "cpu"
+
+    $name = $card.split('controller: ')[1]
+    $name = $name.split(' (')[0]
+
+    $Video_Cards += [VIDEO_CARD]::New($busid, $name, $brand)
 }
 
 
+$Video_Cards = $Video_Cards | Sort-Object busid
 
+## now that we have all video cards, build GPUS
+
+$GPUS = @()
+
+$NVIDIA_CARDS = $Video_Cards | Where brand -eq "NVIDIA"
+$AMD_CARDS = $Video_Cards | Where brand -eq "AMD"
+$OTHER_CARDS = $Video_Cards | Where brand -eq "cpu"
+
+foreach ($card in $NVIDIA_CARDS) {
+    $nvidia_smi = Join-Path $env:ProgramFiles "NVIDIA Corporation\NVSMI\nvidia-smi.exe"
+    $smi = [Proc_Data]::Read($nvidia_smi, $null, '--query-gpu=gpu_bus_id,gpu_name,memory.total,power.min_limit,power.default_limit,power.max_limit,vbios_version --format=csv', 10)
+    if ($smi) { $smi = $smi | ConvertFrom-Csv }
+    foreach ($item in $smi) { $item.'pci.bus_id' = $item.'pci.bus_id'.replace('00000000:', '') }
+    $smi_card = $smi | Where pci.bus_id -eq $card.busid
+    if ($IsWindows) {
+        $vmms = [Proc_Data]::Read("$env:SWARM_DIR\apps\pci-win\lspci.exe", $null, "-vmms $($card.busid)", 0)
+    }
+    elseif ($IsLinux) {
+        $vmms = [Proc_Data]::Read("lspci", $null, "-vmms $($card.busid)", 0)
+    }
+    $subvendor = ((($vmms | Select-String "SVendor").line).split("SVendor:")[1]).TrimStart("`t")
+    $GPUS += [NVIDIA_CARD]::new($card, $subvendor, $smi_card.'memory.total [MiB]', $smi_card.vbios_version, $smi_card.'power.min_limit [W]', $smi_card.'power.default_limit [W]', $smi_card.'power.max_limit [W]')
+}
+
+foreach ($card in $AMD_CARDS) {
+    if ($IsWindows) {
+        $vmms = [Proc_Data]::Read("$env:SWARM_DIR\apps\pci-win\lspci.exe", $null, "-vmms $($card.busid)", 0)
+        $gpuz_card = $data | where location -eq $card.busid
+    }
+    elseif ($IsLinux) {
+        $vmms = [Proc_Data]::Read("lspci", $null, "-vmms $($card.busid)", 0)
+    }
+    $subvendor = ((($vmms | Select-String "SVendor").line).split("SVendor:")[1]).TrimStart("`t")
+
+    ## Mem invfor
+    if ($IsWindows) {
+        $memtype = "$($gpuz_card.memvendor) $($gpuz_card.memtype)"
+        $vbios = $gpuz_card.biosversion
+        $memsize = "$($gpuz_card.memsize) MiB"
+    }
+    if ($IsLinux) {
+
+    }
+
+    $GPUS += [AMD_CARD]::New($card, $subvendor, $memsize, $vbios, $memtype)
+}
+
+foreach($card in $OTHER_CARDS) {
+    $GPUS += $card
+}
+
+$GPUS = $GPUS | Sort-Object busid
+
+## Now that table is built, time to perform actions.
+
+if($args[0] -eq "list" -or $args[0] -eq "json") {
+    $tolist = $(
+        if($args[1] -eq "NVIDIA") {$GPUS | Where brand -eq "NVIDIA"}
+        elseif($args[1] -eq "AMD") {$GPUS | Where brand -eq "AMD"}
+        else{$GPUS}
+    )
+
+    if($args[0] -eq "list") {
+        for($i=0; $i -lt $tolist.count; $i++) {
+            $gpu = $tolist[$i]
+            switch($gpu.brand) {
+                "NVIDIA" {
+                    $color = $GREEN
+                    $additional = "($($gpu.mem) $($gpu.plim_def))"
+                }
+                "AMD" {
+                    $color = $RED
+                    $additional = "($($gpu.mem) $($gpu.vbios) $($gpu.mem_type))"
+                }
+                "cpu" {$color = $YELLOW}
+            }
+            Write-Host "${BLUE}$i${NOCOLOR} $($gpu.busid) ${color}$($gpu.name)${NOCOLOR} $additional"
+        }
+        $tolist | Foreach {
+        }
+    }
+
+    if($args[0] -eq "json") {
+        $tolist | ConvertTo-Json | Out-Host
+    }
+}
+
+if($args[0] -eq "count") {
+    $tolist = $(
+        if($args[1] -eq "NVIDIA") {$GPUS | Where brand -eq "NVIDIA"}
+        elseif($args[1] -eq "AMD") {$GPUS | Where brand -eq "AMD"}
+        else{$GPUS}
+    )
+    $tolist.count
+}
+
+if($args[0] -eq "swarm") {
+    return $GPUS
+}
 
