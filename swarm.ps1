@@ -8,23 +8,25 @@ if ($IsLinux) { $Scripts = [IO.Path]::Join($Dir, "linux"); }
 $Target1 = [EnvironmentVariableTarget]::Machine
 $Target2 = [EnvironmentVariableTarget]::Process
 
-if ($IsLinux) {
-    $PATH = ([Environment]::GetEnvironmentVariable('PATH')).Split(":") | Where { $_ -ne "" } | Where { $_ -notlike "*SWARM*" }
-    if ($Scripts -NotIn $PATH) { $PATH += $Scripts; }
-    $PATH = $PATH -Join ":"
-}
-elseif ($IsWindows) {
-    $PATH = ([Environment]::GetEnvironmentVariable('PATH', $Target1)).Split(";") | Where { $_ -ne "" } | Where { $_ -notlike "*SWARM*" }
-    if ($Scripts -NotIn $PATH) { $PATH += $Scripts; }
-    $PATH = $PATH -Join ";";
+if($IsLinux) { $Divider = ":"}
+elseif($IsWindows { $Divider = ";"}
 
-}
+## Add SWARM to PATH
+$PATH = ([Environment]::GetEnvironmentVariable('PATH')).Split($Divider) | Where { $_ -ne "" } | Where { $_ -notlike "*SWARM*" }
+if ($Scripts -NotIn $PATH) { $PATH += $Scripts; }
+$PATH = $PATH -Join $Divider
 
-## Set for both machine and this process.
+## Set SWARM_DIR $env for both machine and this process.
+## Add SWARM path.
 [environment]::SetEnvironmentVariable('SWARM_DIR', $Dir, $Target1);
-[environment]::SetEnvironmentVariable('SWARM_DIR', $Dir, $Target2);
 [environment]::SetEnvironmentVariable('PATH', $PATH, $Target1);
+
+## Reset Explorer If Windows
+if($IsWindows) {Stop-Process -name "explorer.exe" };
+
+## Set $env for Process
 [environment]::SetEnvironmentVariable('PATH', $PATH, $Target2);
+[environment]::SetEnvironmentVariable('SWARM_DIR', $Dir, $Target2);
 Set-Location $env:SWARM_DIR
 
 [SWARM]::main($args);
