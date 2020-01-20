@@ -22,7 +22,7 @@ $PATH = $PATH -Join $Divider
 [environment]::SetEnvironmentVariable('PATH', $PATH, $Target1);
 
 ## Reset Explorer If Windows
-if($IsWindows) {Stop-Process -name "explorer.exe" };
+if($IsWindows) {Stop-Process -ProcessName explorer };
 
 ## Set $env for Process
 [environment]::SetEnvironmentVariable('PATH', $PATH, $Target2);
