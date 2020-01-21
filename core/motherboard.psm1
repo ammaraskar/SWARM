@@ -9,7 +9,7 @@ class MOTHERBOARD {
 
     MOTHERBOARD() {
         $data = $(
-            if ($Global:IsLinux) { [Proc_Data]::read("dmidecode", $null, $null, 0) }
+            if ($Global:IsLinux) { [Proc_Data]::read((Join-Path $env:SWARM_DIR "\apps\dmidecode\dmidecode"), $null, $null, 0) }
             elseif ($Global:IsWindows) { Get-CimInstance Win32_BaseBoard }
         )
         $this.manufacturer = $(
@@ -30,7 +30,7 @@ class MOTHERBOARD {
         )
         $this.system_uuid = $(
             if ($global:ISLinux) {
-                [string]([Proc_Data]::Read("dmidecode", $null, "-s system-uuid", 0))
+                [string]([Proc_Data]::Read((Join-Path $env:SWARM_DIR "\apps\dmidecode\dmidecode"), $null, "-s system-uuid", 0))
             }
             if ($global:IsWindows) {
                 (Get-CimInstance -ClassName Win32_ComputerSystemProduct).UUID

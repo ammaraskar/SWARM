@@ -275,12 +275,18 @@ class RIG_RUN {
     }
 
     static [void] list_gpus() {
-        $data = [Proc_Data]::Read("$env:SWARM_DIR\win\gpu_check.bat", $null, "list", 0);
+        $data = ""
+        if ($Global:IsLinux) {
+            $data = [Proc_Data]::Read((Join-Path $env:SWARM_DIR "linux\gpu_check"), $null, "list", 0);
+        }
+        elseif ($Global:IsWindows) {
+            $data = [Proc_Data]::Read((Join-Path $env:SWARM_DIR "win\gpu_check.bat"), $null, "list", 0);
+        }
         if ($Global:Log) {
             $Global:log.screen($data);
         } 
         else {
-            $data | ForEach-Object { Write-Host $_};
+            $data | ForEach-Object { Write-Host $_ };
         }
     }
 }

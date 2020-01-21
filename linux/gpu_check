@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+pwsh -command "$SWARM_DIR\scripts\gpu_check.ps1 %*"
