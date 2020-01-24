@@ -1,3 +1,4 @@
+Using module ".\process.psm1";
 
 ## Base class for video card
 class VIDEO_CARD {
@@ -38,7 +39,7 @@ class NVIDIA_CARD {
         [string]$Plim_min, 
         [string]$Plim_def, 
         [string]$Plim_max
-        ) {
+    ) {
         $this.busid = $card.busid;
         $this.name = $card.name;
         $this.brand = $card.brand;
@@ -80,10 +81,18 @@ class AMD_CARD {
 
 ## NVIDIA specific
 class NVIDIA_RUN {
+
     static [string] get_driver() {
         $driver = "0.0"
-        $smi = (invoke-expression "nvidia-smi -h" | Select -First 1).split("-- v") | Select -Last 1
-        if ($smi) { $driver = $smi }
+        $smi_path = "/usr/bin/nvidia-smi"
+        if ($Global:IsWindows) {
+            $smi_path = Join-Path $env:ProgramFiles "NVIDIA Corporation\NVSMI\nvidia-smi.exe"
+        }
+        $check = [IO.File]::Exists($smi_path)
+        if ($check) {
+            $nvidia_smi = [Proc_Data]::Read($smi_path, $null, "-h", 0)
+            $driver = $nvidia_smi.split("-- v") | Select -Last 1
+        }
         return $driver;
     }
 
