@@ -24,12 +24,16 @@ class NVIDIA_CARD {
     [string]$plim_min;
     [string]$plim_def;
     [string]$plim_max;
-    [Int]$PCI_SLOT; #Denoted Order It Is On The Bus
-    [Int]$Device; #Denoted Order It Is Among Same Model Cards
-    [Decimal]$Speed; #Current Hashrate
-    [Int]$Temp = 0; #Current Temperature
-    [Int]$Fan = 0; #Current Fan Speed
-    [Int]$Wattage = 0; #Current Wattage
+    [Int]$PCI_SLOT;
+    [Int]$Device;
+    [Decimal]$Speed = 0.0;
+    [Int]$Temp = 0;
+    [Int]$Current_Fan = 0;
+    [Int]$Wattage = 0;
+    [Int]$Fan_Speed = 0;
+    [Int]$Power_Limit = 0;
+    [int]$Core_Clock = 0;
+    [int]$Mem_Clock = 0;
 
     NVIDIA_CARD (
         [VIDEO_CARD]$card, 
@@ -61,12 +65,19 @@ class AMD_CARD {
     [String]$mem
     [String]$vbios
     [String]$mem_type
-    [Int]$PCI_SLOT; #Denoted Order It Is On The Bus
-    [Int]$Device; #Denoted Order It Is Among Same Model Cards
-    [Decimal]$Speed; #Current Hashrate
-    [Int]$Temp = 0; #Current Temperature
-    [Int]$Fan = 0; #Current Fan Speed
-    [Int]$Wattage = 0; #Current Wattage
+    [Int]$PCI_SLOT;
+    [Int]$Device;
+    [Decimal]$Speed;
+    [Int]$Temp = 0;
+    [Int]$Current_Fan = 0;
+    [Int]$Wattage = 0;
+    [int]$Core_Clock = 0;
+    [int]$Core_Voltage = 0;
+    [int]$Core_State = 0;
+    [int]$Mem_Clock = 0;
+    [int]$Mem_State = 0;
+    [int]$Fan_Speed = 0;
+    [int]$REF = 0;
 
     AMD_CARD($card, $Subvendor, $Mem, $Vbios, $Mem_Type) {
         $this.busid = $card.Busid;

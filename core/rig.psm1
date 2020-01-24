@@ -105,7 +105,9 @@ class RIG {
         $Hello.Add("amd_version", $this.amd_version);
         $Hello.Add("gpu_count_nvidia", $this.gpu_count_nvidia);
         $Hello.Add("gpu_count_amd", $this.gpu_count_amd);
-        $get_gpu = $this.gpus | Select -ExcludeProperty PCI_SLOT, Device, Speed, Temp, Fan, Wattage
+        $get_gpu = $this.gpus | Select -ExcludeProperty PCI_SLOT, Device, Speed, `
+        Temp, Current_Fan, Wattage, Fan_Speed, Power_Limit, Power_Limit, Core_Clock, `
+        Mem_Clock, Core_Voltage, Core_State, Mem_Clock, Mem_State, Fan_Speed, REF
         $Hello.Add("gpu", $get_gpu);
         $Hello.Add("uid", $this.uid);
         $Hello.Add("disk_model", $this.disk.disk_model);

@@ -295,7 +295,10 @@ if ($args[0] -eq "list" -or $args[0] -eq "json") {
     }
 
     if ($args[0] -eq "json") {
-        $tolist | Select -ExcludeProperty PCI_SLOT, Device, Speed, Temp, Fan, Wattage | ConvertTo-Json | Out-Host
+        $tolist | Select -ExcludeProperty PCI_SLOT, Device, Speed, `
+        Temp, Current_Fan, Wattage, Fan_Speed, Power_Limit, Power_Limit, Core_Clock, `
+        Mem_Clock, Core_Voltage, Core_State, Mem_Clock, Mem_State, Fan_Speed, REF |
+        ConvertTo-Json | Out-Host
     }
 }
 
