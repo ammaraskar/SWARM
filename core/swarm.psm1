@@ -18,6 +18,14 @@ class SWARM {
         $Global:Data.Add('rig',[SWARM_RIG]::New());
 
         ## List GPUS
+        $Global:Log.screen('');
+        $Global:Log.screen('');
         [RIG_RUN]::list_gpus();
+        $Global:Log.screen('');
+        $Global:Log.screen('');
+
+        ## List CPUS
+        #[RIG_RUN]::list_cpus();
+
     }
 }

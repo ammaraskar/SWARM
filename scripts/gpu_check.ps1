@@ -1,9 +1,11 @@
 Using namespace System;
 Using module "..\core\process.psm1";
 Using module "..\core\gpu.psm1";
+
+Set-Location $env:SWARM_DIR
 . .\core\colors.ps1
 
-$lspci_file = [IO.Path]::Join($env:SWARM_DIR, "debug\lspci.txt");
+$lspci_file = Join-Path $env:SWARM_DIR "debug\lspci.txt";
 
 if ($IsWindows) {
     $smi_path = Join-Path $env:ProgramFiles "NVIDIA Corporation\NVSMI\nvidia-smi.exe"
@@ -21,9 +23,9 @@ class Win_Loader {
         [bool]$check_file = [IO.File]::Exists($lspci_file);
         [string[]]$old_gpu_list = if ($check_file) { [IO.File]::ReadLines($lspci_file); }
         [string[]]$new_gpu_list = $lspci | Where { $_ -like "*VGA*" -or $_ -like "*3D controller*" };
-        [string]$file = [IO.Path]::Join($env:SWARM_DIR, "debug\lspci.txt")
-        [string]$exe = [IO.Path]::Join($env:SWARM_DIR, "apps\gpu-z\gpu-z.exe")
-        [string]$xml = [IO.Path]::Join($env:SWARM_DIR, "debug\data.xml")
+        [string]$file = Join-Path $env:SWARM_DIR "debug\lspci.txt"
+        [string]$exe = Join-Path $env:SWARM_DIR "apps\gpu-z\gpu-z.exe"
+        [string]$xml = Join-Path $env:SWARM_DIR "debug\data.xml"
 
         ## Write lscpi to file
         [IO.File]::WriteAllLines($file, $new_gpu_list);
@@ -167,8 +169,8 @@ if ($NVIDIA_CARDS) {
 
 if ($AMD_CARDS) {
     if ($IsLinux) {
-        $rocm_path = [IO.Path]::Join($env:SWARM_DIR, "build\apps\rocm\rocm-smi");
-        $mem_path = [IO.Path]::Join($env:SWARM_DIR, "build\apps\amdmeminfo\amdmeminfo")
+        $rocm_path = Join-Path $env:SWARM_DIR "build\apps\rocm\rocm-smi";
+        $mem_path = Join-Path $env:SWARM_DIR "build\apps\amdmeminfo\amdmeminfo";
         $rocm_smi = [Proc_Data]::Read($rocm_path, $null, "--showproductname --showid --showvbios --showbus --json", 0);
         $mem_info = [Proc_Data]::Read($mem_path, $null, $null, 0);
 

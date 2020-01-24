@@ -16,7 +16,7 @@ class startup {
         $Folders += 'debug'
 
         foreach($Folder in $Folders) {
-            [string]$Path = [IO.Path]::Join($Global:Dir,$Folder)
+            [string]$Path = Join-Path $Global:Dir $Folder
             [bool]$Check = [IO.Directory]::Exists($Path)
             if(-not $Check) {
                 New-Item -ItemType Directory -Path $Global:Dir -Name $folder | Out-Null

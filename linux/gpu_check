@@ -1,2 +1,6 @@
 #!/usr/bin/env bash
-pwsh -command "$SWARM_DIR\scripts\gpu_check.ps1 %*"
+if [[ -z "${SWARM_DIR}" ]]; then
+  export SWARM_DIR=`cat /usr/bin/swarm_dir`
+fi
+
+pwsh -command "$SWARM_DIR\scripts\gpu_check.ps1 $@"

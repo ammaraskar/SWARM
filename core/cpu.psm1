@@ -30,7 +30,7 @@ class CPU_RUN {
     static [string] Get_Model() {
         [string]$model = "unknown"
         if ($global:IsLinux) {
-            $model = "lscpu | grep `"Model name:`" | sed `'`s`/Model name:[ `\t]`*`/`/g`'"
+            $model = Invoke-Expression "lscpu | grep `"Model name:`" | sed `'`s`/Model name:[ `\t]`*`/`/g`'"
         }
         if ($global:IsWindows) {
             $model = (Get-CimInstance -Class Win32_processor).Name.Trim()
@@ -80,14 +80,14 @@ class CPU_RUN {
 
     static [hashtable] Get_Features() {
         $hash = [hashtable]::New()
-        if ($global:ISWindows) {
-            $get_features = [Proc_Data]::Read("$env:SWARM_DIR\apps\features\features.exe", $null, $null, 0);
-            if ($get_features.count -gt 0) {
-                $get_features = $get_features | Select-Object -Skip 1 | ConvertFrom-StringData
-                foreach ($key in $get_features.keys) {
-                    $hash.Add($key, $get_features.$key)
-                }    
-            }
+        $exe = Join-Path $env:SWARM_DIR  "apps\features\features.exe"
+        if ($Global:Islinux) { $exe = Join-Path $env:SWARM_DIR "apps/features/features" }
+        $get_features = [Proc_Data]::Read($exe, $null, $null, 0);
+        if ($get_features.count -gt 0) {
+            $get_features = $get_features | Select-Object -Skip 1 | ConvertFrom-StringData
+            foreach ($key in $get_features.keys) {
+                $hash.Add($key, $get_features.$key)
+            }    
         }
         return $hash;
     }

@@ -102,19 +102,19 @@ class NVIDIA_RUN {
         $check = [IO.File]::Exists($smi_path)
         if ($check) {
             $nvidia_smi = [Proc_Data]::Read($smi_path, $null, "-h", 0)
-            $driver = $nvidia_smi.split("-- v") | Select -Last 1
+            $driver = $nvidia_smi[0].split("-- v") | Select -Last 1
         }
         return $driver;
     }
 
     static [void] get_nvml() {
         ## Check for NVIDIA-SMI and nvml.dll in system32. If it is there- copy to NVSMI
-        $x86_driver = [IO.Path]::Join(${env:ProgramFiles(x86)}, "NVIDIA Corporation")
-        $x64_driver = [IO.Path]::Join($env:ProgramFiles, "NVIDIA Corporation")
-        $x86_NVSMI = [IO.Path]::Join($x86_driver, "NVSMI")
-        $x64_NVSMI = [IO.Path]::Join($x64_driver, "NVSMI")
-        $smi = [IO.Path]::Join($env:windir, "system32\nvidia-smi.exe")
-        $nvml = [IO.Path]::Join($env:windir, "system32\nvml.dll")
+        $x86_driver = Join-Path ${env:ProgramFiles(x86)} "NVIDIA Corporation"
+        $x64_driver = Join-Path $env:ProgramFiles "NVIDIA Corporation"
+        $x86_NVSMI = Join-Path $x86_driver "NVSMI"
+        $x64_NVSMI = Join-Path $x64_driver "NVSMI"
+        $smi = Join-Path $env:windir "system32\nvidia-smi.exe"
+        $nvml = Join-Path $env:windir "system32\nvml.dll"
 
         ## Set the device order to match the PCI bus if NVIDIA is installed
         if ([IO.Directory]::Exists($x86_driver) -or [IO.Directory]::Exists($x64_driver)) {
@@ -126,17 +126,17 @@ class NVIDIA_RUN {
 
         if ( [IO.Directory]::Exists($x86_driver) ) {
             if (-not [IO.Directory]::Exists($x86_NVSMI)) { [IO.Directory]::CreateDirectory($x86_NVSMI) | Out-Null }
-            $dest = [IO.Path]::Join($x86_NVSMI, "nvidia-smi.exe")
+            $dest = Join-Path $x86_NVSMI "nvidia-smi.exe"
             try { [IO.File]::Copy($smi, $dest, $true) | Out-Null } catch { }
-            $dest = [IO.Path]::Join($x86_NVSMI, "nvml.dll")
+            $dest = Join-Path $x86_NVSMI "nvml.dll"
             try { [IO.File]::Copy($nvml, $dest, $true) | Out-Null } catch { }
         }
 
         if ( [IO.Directory]::Exists($x64_driver) ) {
             if (-not [IO.Directory]::Exists($x64_NVSMI)) { [IO.Directory]::CreateDirectory($x64_NVSMI) | Out-Null }
-            $dest = [IO.Path]::Join($x64_NVSMI, "nvidia-smi.exe")
+            $dest = Join-Path $x64_NVSMI "nvidia-smi.exe"
             try { [IO.File]::Copy($smi, $dest, $true) | Out-Null } catch { }
-            $dest = [IO.Path]::Join($x64_NVSMI, "nvml.dll")
+            $dest = Join-Path $x64_NVSMI "nvml.dll"
             try { [IO.File]::Copy($nvml, $dest, $true) | Out-Null } catch { }
         }
     }
@@ -149,8 +149,6 @@ class AMD_RUN {
         if ($global:IsWindows) {
             [string]$aMDPnPId = 'pci\\ven_1002.*';
             [string]$DriverName = 'RadeonSoftwareVersion';
-            $DriverDesc = $null;
-            $AMDDriver = "";
             [string]$regKeyName = 'SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}';
             $reg = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, [Microsoft.Win32.RegistryView]::Default);
             $key = $reg.OpenSubKey($regKeyName, [Microsoft.Win32.RegistryKeyPermissionCheck]::ReadSubTree);
