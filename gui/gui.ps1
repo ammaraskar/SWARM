@@ -9,6 +9,13 @@ $Debug = $true
 $xaml = Get-Content ".\gui\ViewModels\MainWindow.xaml" | Out-String
 $Global:MainWindow = [GUI]::CreateWindow($xaml)
 $Global:MainWindow.HasSystemDecorations = $false
+
+## Windows will self-adjust it seems. Linux is static.
+if($IsLinux){
+    $Global:MainWindow.Width = "800"
+    $Global:MainWindow.Height = "600"
+}
+
 $MainWindow_Context = [MainWindow]::New()
 $MainWindow.DataContext = $MainWindow_Context
 

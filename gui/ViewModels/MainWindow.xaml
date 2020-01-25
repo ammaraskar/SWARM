@@ -6,8 +6,6 @@
         Title="SWARM"
         WindowStartupLocation="CenterScreen"
         Background="Gold"
-        Width="800"
-        Height="600"
 >
 
   <Grid>
