@@ -49,6 +49,7 @@
       <Button Grid.Column="1" Name ="exit_button" Classes="window" Content="X"/> <!-- Click="exit"> -->
     </Grid>
 
+    <!-- This is the Main Model. Each Tabcontrol Will Essentially Be A New View/ViewModel"> -->
     <Grid Grid.Row="1">
       <TabControl TabStripPlacement="Left">
         <TabControl.Styles>
