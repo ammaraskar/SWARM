@@ -22,7 +22,9 @@
           <Setter Property="Width" Value="30"/>
           <Setter Property="Background" Value="White"/>
           <Setter Property="BorderThickness" Value="0"/>
+          <Setter Property="HorizontalContentAlignment" Value="Center"/>
           <Setter Property="HorizontalAlignment" Value="Right"/>
+          <Setter Property="FontWeight" Value="Bold"/>
         </Style>
       </Grid.Styles>
       <Grid.ColumnDefinitions>
@@ -40,7 +42,9 @@
           <MenuItem Header="_Exit" Name="Exit" Foreground="Black"/>
         </MenuItem>
         <MenuItem Name="edit" Header="Edit" VerticalAlignment="Center" >
-          <MenuItem Header="Cut"/>
+          <MenuItem Header="Cut             Ctrl+X"/>
+          <MenuItem Header="Copy          Ctrl+C"/>
+          <MenuItem Header="Paste          Ctrl+V"/>
         </MenuItem>
       </Menu>
       <Button Grid.Column="1" Name ="exit_button" Classes="window" Content="X"/> <!-- Click="exit"> -->
