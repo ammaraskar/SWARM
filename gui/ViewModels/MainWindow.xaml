@@ -5,8 +5,9 @@
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
         Title="SWARM"
         WindowStartupLocation="CenterScreen"
-        VerticalAlignment="Top"
         Background="Gold"
+        Width="800"
+        Height="600"
 >
 
   <Grid>

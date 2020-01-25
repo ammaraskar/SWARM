@@ -57,7 +57,7 @@ class MainWindow : ViewModelBase {
     hidden [scriptblock] start_exit() {
         return {
             param([object]$sender, [RoutedEventArgs]$e)
-            $global:MainWindow.Close();
+            $global:MainWindow.Close($e);
         }
     }
 
