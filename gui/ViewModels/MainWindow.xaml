@@ -2,9 +2,103 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        Title="SWARM">
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
+        Title="SWARM"
+        WindowStartupLocation="CenterScreen"
+        VerticalAlignment="Top"
+        Background="Gold"
+>
 
-    <TextBlock Text="{Binding Test}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+  <Grid>
+    
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
 
+    <Grid Grid.Row="0" Name="menu_bar"> <!-- PointerPressed="Menu_MouseLeftButtonDown"> -->
+      <Grid.Styles>
+        <Style Selector="Button.window">
+          <Setter Property="Width" Value="30"/>
+          <Setter Property="Background" Value="White"/>
+          <Setter Property="BorderThickness" Value="0"/>
+          <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
+      </Grid.Styles>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="Auto"/>
+      </Grid.ColumnDefinitions>
+      <Menu Grid.Column="0" Name="main_menu" Height="30" Background="White" HorizontalAlignment="Stretch">
+        <MenuItem Name="file" Header="File" Foreground="Black" VerticalAlignment="Center">
+          <MenuItem Header="_Start Swarm" Name="Start_Swarm" Foreground="Black"/>
+          <MenuItem Header="_Stop Swarm" Name="Stop_Swarm" Foreground="Black"/>
+          <Separator BorderThickness="1" BorderBrush="LightGray"/>
+          <MenuItem Header="_Save And Start Swarm" Name="Save_Swarm" Foreground="Black"/>
+          <MenuItem Header="_Save And Exit" Name="Save_Exit" Foreground="Black"/>
+          <Separator BorderThickness="1" BorderBrush="LightGray"/>
+          <MenuItem Header="_Exit" Name="Exit" Foreground="Black"/>
+        </MenuItem>
+        <MenuItem Name="edit" Header="Edit" VerticalAlignment="Center" >
+          <MenuItem Header="Cut"/>
+        </MenuItem>
+      </Menu>
+      <Button Grid.Column="1" Name ="exit_button" Classes="window" Content="X"/> <!-- Click="exit"> -->
+    </Grid>
+
+    <Grid Grid.Row="1">
+      <TabControl TabStripPlacement="Left">
+        <TabControl.Styles>
+          <Style Selector="TabItem.main">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="FontFamily" Value="Century Gothic"/>
+            <Setter Property="FontSize" Value="18"/>
+          </Style>
+          <Style Selector="TabItem.main[IsSelected=true]">
+            <Setter Property="Foreground" Value="Gold"/>
+          </Style>
+        </TabControl.Styles>
+
+        <TabItem Classes="main" Header="Rig Info" IsSelected="True">
+          <Grid Background="#FF3C3A3A" Margin="-5,0">
+            <TextBlock>"Hello World"</TextBlock>
+          </Grid>
+        </TabItem>
+
+        <TabItem Classes="main" Header="Overclocking">
+          <Grid Background="#FF3C3A3A" Margin="-5,0">
+            <TextBlock>"Hello You"</TextBlock>
+          </Grid>
+        </TabItem>
+
+        <TabItem Classes="main" Header="Configuration">
+          <TabControl Background="#FF3C3A3A" TabStripPlacement="Top" Margin="-5,0">
+            <TabItem Header="Parameters" FontSize="10"></TabItem>
+          </TabControl>
+        </TabItem>
+
+        <TabItem Classes="main" Header="Mining Statistics">
+          <Grid Background="#FF3C3A3A" Margin="-5,0">
+            <TextBlock>"Hello You"</TextBlock>
+          </Grid>
+        </TabItem>
+
+        <TabItem Classes="main" Header="Profit Statistics">
+          <Grid Background="#FF3C3A3A" Margin="-5,0">
+            <TextBlock>"Hello You"</TextBlock>
+          </Grid>
+        </TabItem>
+      </TabControl>
+    </Grid>
+    
+  </Grid>
+  
 </Window>
