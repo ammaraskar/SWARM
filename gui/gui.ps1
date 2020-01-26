@@ -3,8 +3,8 @@ using namespace Avalonia.Controls;
 using namespace PSAvalonia;
 using module ".\ViewModels\MainWindow.xaml.psm1"
 
+## Set to $true to run in Debugger
 $Debug = $true
-
 
 $xaml = Get-Content ".\gui\ViewModels\MainWindow.xaml" | Out-String
 $Global:MainWindow = [GUI]::CreateWindow($xaml)
