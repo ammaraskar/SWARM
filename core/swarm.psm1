@@ -1,4 +1,4 @@
-Using namespace System;
+Using namespace System; 
 using module ".\maintenance.psm1";
 using module ".\rig.psm1";
 using module ".\logging.psm1";
@@ -17,15 +17,15 @@ class SWARM {
         $Global:Data = [Hashtable]::Synchronized(@{});
         $Global:Data.Add('rig',[SWARM_RIG]::New());
 
+        ## Print Rig details
+        $Global:Log.screen('');
+        $Global:Data.Rig.list();
+
         ## List GPUS
         $Global:Log.screen('');
         $Global:Log.screen('');
         [RIG_RUN]::list_gpus();
         $Global:Log.screen('');
         $Global:Log.screen('');
-
-        ## List CPUS
-        #[RIG_RUN]::list_cpus();
-
     }
 }

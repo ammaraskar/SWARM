@@ -1,4 +1,5 @@
 Using namespace System
+Using module ".\core\colors.psm1";
 Using module ".\core\swarm.psm1";
 
 ## Environment

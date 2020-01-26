@@ -1,9 +1,9 @@
 Using namespace System;
+Using module "..\core\colors.psm1";
 Using module "..\core\process.psm1";
 Using module "..\core\gpu.psm1";
 
 Set-Location $env:SWARM_DIR
-. .\core\colors.ps1
 
 $lspci_file = Join-Path $env:SWARM_DIR "debug\lspci.txt";
 
@@ -18,7 +18,10 @@ elseif ($IsLinux) {
 
 
 class Win_Loader {
-    static [Xml.XmlElement] GPUZ([string[]]$lspci, [string]$lspci_file) {
+    ## This is labeled 'object', because I have seen it convert
+    ## it to two different types before, and I don't know
+    ## why. Forcing it to a type can draw an error.
+    static [object] GPUZ([string[]]$lspci, [string]$lspci_file) {
         [String[]]$old_gpu_list = $null;
         [bool]$check_file = [IO.File]::Exists($lspci_file);
         [string[]]$old_gpu_list = if ($check_file) { [IO.File]::ReadLines($lspci_file); }
@@ -298,8 +301,8 @@ if ($args[0] -eq "list" -or $args[0] -eq "json") {
 
     if ($args[0] -eq "json") {
         $tolist | Select -ExcludeProperty PCI_SLOT, Device, Speed, `
-        Temp, Current_Fan, Wattage, Fan_Speed, Power_Limit, Power_Limit, Core_Clock, `
-        Mem_Clock, Core_Voltage, Core_State, Mem_Clock, Mem_State, Fan_Speed, REF |
+            Temp, Current_Fan, Wattage, Fan_Speed, Power_Limit, Power_Limit, Core_Clock, `
+            Mem_Clock, Core_Voltage, Core_State, Mem_Clock, Mem_State, Fan_Speed, REF |
         ConvertTo-Json | Out-Host
     }
 }

@@ -1,6 +1,7 @@
 Using namespace System;
 Using namespace System.Text;
 Using namespace System.Diagnostics;
+Using module ".\colors.psm1";
 Using module ".\process.psm1";
 Using module ".\helper.psm1";
 Using module ".\motherboard.psm1";
@@ -64,9 +65,11 @@ class RIG {
         [hashtable]$data = [RIG_RUN]::uid();
         $this.net_interfaces = $data.net_interfaces;
         $this.uid = $data.uid;
+        
 
         ## AMD Driver
         $this.amd_version = [AMD_RUN]::get_driver();
+
 
         ## NVIDIA Driver
         ## Nvidia NVML
@@ -90,7 +93,6 @@ class RIG {
         $this.gpus = [RIG_RUN]::get_gpus();
         $this.gpu_count_amd = ($this.gpus | Where { $_ -is [AMD_CARD] }).count
         $this.gpu_count_nvidia = ($this.gpus | Where { $_ -is [NVIDIA_CARD] }).count
-
     }
 
     ## Returns JSON for hello method.
@@ -106,8 +108,8 @@ class RIG {
         $Hello.Add("gpu_count_nvidia", $this.gpu_count_nvidia);
         $Hello.Add("gpu_count_amd", $this.gpu_count_amd);
         $get_gpu = $this.gpus | Select -ExcludeProperty PCI_SLOT, Device, Speed, `
-        Temp, Current_Fan, Wattage, Fan_Speed, Power_Limit, Power_Limit, Core_Clock, `
-        Mem_Clock, Core_Voltage, Core_State, Mem_Clock, Mem_State, Fan_Speed, REF
+            Temp, Current_Fan, Wattage, Fan_Speed, Power_Limit, Power_Limit, Core_Clock, `
+            Mem_Clock, Core_Voltage, Core_State, Mem_Clock, Mem_State, Fan_Speed, REF
         $Hello.Add("gpu", $get_gpu);
         $Hello.Add("uid", $this.uid);
         $Hello.Add("disk_model", $this.disk.disk_model);
@@ -117,6 +119,125 @@ class RIG {
         $Hello.Add("ip", $this.ip);
         $Hello.Add("boot_time", $this.boot_time);
         return $Hello | ConvertTo-Json -Depth 5 -Compress;
+    }
+
+    [void] list() {
+        if (-not $Global:log) {
+            Write-Host "${global:Yellow}CPU:${global:NOCOLOR}"
+            Write-Host "  ${global:Yellow}Has AES: ${global:NOCOLOR}$($this.CPU.aes)"
+            Write-Host "  ${global:Yellow}Model: ${global:NOCOLOR}$($this.CPU.model)"
+            Write-Host "  ${global:Yellow}Cpu ID: ${global:NOCOLOR}$($this.CPU.cpu_id)"
+            Write-Host "  ${global:Yellow}Cores: ${global:NOCOLOR}$($this.CPU.cores)"
+
+            Write-host ""
+            Write-Host "${global:Blue}Motherboard:${global:NOCOLOR}"
+            Write-Host "  ${global:Blue}System Uuid: ${global:NOCOLOR}$($this.mb.system_uuid)"
+            Write-Host "  ${global:Blue}Product: ${global:NOCOLOR}$($this.mb.product)"
+            Write-Host "  ${global:Blue}Manufacturer: ${global:NOCOLOR}$($this.mb.manufacturer)"
+
+            Write-host ""
+            Write-Host "${global:Red}Disk:${global:NOCOLOR}"
+            Write-Host "  ${global:Red}Disk Model: ${global:NOCOLOR}$($this.Disk.disk_model)"
+            Write-Host "  ${global:Red}Freespace: ${global:NOCOLOR}$($this.Disk.freespace)"
+
+            Write-host ""
+            Write-Host "${global:Red}RAM:${global:NOCOLOR}"
+            Write-Host "  ${global:Red}Total Space: ${global:NOCOLOR}$($this.ram.total_space) MiB"
+            Write-Host "  ${global:Red}Used: ${global:NOCOLOR}$($this.ram.used_space) MiB"
+
+            Write-host ""
+            Write-Host "${global:Cyan}Net Interfaces:${global:NOCOLOR}"
+            Write-Host "  ${global:Cyan}Interface: ${global:NOCOLOR}$($this.net_interfaces.iface)"
+            Write-Host "  ${global:Cyan}MAC: ${global:NOCOLOR}$($this.net_interfaces.iface)"
+            $this.net_interfaces.mac | % {
+                Write-Host "    $($_)"
+            }
+
+            Write-Host ""
+            Write-Host "${global:BCYAN}LAN Config:${global:NOCOLOR}"
+            Write-Host "  ${global:BCYAN}Address: ${global:NOCOLOR}$($this.lan_config.address)"
+            Write-Host "  ${global:BCYAN}Gateway: ${global:NOCOLOR}$($this.lan_config.Gateway)"
+            Write-Host "  ${global:BCYAN}DHCP Enabled: ${global:NOCOLOR}$($this.lan_config.dhcp)"
+            Write-Host "  ${global:BCYAN}DNS: ${global:NOCOLOR}$($this.lan_config.dns)"
+
+            Write-Host ""
+            Write-Host "${global:WHITE}SWARM Version: ${global:NOCOLOR}$($this.version)"
+            Write-Host "${global:WHITE}OS kernel Version: ${global:NOCOLOR}$($this.kernel)"
+
+            Write-Host ""
+            Write-Host "${global:Green}NVIDIA Driver Version: ${global:NOCOLOR}$($this.nvidia_version)"
+            Write-Host "${global:Green}NVIDIA Count: ${global:NOCOLOR}$($this.gpu_count_nvidia)"
+
+            Write-Host ""
+            Write-Host "${global:Red}AMD Driver Version: ${global:NOCOLOR}$($this.amd_version)"
+            Write-Host "${global:Red}AMD Count: ${global:NOCOLOR}$($this.gpu_count_amd)"
+
+            Write-Host ""
+            Write-Host "${global:PURPLE}IP Address List: ${global:NOCOLOR}"
+            $this.ip | % {
+                Write-Host "  $($_)"
+            }
+
+            Write-Host ""
+            Write-Host "${global:WHITE}Last Boot: $($this.boot_time)${global:NOCOLOR}"
+        } else {
+            $Global:Log.screen("${global:Yellow}CPU:${global:NOCOLOR}")
+            $Global:Log.screen("  ${global:Yellow}Has AES: ${global:NOCOLOR}$($this.CPU.aes)")
+            $Global:Log.screen("  ${global:Yellow}Model: ${global:NOCOLOR}$($this.CPU.model)")
+            $Global:Log.screen("  ${global:Yellow}Cpu ID: ${global:NOCOLOR}$($this.CPU.cpu_id)")
+            $Global:Log.screen("  ${global:Yellow}Cores: ${global:NOCOLOR}$($this.CPU.cores)")
+
+            $Global:Log.screen("")
+            $Global:Log.screen("${global:Blue}Motherboard:${global:NOCOLOR}")
+            $Global:Log.screen("  ${global:Blue}System Uuid: ${global:NOCOLOR}$($this.mb.system_uuid)")
+            $Global:Log.screen("  ${global:Blue}Product: ${global:NOCOLOR}$($this.mb.product)")
+            $Global:Log.screen("  ${global:Blue}Manufacturer: ${global:NOCOLOR}$($this.mb.manufacturer)")
+
+            $Global:Log.screen("")
+            $Global:Log.screen("${global:Red}Disk:${global:NOCOLOR}")
+            $Global:Log.screen("  ${global:Red}Disk Model: ${global:NOCOLOR}$($this.Disk.disk_model)")
+            $Global:Log.screen("  ${global:Red}Freespace: ${global:NOCOLOR}$($this.Disk.freespace)")
+
+            $Global:Log.screen("")
+            $Global:Log.screen("${global:Red}RAM:${global:NOCOLOR}")
+            $Global:Log.screen("  ${global:Red}Total Space: ${global:NOCOLOR}$($this.ram.total_space) MiB")
+            $Global:Log.screen("  ${global:Red}Used: ${global:NOCOLOR}$($this.ram.used_space) MiB")
+
+            $Global:Log.screen("")
+            $Global:Log.screen("${global:Cyan}Net Interfaces:${global:NOCOLOR}")
+            $Global:Log.screen("  ${global:Cyan}Interface: ${global:NOCOLOR}$($this.net_interfaces.iface)")
+            $Global:Log.screen("  ${global:Cyan}MAC: ${global:NOCOLOR}$($this.net_interfaces.iface)")
+            $this.net_interfaces.mac | % {
+                $Global:Log.screen("    $($_)")
+            }
+
+            $Global:Log.screen("")
+            $Global:Log.screen("${global:BCYAN}LAN Config:${global:NOCOLOR}")
+            $Global:Log.screen("  ${global:BCYAN}Address: ${global:NOCOLOR}$($this.lan_config.address)")
+            $Global:Log.screen("  ${global:BCYAN}Gateway: ${global:NOCOLOR}$($this.lan_config.Gateway)")
+            $Global:Log.screen("  ${global:BCYAN}DHCP Enabled: ${global:NOCOLOR}$($this.lan_config.dhcp)")
+            $Global:Log.screen("  ${global:BCYAN}DNS: ${global:NOCOLOR}$($this.lan_config.dns)")
+
+            $Global:Log.screen("")
+            $Global:Log.screen("${global:WHITE}SWARM Version: ${global:NOCOLOR}$($this.version)")
+            $Global:Log.screen("${global:WHITE}OS kernel Version: ${global:NOCOLOR}$($this.kernel)")
+
+            $Global:Log.screen("")
+            $Global:Log.screen("${global:Green}NVIDIA Driver Version: ${global:NOCOLOR}$($this.nvidia_version)")
+            $Global:Log.screen("${global:Green}NVIDIA Count: ${global:NOCOLOR}$($this.gpu_count_nvidia)")
+
+            $Global:Log.screen("")
+            $Global:Log.screen("${global:Red}AMD Driver Version: ${global:NOCOLOR}$($this.amd_version)")
+            $Global:Log.screen("${global:Red}AMD Count: ${global:NOCOLOR}$($this.gpu_count_amd)")
+
+            $Global:Log.screen("")
+            $Global:Log.screen("${global:PURPLE}IP Address List: ${global:NOCOLOR}")
+            $this.ip | % {
+                $Global:Log.screen("  $($_)")
+            }
+            $Global:Log.screen("")
+            $Global:Log.screen("${global:WHITE}Last Boot: $($this.boot_time)${global:NOCOLOR}")
+        }
     }
 }
 
@@ -157,43 +278,56 @@ class RIG_RUN {
     }
     ## Get lan information
     static [hashtable] get_lan() {
+        ## Get EtherNet Adapter
+        $Net = [System.Net.NetworkInformation.NetworkInterface]::GetAllNetworkInterfaces()
+        $EtherNet = $Net | Where Name -eq "Ethernet"
+        if ($Global:IsLinux) { $Ethernet = $Net | Where name -eq "eth0" }
+
+        $lan_gateway = "0.0.0.0"
+        $lan_dns = "0.0.0.0"
+        $lan_dhcp = "0"
+        $lan_address = "0.0.0.0"
+
+        if ($EtherNet) {
+            ##get lan address
+            $get_lan = ($EtherNet.GetIPProperties().UnicastAddresses).Address.IPAddressToString
+            $get_lan = $get_lan | Where { $_ -notlike "*`:*" } | Select -First 1 ## no ipv6
+            if ($get_lan) { $lan_address = $get_lan }
+
+            ##get ip properties
+            [System.Net.NetworkInformation.IPInterfaceProperties]$IP_Props = $Ethernet.GetIPProperties()
+
+            if ($IP_Props) { 
+                ## get dhcp
+                [System.Net.NetworkInformation.IPv4InterfaceProperties]$dhcp = $IP_Props.GetIPv4Properties()
+                if ($dhcp.IsDhcpEnabled) { $lan_dhcp = 1 }
+        
+                $get_gateway = $IP_Props.GatewayAddresses | Select -First 1
+                $get_gateway = $get_gateway.Address
+                $get_gateway = $get_gateway.IPAddressToString | Select -First 1
+                if ($get_gateway) { $lan_gateway = $get_gateway }
+
+                $get_dns = $IP_Props.DnsAddresses | Select -First 1
+                $get_dns = $get_dns.IPAddressToString | Select -First 1
+                if ($get_dns) { $lan_dns = $get_dns }
+            }
+        }
+
         $lan = @{ }
-        if ($Global:ISLinux) {
-            $dhcp = [IO.File]::ReadAllLines("/etc/systemd/network/20-ethernet.network") | Select-String "DHCP=No"
-            if ($dhcp) { $lan_dhcp = 1 }else { $lan_dhcp = 0 }
-            $lan_address = invoke-expression "ip -o -f inet addr show | grep eth0 | awk `'/scope global/ {print `$4}`'"
-            $lan_gateway = invoke-expression "ip route | awk `'/default/ && /eth0/ { print `$3 }`' | head -1"
-            $lan_dns = invoke-expression "cat /run/systemd/resolve/resolv.conf | grep -m1 ^nameserver | awk `'{print `$2}`'"
-            $lan.Add("dhcp", $lan_dhcp)
-            $lan.Add("address", $lan_address)
-            $lan.Add("gateway", $lan_gateway)
-            $lan.Add("dns", $lan_dns)
-        }
-        elseif ($Global:IsWindows) {
-            $ipconfig = invoke-expression "ipconfig /all"
-            [string]$dhcp = $($ipconfig | Select-String "DHCP Enabled")
-            $get_dhcp = 1
-            switch ($dhcp.split(": ") | Select -Last 1) { "Yes" { $get_dhcp = 1 }; "No" { $get_dhcp = 0 } }
-            [string]$lan_address = $($ipconfig | Select-String "IPv4 Address")
-            $address = ($lan_address.split(": ") | Select -Last 1).Replace("`(Preferred`)", "")
-            [string]$lan_gateway = $ipconfig | Select-String "Default Gateway"
-            $gateway = ($lan_gateway.split(": ") | Select -Last 1)
-            [string]$lan_dns = $ipconfig | Select-String "DNS Servers"
-            $dns = ($lan_dns.split(": ") | Select -Last 1)
-            $lan.Add("dhcp", $get_dhcp)
-            $lan.Add("address", $address)
-            $lan.Add("gateway", $gateway)
-            $lan.Add("dns", $dns)
-        }
+        $lan.Add("dhcp", $lan_dhcp)
+        $lan.Add("address", $lan_address)
+        $lan.Add("gateway", $lan_gateway)
+        $lan.Add("dns", $lan_dns)
         return $lan;
     }
+
     ## Get IP information
     static [string[]] get_ip() {
         [string[]]$ip = @()
         if ($Global:IsWindows) {
             $ip_host = [System.Net.DNS]::GetHostName()
             $ip_addresses = ([System.Net.DNS]::GetHostEntry($ip_host)).AddressList
-            $get_ip = $($ip_addresses | Where AddressFamily -eq "InterNetwork").IPAddressToString
+            $get_ip = $ip_addresses | Where AddressFamily -eq "InterNetwork"
             $get_ip | foreach { $ip += "$($_)" }
         }
         elseif ($GLobal:IsLinux) {
