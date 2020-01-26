@@ -103,7 +103,7 @@ class NVIDIA_RUN {
         if ($check) {
             ## nvidia-smi -h causes [System.Diagnostics.Process] waitforexit() to lock up.
             ## It is the only instance in which it does.
-            $run = ".$smi_path -h"
+            $run = "$smi_path -h"
             if($Global:IsWindows){$run = ". '$smi_path' -h"}
             $nvidia_smi = invoke-expression $run
             $driver = $nvidia_smi[0].split("-- v") | Select -Last 1
