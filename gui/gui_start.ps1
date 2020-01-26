@@ -6,4 +6,6 @@ foreach($file in $libs) {
     }
 }
 
+## Stop next line if just loading libs for
+## programming.
 . .\gui\gui.ps1

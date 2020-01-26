@@ -5,6 +5,7 @@ using module ".\logging.psm1";
 
 class SWARM {
     static [void] main([String[]]$arguments) {
+
         ## Start Logger
         $Global:Log = [Logging]::New();
     
@@ -27,5 +28,12 @@ class SWARM {
         [RIG_RUN]::list_gpus();
         $Global:Log.screen('');
         $Global:Log.screen('');
+
+        ## The next step is gathering user config information
+        ## To Prevent to much module depth, this is ran as a
+        ## script. User can run themselves with 'check_configs json'.
+        $Global:Log.screen("Gathering Last Known Configurations...");
+        $Global:Data.Configs = . .\scripts\configs_check swarm;
+
     }
 }

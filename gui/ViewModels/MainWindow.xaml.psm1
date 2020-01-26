@@ -7,6 +7,9 @@ using namespace Avalonia.Media;
 using namespace PSAvalonia;
 using module "..\Views\MainWindows.psm1"
 
+## Program from main dir
+## using module ".\gui\Views\MainWindows.psm1"
+
 class ViewModelBase : ReactiveUI.ReactiveObject {
 
 }
