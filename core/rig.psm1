@@ -56,6 +56,7 @@ class RIG {
     [String]$kernel;
     [string[]]$ip
     [String]$boot_time;
+    [Hashtable]$Configs = @{ };
 
     RIG() {
         ## Kernel
