@@ -1,3 +1,4 @@
+#! /usr/bin/pwsh
 Using namespace System;
 Using module "..\core\colors.psm1";
 Using module "..\core\process.psm1";
