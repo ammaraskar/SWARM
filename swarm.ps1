@@ -22,13 +22,20 @@ $PATH = $PATH -Join $Divider
 [environment]::SetEnvironmentVariable('SWARM_DIR', $Dir, $Target1);
 [environment]::SetEnvironmentVariable('PATH', $PATH, $Target1);
 
+## Cuda Device Order- Set it to match Busid.
+if ($IsWindows) {
+    [Environment]::SetEnvironmentVariable("CUDA_DEVICE_ORDER", "PCI_BUS_ID", $Target1)
+    [Environment]::SetEnvironmentVariable("CUDA_DEVICE_ORDER", "PCI_BUS_ID", $Target2)
+}
+
 ## Reset Explorer If Windows
 if ($IsWindows) { Stop-Process -ProcessName explorer };
+
 ## Add files to /usr/bin so they can insta-run
 if ($IsLinux) {
     $dir | Set-Content ".\linux\swarm_dir"
     $scripts = Get-ChildItem ".\linux"
-    foreach($script in $scripts) {
+    foreach ($script in $scripts) {
         $destination = "/usr/bin/$($script.basename)"
         Copy-Item -Path $script.fullname -Destination $destination | Out-Null
         $proc = Start-Process -FilePath "chmod" -ArgumentList "+x $destination" -PassThru
@@ -39,6 +46,7 @@ if ($IsLinux) {
 ## Set $env for Process
 [environment]::SetEnvironmentVariable('PATH', $PATH, $Target2);
 [environment]::SetEnvironmentVariable('SWARM_DIR', $Dir, $Target2);
+
 Set-Location $env:SWARM_DIR
 
 [SWARM]::main($args);

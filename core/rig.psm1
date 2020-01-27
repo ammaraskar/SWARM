@@ -149,7 +149,7 @@ class RIG {
             Write-host ""
             Write-Host "${global:Cyan}Net Interfaces:${global:NOCOLOR}"
             Write-Host "  ${global:Cyan}Interface: ${global:NOCOLOR}$($this.net_interfaces.iface)"
-            Write-Host "  ${global:Cyan}MAC: ${global:NOCOLOR}$($this.net_interfaces.iface)"
+            Write-Host "  ${global:Cyan}MAC: ${global:NOCOLOR}"
             $this.net_interfaces.mac | % {
                 Write-Host "    $($_)"
             }
@@ -207,7 +207,7 @@ class RIG {
             $Global:Log.screen("")
             $Global:Log.screen("${global:Cyan}Net Interfaces:${global:NOCOLOR}")
             $Global:Log.screen("  ${global:Cyan}Interface: ${global:NOCOLOR}$($this.net_interfaces.iface)")
-            $Global:Log.screen("  ${global:Cyan}MAC: ${global:NOCOLOR}$($this.net_interfaces.iface)")
+            $Global:Log.screen("  ${global:Cyan}MAC: ${global:NOCOLOR}"
             $this.net_interfaces.mac | % {
                 $Global:Log.screen("    $($_)")
             }
