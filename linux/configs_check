@@ -1,6 +1,6 @@
-#!/usr/bin/env bash
-if [[ -z "${SWARM_DIR}" ]]; then
-  export SWARM_DIR=`cat /usr/bin/swarm_dir`
-fi
+#! /usr/bin/pwsh
+if(-not $env:SWARM_DIR) {
+  $env:SWARM_DIR = "$(cat "/usr/bin/swarm_dir")"
+}
 
-pwsh -command "$SWARM_DIR\scripts\configs_check.ps1 $@"
+. $env:SWARM_DIR\scripts\configs_check.ps1 @args
