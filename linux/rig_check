@@ -3,4 +3,4 @@ if(-not $env:SWARM_DIR) {
   $env:SWARM_DIR = "$(cat "/usr/bin/swarm_dir")"
 }
 
-. $SWARM_DIR\scripts\rig_check.ps1 @args
+. $env:SWARM_DIR\scripts\rig_check.ps1 @args
