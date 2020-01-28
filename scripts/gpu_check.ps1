@@ -1,8 +1,8 @@
 #! /usr/bin/pwsh
 Using namespace System;
-Using module "..\core\colors.psm1";
-Using module "..\core\process.psm1";
-Using module "..\core\gpu.psm1";
+Using module "..\core\control\colors.psm1";
+Using module "..\core\control\process.psm1";
+Using module "..\core\devices\gpu.psm1";
 
 Set-Location $env:SWARM_DIR
 

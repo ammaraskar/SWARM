@@ -1,7 +1,7 @@
 #! /usr/bin/pwsh
 Using namespace System
-Using module ".\core\colors.psm1";
-Using module ".\core\swarm.psm1";
+Using module ".\core\control\colors.psm1";
+Using module ".\core\control\swarm.psm1";
 
 ## Environment
 $Dir = [IO.Path]::GetDirectoryName($script:MyInvocation.MyCommand.Path)

@@ -1,9 +1,8 @@
 Using namespace System;
 Using namespace System.Text;
 Using namespace System.Diagnostics;
-Using module ".\colors.psm1";
-Using module ".\process.psm1";
-Using module ".\helper.psm1";
+Using module "..\control\process.psm1";
+Using module "..\control\helper.psm1";
 Using module ".\motherboard.psm1";
 Using module ".\disk.psm1";
 Using module ".\ram.psm1";
@@ -207,7 +206,7 @@ class RIG {
             $Global:Log.screen("")
             $Global:Log.screen("${global:Cyan}Net Interfaces:${global:NOCOLOR}")
             $Global:Log.screen("  ${global:Cyan}Interface: ${global:NOCOLOR}$($this.net_interfaces.iface)")
-            $Global:Log.screen("  ${global:Cyan}MAC: ${global:NOCOLOR}"
+            $Global:Log.screen("  ${global:Cyan}MAC: ${global:NOCOLOR}")
             $this.net_interfaces.mac | % {
                 $Global:Log.screen("    $($_)")
             }

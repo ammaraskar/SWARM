@@ -1,0 +1,11 @@
+{
+    "example": {
+        "explanation": "this is a explanation of a paramter",
+        "type": "this is varible type i.e.: string, string array, integer, decimal",
+        "default": "this is default value",
+        "options": "this is range of parameter / potential options",
+        "examples_arg": ["-Parameter Test"],
+        "examples_json": ["{\"parameter\":\"test\"}"]
+    }
+
+}

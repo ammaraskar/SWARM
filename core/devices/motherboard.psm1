@@ -1,5 +1,5 @@
 Using namespace System;
-Using module ".\process.psm1"
+Using module "..\control\process.psm1"
 
 ## Motherboard constructor
 class MOTHERBOARD {

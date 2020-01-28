@@ -1,7 +1,7 @@
 Using namespace System; 
-using module ".\maintenance.psm1";
-using module ".\rig.psm1";
 using module ".\logging.psm1";
+using module ".\helper.psm1";
+using module "..\devices\rig.psm1";
 
 class SWARM {
     static [void] main([String[]]$arguments) {
@@ -33,7 +33,7 @@ class SWARM {
         ## To Prevent to much module depth, this is ran as a
         ## script. User can run themselves with 'check_configs json'.
         $Global:Log.screen("Gathering Last Known Configurations...");
-        $Global:Data.Configs = . .\scripts\configs_check swarm;
+        $Global:Data.rig.Configs = . .\scripts\configs_check swarm;
 
     }
 }

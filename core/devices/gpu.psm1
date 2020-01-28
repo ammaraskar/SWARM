@@ -1,4 +1,4 @@
-Using module ".\process.psm1";
+Using module "..\control\process.psm1";
 
 ## Base class for video card
 class VIDEO_CARD {

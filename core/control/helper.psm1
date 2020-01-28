@@ -62,3 +62,21 @@ class filedata {
         [IO.File]::WriteAllLines($filename, $file_data)
     }
 }
+
+class startup {
+    ## Make folders if they don't exsist.
+    static [void] make_folders(){
+        [string[]]$Folders = @()
+        $Folders += 'stats'
+        $Folders += 'logs'
+        $Folders += 'debug'
+
+        foreach($Folder in $Folders) {
+            [string]$Path = Join-Path $Global:Dir $Folder
+            [bool]$Check = [IO.Directory]::Exists($Path)
+            if(-not $Check) {
+                New-Item -ItemType Directory -Path $Global:Dir -Name $folder | Out-Null
+            }
+        }
+    }
+}

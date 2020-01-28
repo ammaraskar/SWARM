@@ -1,8 +1,8 @@
 #! /usr/bin/pwsh
 using namespace System;
-Using module "..\core\colors.psm1";
-using module "..\core\rig.psm1";
-using module "..\core\maintenance.psm1";
+Using module "..\core\control\colors.psm1";
+using module "..\core\control\helper.psm1";
+using module "..\core\devices\rig.psm1";
 
 Set-Location $env:SWARM_DIR
 
