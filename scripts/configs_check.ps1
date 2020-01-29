@@ -8,13 +8,11 @@ using module "..\core\control\helper.psm1";
 ## json will print condensed json
 ## swarm will return as object (for SWARM use)
 
-$Args += "swarm"
-
 Set-Location $env:SWARM_DIR
 
 $HIVEOS_CONF = Join-Path $env:SWARM_DIR "configs\web\hiveos_rig.conf"
 $H_MANIFEST = Join-Path $env:SWARM_DIR "configs\web\h-manifest.conf"
-$DEFAULTS = Join-Path $env:SWARM_DIR "configs\paramters\hiveos_rig.conf"
+$DEFAULTS = Join-Path $env:SWARM_DIR "configs\parameters\hiveos_rig.conf"
 
 $CONFIGS = @{ }
 

@@ -86,7 +86,7 @@ class RIG {
         $this.lan_config = [RIG_RUN]::get_lan();
 
         ## Version
-        [string]$Path = Join-Path $Global:Dir "h-manifest.conf"
+        [string]$Path = Join-Path $Global:Dir "configs\web\h-manifest.conf"
         $this.version = ([filedata]::stringdata("$($Path)")).CUSTOM_VERSION
 
         ## Get GPU Information
@@ -280,8 +280,8 @@ class RIG_RUN {
     static [hashtable] get_lan() {
         ## Get EtherNet Adapter
         $Net = [System.Net.NetworkInformation.NetworkInterface]::GetAllNetworkInterfaces()
-        $EtherNet = $Net | Where Name -eq "Ethernet"
-        if ($Global:IsLinux) { $Ethernet = $Net | Where name -eq "eth0" }
+        $EtherNet = $Net | Where NetworkInterfaceType -ne "Loopback" | Where OperationalStatus -eq "Up" | Where Description -notlike "*virtual*" | Select -First 1
+        if ($Global:IsLinux) { $Ethernet = $Net | Where name -eq "eth0" | Select -First 1 }
 
         $lan_gateway = "0.0.0.0"
         $lan_dns = "0.0.0.0"
