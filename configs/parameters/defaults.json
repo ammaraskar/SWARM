@@ -6,6 +6,45 @@
         "options": "this is range of parameter / potential options",
         "examples_arg": ["-Parameter Test"],
         "examples_json": ["{\"parameter\":\"test\"}"]
+    },
+    "Pools": {
+        "explanation": "Current Pools SWARM can mine from. Omit or add as desired.",
+        "type": "string array",
+        "default": ["nicehash","zergpool"],
+        "options": ["nicehash","zergpool","fairpool","blazepool","ahashpool","blockmasters","nlpool","zpool","Whalesburg"],
+        "examples_arg": ["-Pools nicehash,zergpool"],
+        "examples_json": ["[\"nicehash\",\"zergpool\"]"]
+    },
+    "Wallets": {
+        "explanation": "Wallets For SWARM To Use- Ordered by precedence of use.",
+        "type": "string array",
+        "default": ["1FpuMha1QPaWS4PTPZpU1zGRzKMevnDpwg:BTC"],
+        "options": ["Any Wallet"],
+        "examples_arg": ["-Pools 1FpuMha1QPaWS4PTPZpU1zGRzKMevnDpwg:BTC,1Leus3Mhwierua3Awidlsuq4asdfe34:LTC"],
+        "examples_json": ["[\"1FpuMha1QPaWS4PTPZpU1zGRzKMevnDpwg:BTC\",\"1Leus3Mhwierua3Awidlsuq4asdfe34:LTC\"]"]
+    },
+    "Donate": {
+        "explanation": "Percentage you would like to add to donation.",
+        "type": "decimal",
+        "default": ["0.5"],
+        "options": ["Any Decimal Value Up To 100"],
+        "examples_arg": ["-Donate 0.5"],
+        "examples_json": "0.5"
+    },
+    "Location": {
+        "explanation": "Select Location Nearest To You. If you have issues with a pool- Considering choosing another location.",
+        "type": "string",
+        "default": "USA",
+        "options": ["USA","EUROPE","ASIA","JAPAN"],
+        "examples_arg": ["-Donate 0.5"],
+        "examples_json": "0.5"
+    },
+    "Hive_Hash": {
+        "explanation": "The unique hash generated from HiveOS for this rig.",
+        "type": "string",
+        "default": "",
+        "options": [""],
+        "examples_arg": ["-Hive_Hash 1sSrudkwpoiuf32gGeirhghse2123SFE2sdg"],
+        "examples_json": "1sSrudkwpoiuf32gGeirhghse2123SFE2sdg"
     }
-
 }
