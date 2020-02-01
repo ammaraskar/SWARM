@@ -29,7 +29,9 @@ if ($IsWindows) {
     [Environment]::SetEnvironmentVariable("CUDA_DEVICE_ORDER", "PCI_BUS_ID", $Target2)
 }
 
-## Reset Explorer If Windows
+## Reset Explorer If Windows- You can do this to reset
+## Global environment variables, and re-load registry
+## entries.
 if ($IsWindows) { Stop-Process -ProcessName explorer };
 
 ## Add files to /usr/bin so they can insta-run
