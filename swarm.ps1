@@ -48,6 +48,10 @@ if ($IsLinux) {
 [environment]::SetEnvironmentVariable('PATH', $PATH, $Target2);
 [environment]::SetEnvironmentVariable('SWARM_DIR', $Dir, $Target2);
 
+## If location isn't already main dir, script won't launch.
+## This is just to flag an error if there was an issue with
+## Setting Path environment. I've learned .NET and linux global
+## environments can have issues.
 Set-Location $env:SWARM_DIR
 
 [SWARM]::main($args);
