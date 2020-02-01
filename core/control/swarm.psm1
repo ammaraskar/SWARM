@@ -20,10 +20,14 @@ class SWARM {
 
         ## Print Rig details
         $Global:Log.screen('');
+        $Global:Log.screen('##### RIG SPECIFICATIONS #####');
+        $Global:Log.screen('');
         $Global:Data.Rig.list();
 
         ## List GPUS
         $Global:Log.screen('');
+        $Global:Log.screen('');
+        $Global:Log.screen('##### GPU LIST #####',"WHITE");
         $Global:Log.screen('');
         [RIG_RUN]::list_gpus();
         $Global:Log.screen('');
@@ -34,6 +38,5 @@ class SWARM {
         ## script. User can run themselves with 'check_configs json'.
         $Global:Log.screen("Gathering Last Known Configurations...");
         $Global:Data.rig.Configs = . .\scripts\configs_check swarm;
-
     }
 }
