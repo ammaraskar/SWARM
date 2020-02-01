@@ -1,6 +1,5 @@
 {
     "example": {
-        "value": "",
         "explanation": "this is a explanation of a paramter",
         "type": "this is varible type i.e.: string, string array, integer, decimal",
         "default": "this is default value",
@@ -9,7 +8,6 @@
         "examples_json": "{\"parameter\":\"test\"}"
     },
     "Pools": {
-        "value": "",
         "explanation": "Current Pools SWARM can mine from. Omit or add as desired.",
         "type": "[string[]]",
         "default": ["nicehash","zergpool"],
@@ -18,7 +16,6 @@
         "examples_json": "[\"nicehash\",\"zergpool\"]"
     },
     "Wallets": {
-        "value": "",
         "explanation": "Wallets For SWARM To Use- Ordered by precedence of use.",
         "type": "[string[]]",
         "default": ["1FpuMha1QPaWS4PTPZpU1zGRzKMevnDpwg:BTC"],
@@ -27,7 +24,6 @@
         "examples_json": "[\"1FpuMha1QPaWS4PTPZpU1zGRzKMevnDpwg:BTC\",\"1Leus3Mhwierua3Awidlsuq4asdfe34:LTC\"]"
     },
     "Donate": {
-        "value": "",
         "explanation": "Percentage you would like to add to donation.",
         "type": "[decimal]",
         "default": "0.5",
@@ -36,7 +32,6 @@
         "examples_json": "0.5"
     },
     "Location": {
-        "value": "",
         "explanation": "Select Location Nearest To You. If you have issues with a pool- Considering choosing another location.",
         "type": "[string]",
         "default": "USA",
@@ -45,7 +40,6 @@
         "examples_json": "\"EUROPE\""
     },
     "Hive_Hash": {
-        "value": "",
         "explanation": "The unique hash generated from HiveOS for this rig.",
         "type": "[string]",
         "default": "",

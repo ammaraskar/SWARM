@@ -38,5 +38,8 @@ class SWARM {
         ## script. User can run themselves with 'check_configs json'.
         $Global:Log.screen("Gathering Last Known Configurations...");
         $Global:Data.rig.Configs = . .\scripts\configs_check swarm;
+
+        ## Now that we have last know configurations- We parse arguments
+        ## Make changes as neccessary.
     }
 }
