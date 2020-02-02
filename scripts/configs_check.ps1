@@ -25,8 +25,6 @@ using module "..\core\control\helper.psm1";
 
 Set-Location $env:SWARM_DIR
 
-$args += "list"
-
 $HIVEOS_CONF = Join-Path $env:SWARM_DIR "configs\web\hiveos_rig.conf"
 $H_MANIFEST = Join-Path $env:SWARM_DIR "configs\web\h-manifest.conf"
 $DEFAULTS = Join-Path $env:SWARM_DIR "configs\parameters\defaults.json"
