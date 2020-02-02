@@ -52,6 +52,13 @@ setlocal & pushd .
 cd /d %~dp0
 if '%1'=='ELEV' (del "%vbsGetPrivileges%" 1>nul 2>nul  &  shift /1)
 
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+::                      HANDLE ARGUMENTS                                 ::
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+:: If no commandline arguments, use ARGUMENTS parameter
+:: Else use commandline arguments minus ELEV
 setlocal EnableDelayedExpansion
 if [%1]==[] (
     set PARAMETERS=!ARGUMENTS!
@@ -60,6 +67,10 @@ if [%1]==[] (
     for /f "tokens=1,* delims= " %%a in ("!COMMANDS!") do set PARAMETERS=%%b 
 )
 
-cd /D "%~dp0"
 
-pwsh -executionpolicy bypass -windowstyle normal -noexit -command "Set-Location ..; .\scripts\swarm.ps1 %PARAMETERS%"
+:: Navigate to main dir
+cd /D "%~dp0"
+cd ..
+
+:: Launch
+pwsh -executionpolicy bypass -windowstyle normal -noexit -command ".\scripts\swarm.ps1 %PARAMETERS%"
