@@ -27,7 +27,7 @@ class RAM_RUN {
                 [math]::Round((Get-Content '/proc/meminfo' | Select-String "MemFree:" | ForEach-Object { $($_ -split 'MemFree:\s+' | Select-Object -Last 1).replace(" kB", "") }) / 1KB, 0)
             }
             if ($global:IsWindows) {
-                [math]::Round((Get-CimInstance -ClassName Win32_OperatingSystem).FreePhysicalMemory / 1KB, 0)
+                [math]::Round((Get-CimInstance -ClassName Win32_ComputerSystem).TotalPhysicalMemory / 1MB, 0) - [math]::Round((Get-CimInstance -ClassName Win32_OperatingSystem).FreePhysicalMemory / 1KB, 0)
             }
         )
         return $used_space
