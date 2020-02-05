@@ -41,16 +41,16 @@ foreach ($Device in $Devices) {
         $new_deviceID = "{0:x2}" -f $get_deviceID
         $new_functionId = "{0:x2}" -f $get_functionId
 
-        $Device | Add-Member "location" "$new_busid`:$new_deviceID`:$new_functionId"
+        $Device | Add-Member "ilocation" "$new_busid`:$new_deviceID`:$new_functionId"
     }
 }
 
 ## IF using parsable argument to get a single device
 if ($args[0] -eq "-vmms") {
-    $Devices = $Devices | Where location -eq $args[1]
+    $Devices = $Devices | Where ilocation -eq $args[1]
 }
 else {
-    $Devices = $Devices | Where location -ne $null
+    $Devices = $Devices | Where ilocation -ne $null
 }
 
 ## I only have so many devices to test with
@@ -114,7 +114,7 @@ foreach ($Device in $Devices) {
 ## Print single view
 if ($args[0] -eq "-vmms") {
     $Devices | % {
-        Write-Host "Slot:`t$($_.location)"
+        Write-Host "Slot:`t$($_.ilocation)"
         Write-Host "Class:`t$($_.ititle)"
         Write-Host "Vendor:`t$($_.ivendor)"
         Write-Host "Device:`t$($_.idevice)"
@@ -125,10 +125,10 @@ if ($args[0] -eq "-vmms") {
 }
 ## Print list just like PCIUtils
 else {
-    $Devices | Sort-Object location | ForEach-Object {
+    $Devices | Sort-Object ilocation | ForEach-Object {
         $a = " $($_.idevicesubsys)"
         $b = " (rev $($_.irev))"
-        Write-Host "$($_.location) $($_.ititle): $($_.ivendor)$a$b"
+        Write-Host "$($_.ilocation) $($_.ititle): $($_.ivendor)$a$b"
     }
 }
 
