@@ -33,4 +33,4 @@ $pci_ids | % {
     }
 }
 
-$device_list | ConvertTo-Json -Depth 5 -Compress | Set-Content ".\apps\device\pci_ids.json"
+$device_list | ConvertTo-Json -Depth 10 | Set-Content ".\apps\device\pci_ids.json"

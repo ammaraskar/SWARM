@@ -66,26 +66,23 @@ foreach ($Device in $Devices) {
  
     $vendor = $pci.PSobject.Properties.name | Where { $_.substring(0, 4) -eq $vendorId }
     $device_name = $pci.$vendor.PSObject.Properties.Name | Where { $_.substring(0, 4) -eq $deviceId }
-    if ($pci.$vendor.$device_name.PSobject.Properties.Name) {
-        $subsys = $pci.$vendor.$device_name.PSObject.Properties.name | Where { $_ -eq $deviceSubsysId }
-        $deviceSubsys = $pci.$vendor.$device_name.$subsys
-    }
-    if($deviceSubsys -eq $null) {$deviceSubsys = ($device_name.split("   ")[1])}
+    $deviceSubsys = $pci.$vendor.$device_name.$deviceSubsysId
+    if ($null -eq $deviceSubsys) { $deviceSubsys = ($device_name.split("   ")[1]) }
     $manufacturer = $pci.PSobject.Properties.name | Where { $_.substring(0, 4) -eq $manufacturerId }
 
-    $CC = $device.CompatibleID | Where {$_ -like "*CC_*"} | Select -First 1
+    $CC = $device.CompatibleID | Where { $_ -like "*CC_*" } | Select -First 1
     $Get = $CC.IndexOf("CC_")
-    $CC = $CC.Substring(13 + 3,4)
+    $CC = $CC.Substring(13 + 3, 4)
 
-    $Code = $CC.Substring(0,2)
-    $Code_Id = $CC.Substring(2,2)
-    $title = $pci.PSObject.Properties.Name | Where {$_.substring(0,4) -eq "C $Code"}
-    if($pci.$title.PSObject.Properties.Name) {
-        $title = $pci.$title.PSObject.Properties.Name | Where{$_.substring(0,2) -eq $Code_Id}
+    $Code = $CC.Substring(0, 2)
+    $Code_Id = $CC.Substring(2, 2)
+    $title = $pci.PSObject.Properties.Name | Where { $_.substring(0, 4) -eq "C $Code" }
+    if ($pci.$title.PSObject.Properties.Name) {
+        $title = $pci.$title.PSObject.Properties.Name | Where { $_.substring(0, 2) -eq $Code_Id }
     }
 
     $rev = $Device.DeviceID.IndexOf("REV_")
-    $revision = $Device.DeviceID.substring($rev + 4,2)
+    $revision = $Device.DeviceID.substring($rev + 4, 2)
     $new_rev = "{0:x2}" -f $revision
 
     $Device | Add-Member "irev" $new_rev
