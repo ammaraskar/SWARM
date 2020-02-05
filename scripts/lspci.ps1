@@ -15,13 +15,17 @@ If you use my code, please include my github: https://github.com/maynardminer
 #>
 
 
+## USE CIM to get to PnP Devices- To my knowledge this should not require administrator,
+## but you know...Windows...
 $Devices = Get-CimInstance -class Win32_PnPEntity | Where { $_.PNPDeviceID -match "PCI\\*" } | Select -Unique
-$pci = Get-Content ".\apps\device\pci_ids.json" | ConvertFrom-Json
-$alphabet = @()  
-for ([byte]$c = [char]'A'; $c -le [char]'Z'; $c++) {  
-    $alphabet += [char]$c  
-} 
 
+## This is a json list of pci.ids.
+$pci = Get-Content ".\apps\device\pci_ids.json" | ConvertFrom-Json
+
+## First we need to get locations
+## I have found unlike linux that Windows
+## can have devices listed without locations
+## We only want devices with locations.
 foreach ($Device in $Devices) {
     $device_Id = $Device.PNPDeviceID
     $locations = ((get-itemproperty -path "HKLM:\SYSTEM\CurrentControlSet\Enum\$device_ID" -name locationinformation).locationINformation).split(";")[2]
@@ -41,6 +45,7 @@ foreach ($Device in $Devices) {
     }
 }
 
+## IF using parsable argument to get a single device
 if ($args[0] -eq "-vmms") {
     $Devices = $Devices | Where location -eq $args[1]
 }
@@ -48,6 +53,9 @@ else {
     $Devices = $Devices | Where location -ne $null
 }
 
+## I only have so many devices to test with
+## but so far I haven't found a device yet
+## that doesn't match pci.ids
 foreach ($Device in $Devices) {
     $id = $null
     $Value = $null
@@ -103,7 +111,7 @@ foreach ($Device in $Devices) {
     $Device | Add-Member "imanufacturer" ($manufacturer.split("   ")[1])
 }
 
-
+## Print single view
 if ($args[0] -eq "-vmms") {
     $Devices | % {
         Write-Host "Slot:`t$($_.location)"
@@ -115,6 +123,7 @@ if ($args[0] -eq "-vmms") {
         Write-Host "Rev:`t$($_.irev)"
     }
 }
+## Print list just like PCIUtils
 else {
     $Devices | Sort-Object location | ForEach-Object {
         $a = " $($_.idevicesubsys)"
@@ -122,3 +131,7 @@ else {
         Write-Host "$($_.location) $($_.ititle): $($_.ivendor)$a$b"
     }
 }
+
+## I have found this to be slightly slower than lscpi
+## mainly because its using .json rather than binary,
+## but still seems to work fine for me.
