@@ -11,7 +11,7 @@ class Proc_Data {
             if ($arguments) { $info.Arguments = $arguments };
             $info.UseShellExecute = $false;
             $info.RedirectStandardOutput = $true;
-            if ($global:IsWindows) { $info.Verb = "runas" }        
+            if ($global:IsWindows) { $info.Verb = "runas" }
             $proc = [Process]::New()
             $proc.StartInfo = $Info
             $proc.Start() | Out-Null

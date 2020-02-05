@@ -1,4 +1,5 @@
 #! /usr/bin/pwsh
+#Requires -RunAsAdministrator
 Using namespace System
 Using module "..\core\control\colors.psm1";
 Using module "..\core\control\swarm.psm1";
