@@ -73,4 +73,4 @@ cd /D "%~dp0"
 cd ..
 
 :: Launch
-pwsh -executionpolicy bypass -windowstyle normal -noexit -command ".\scripts\swarm.ps1 %PARAMETERS%"
+pwsh -executionpolicy bypass -noexit -windowstyle normal -command ".\scripts\swarm.ps1 %PARAMETERS%"
