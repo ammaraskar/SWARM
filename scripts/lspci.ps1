@@ -20,7 +20,33 @@ $pci = Get-Content ".\apps\device\pci_ids.json" | ConvertFrom-Json
 $alphabet = @()  
 for ([byte]$c = [char]'A'; $c -le [char]'Z'; $c++) {  
     $alphabet += [char]$c  
-}  
+} 
+
+foreach ($Device in $Devices) {
+    $device_Id = $Device.PNPDeviceID
+    $locations = ((get-itemproperty -path "HKLM:\SYSTEM\CurrentControlSet\Enum\$device_ID" -name locationinformation).locationINformation).split(";")[2]
+    if ($locations) {
+        $location_map = $locations.TrimStart("(").TrimEnd(")")
+        $location = $location_map.split(",")
+
+        [int]$get_busid = $location[0]
+        [int]$get_deviceID = $location[1]
+        [int]$get_functionId = $location[2]
+
+        $new_busid = "{0:x2}" -f $get_busid
+        $new_deviceID = "{0:x2}" -f $get_deviceID
+        $new_functionId = "{0:x2}" -f $get_functionId
+
+        $Device | Add-Member "location" "$new_busid`:$new_deviceID`:$new_functionId"
+    }
+}
+
+if ($args[0] -eq "-vmms") {
+    $Devices = $Devices | Where location -eq $args[1]
+}
+else {
+    $Devices = $Devices | Where location -ne $null
+}
 
 foreach ($Device in $Devices) {
     $id = $null
@@ -33,30 +59,14 @@ foreach ($Device in $Devices) {
     $device_name = $null
     $manufacturer = $null
     $cc = $null
-    $get = $null
     $code = $null
     $Code_Id = $null
     $title = $null
     $rev = $null
     $revision = $null
     $new_rev = $null
-    $subsys = $null
     $deviceSubsys = $null
 
-    $device_Id = $Device.PNPDeviceID
-    $locations = ((get-itemproperty -path "HKLM:\SYSTEM\CurrentControlSet\Enum\$device_ID" -name locationinformation).locationINformation).split(";")[2]
-    $location_map = $locations.TrimStart("(").TrimEnd(")")
-    $location = $location_map.split(",")
-
-    [int]$get_busid = $location[0]
-    [int]$get_deviceID = $location[1]
-    [int]$get_functionId = $location[2]
-
-    $new_busid = "{0:x2}" -f $get_busid
-    $new_deviceID = "{0:x2}" -f $get_deviceID
-    $new_functionId = "{0:x2}" -f $get_functionId
-
-    $Device | Add-Member "location" "$new_busid`:$new_deviceID`:$new_functionId"
     $id = $Device.DeviceID
     $Value = $id.split('&')
     $vendorId = $value[0].Substring($Value[0].Length - 4)
@@ -94,8 +104,21 @@ foreach ($Device in $Devices) {
 }
 
 
-$Devices | Sort-Object location | ForEach-Object {
-    $a = " $($_.idevicesubsys)"
-    $b = " (rev $($_.irev))"
-    Write-Host "$($_.location) $($_.ititle): $($_.ivendor)$a$b"
+if ($args[0] -eq "-vmms") {
+    $Devices | % {
+        Write-Host "Slot:`t$($_.location)"
+        Write-Host "Class:`t$($_.ititle)"
+        Write-Host "Vendor:`t$($_.ivendor)"
+        Write-Host "Device:`t$($_.idevice)"
+        Write-Host "SVendor:`t$($_.imanufacturer)"
+        Write-Host "SDevice:`t$($_.idevicesubsys)"
+        Write-Host "Rev:`t$($_.irev)"
+    }
+}
+else {
+    $Devices | Sort-Object location | ForEach-Object {
+        $a = " $($_.idevicesubsys)"
+        $b = " (rev $($_.irev))"
+        Write-Host "$($_.location) $($_.ititle): $($_.ivendor)$a$b"
+    }
 }
