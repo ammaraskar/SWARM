@@ -10,7 +10,7 @@ $lspci_file = Join-Path $env:SWARM_DIR "debug\lspci.txt";
 
 if ($IsWindows) {
     $smi_path = Join-Path $env:ProgramFiles "NVIDIA Corporation\NVSMI\nvidia-smi.exe"
-    $lspci_exe = Join-Path $env:SWARM_DIR "apps\pci-win\lspci.exe"
+    $lspci_exe = Join-Path $env:SWARM_DIR "win\lspci.bat"
 }
 elseif ($IsLinux) {
     $smi_path = "/usr/bin/nvidia-smi"
@@ -50,39 +50,16 @@ class Win_Loader {
         ## Get GPU-Z Data
         $Data = ([xml]([IO.File]::ReadLines("$xml"))).gpuz_dump.card;
         foreach ($Card in $Data) {
-            switch ($card.location) {
-                "0:2:2" { $card.location = "00:02.0" }
-                "1:0:0" { $card.location = "01:00.0" }
-                "2:0:0" { $card.location = "02:00.0" }
-                "3:0:0" { $card.location = "03:00.0" }
-                "4:0:0" { $card.location = "04:00.0" }
-                "5:0:0" { $card.location = "05:00.0" }
-                "6:0:0" { $card.location = "06:00.0" }
-                "7:0:0" { $card.location = "07:00.0" }
-                "8:0:0" { $card.location = "08:00.0" }
-                "9:0:0" { $card.location = "09:00.0" }
-                "10:0:0" { $card.location = "0a:00.0" }
-                "11:0:0" { $card.location = "0b:00.0" }
-                "12:0:0" { $card.location = "0c:00.0" }
-                "13:0:0" { $card.location = "0d:00.0" }
-                "14:0:0" { $card.location = "0e:00.0" }
-                "15:0:0" { $card.location = "0f:00.0" }
-                "16:0:0" { $card.location = "0g:00.0" }
-                "17:0:0" { $card.location = "0h:00.0" }
-                "18:0:0" { $card.location = "0i:00.0" }
-                "19:0:0" { $card.location = "0j:00.0" }
-                "20:0:0" { $card.location = "0k:00.0" }
-                "21:0:0" { $card.location = "0l:00.0" }
-                "22:0:0" { $card.location = "0m:00.0" }
-                "23:0:0" { $card.location = "0n:00.0" }
-                "24:0:0" { $card.location = "0o:00.0" }
-                "25:0:0" { $card.location = "0p:00.0" }
-                "26:0:0" { $card.location = "0q:00.0" }
-                "27:0:0" { $card.location = "0r:00.0" }
-                "28:0:0" { $card.location = "0s:00.0" }
-                "29:0:0" { $card.location = "0t:00.0" }
-                "30:0:0" { $card.location = "0u:00.0" }
-            }    
+            $location = $card.location.split(":")
+            [int]$get_busid = $location[0]
+            [int]$get_deviceID = $location[1]
+            [int]$get_functionId = $location[2]
+
+            $new_busid = "{0:x2}" -f $get_busid
+            $new_deviceID = "{0:x2}" -f $get_deviceID
+            $new_functionId = "{0:x2}" -f $get_functionId
+            
+            $card.location = "$new_busid`:$new_DeviceID`:$new_FunctionID"
         }    
         return $Data;
     }
