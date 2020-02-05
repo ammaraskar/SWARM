@@ -20,11 +20,18 @@ class SWARM {
 
         ## Print Rig details
         $Global:Log.screen('');
+        $Global:Log.screen('');
+        $Global:Log.screen('Gathering Rig Specifications...');
+        $Global:Log.screen('');
+        $Global:Log.screen('');
         $Global:Log.screen('##### RIG SPECIFICATIONS #####');
         $Global:Log.screen('');
         $Global:Data.Rig.list();
 
         ## List GPUS
+        $Global:Log.screen('');
+        $Global:Log.screen('');
+        $Global:Log.screen('Gathering GPU list...');
         $Global:Log.screen('');
         $Global:Log.screen('');
         $Global:Log.screen('##### GPU LIST #####',"WHITE");
