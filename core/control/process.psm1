@@ -15,24 +15,20 @@ class Proc_Data {
             $proc = [Process]::New()
             $proc.StartInfo = $Info
             $proc.Start() | Out-Null
-            if ($wait -gt 0) {
-                $proc.WaitForExit(($wait * 1000)) | Out-Null
-            }
-            else {
-                $proc.WaitForExit() | Out-Null
-            }
-            if ($proc.HasExited) {
-                while (-not $Proc.StandardOutput.EndOfStream) {
-                    $Data += $Proc.StandardOutput.ReadLine()
-                }    
-            }
-            else { 
-                Stop-Process -Id $Proc.Id -ErrorAction Ignore 
-                $Message = "Error: $Path timed out. Attempting To Stop Manually."
-                if ($Global:Log) { $Global:Log.screen($Message, "Red") }
-                else { Write-Host $Message -ForegroundColor Red }
-            }
-        } else {
+            $Stopwatch = [Stopwatch]::New();
+            $Stopwatch.Restart();
+            while (-not $Proc.StandardOutput.EndOfStream) {
+                $Data += $Proc.StandardOutput.ReadLine()
+                if ($wait -and $Stopwatch.Elapsed.Seconds -gt $wait) {
+                    $Message = "Error: Process $Path has exceeded wait time. Stopping."
+                    if ($Global:Log) { $Global:Log.screen($Message, "Red") }
+                    else { write-Host $Message -ForegroundColor Red }
+                    Stop-Process $Proc;
+                    break
+                }
+            }    
+        }
+        else {
             $Message = "Error: $Path does not exist."
             if ($Global:Log) { $Global:Log.screen($Message, "Red") }
             else { Write-Host $Message -ForegroundColor Red }
