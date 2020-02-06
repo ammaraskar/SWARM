@@ -57,58 +57,48 @@ else {
 ## but so far I haven't found a device yet
 ## that doesn't match pci.ids
 foreach ($Device in $Devices) {
-    $id = $null
-    $Value = $null
-    $vendorId = $null
-    $deviceId = $null
-    $deviceSubsysId = $null
-    $manufacturerId = $null
-    $vendor = $null
-    $device_name = $null
-    $manufacturer = $null
-    $cc = $null
-    $code = $null
-    $Code_Id = $null
-    $title = $null
-    $rev = $null
-    $revision = $null
-    $new_rev = $null
-    $deviceSubsys = $null
-
     $id = $Device.DeviceID
     $Value = $id.split('&')
     $vendorId = $value[0].Substring($Value[0].Length - 4)
     $deviceId = $value[1].Substring($Value[1].Length - 4)
     $deviceSubsysId = $value[2].Substring($Value[2].Length - 4) + ' ' + $value[2].Substring($Value[2].Length - 8, 4)
     $manufacturerId = $value[2].Substring($Value[2].Length - 4)
- 
     $vendor = $pci.PSobject.Properties.name | Where { $_.substring(0, 4) -eq $vendorId }
     $device_name = $pci.$vendor.PSObject.Properties.Name | Where { $_.substring(0, 4) -eq $deviceId }
-    $deviceSubsys = $pci.$vendor.$device_name.$deviceSubsysId
-    if ($null -eq $deviceSubsys) { $deviceSubsys = ($device_name.split("   ")[1]) }
+    $ideviceSubsys = $pci.$vendor.$device_name.$deviceSubsysId
+    if ($null -eq $ideviceSubsys) { 
+        $ideviceSubsys = if ($device_name) { ($device_name.split("   ")[1]) }
+    }
     $manufacturer = $pci.PSobject.Properties.name | Where { $_.substring(0, 4) -eq $manufacturerId }
-
     $CC = $device.CompatibleID | Where { $_ -like "*CC_*" } | Select -First 1
-    $Get = $CC.IndexOf("CC_")
     $CC = $CC.Substring(13 + 3, 4)
-
     $Code = $CC.Substring(0, 2)
     $Code_Id = $CC.Substring(2, 2)
     $title = $pci.PSObject.Properties.Name | Where { $_.substring(0, 4) -eq "C $Code" }
     if ($pci.$title.PSObject.Properties.Name) {
         $title = $pci.$title.PSObject.Properties.Name | Where { $_.substring(0, 2) -eq $Code_Id }
     }
-
     $rev = $Device.DeviceID.IndexOf("REV_")
     $revision = $Device.DeviceID.substring($rev + 4, 2)
-    $new_rev = "{0:x2}" -f $revision
-
-    $Device | Add-Member "irev" $new_rev
-    $Device | Add-Member "ititle" ($title.split("   ")[1])
-    $Device | Add-Member "ivendor" ($vendor.split("   ")[1])
-    $Device | Add-Member "idevice" ($device_name.split("   ")[1])
-    $Device | Add-Member "idevicesubsys" $deviceSubsys
-    $Device | Add-Member "imanufacturer" ($manufacturer.split("   ")[1])
+    $irev = "{0:x2}" -f $revision
+    $ititle = if ($title) { 
+        ($title.split("   ")[1])
+    }
+    $ivendor = if ($vendor) { 
+        ($vendor.split("   ")[1])
+    }
+    $idevice = if ($device_name) {
+        ($device_name.split("   ")[1]) 
+    }
+    $imanufacturer = if ($manufacturer) {
+        ($manufacturer.split("   ")[1])
+    }
+    $Device | Add-Member "irev" $irev
+    $Device | Add-Member "ititle" $ititle
+    $Device | Add-Member "ivendor" $ivendor
+    $Device | Add-Member "idevice" $idevice
+    $Device | Add-Member "idevicesubsys" $ideviceSubsys
+    $Device | Add-Member "imanufacturer" $imanufacturer
 }
 
 ## Print single view
