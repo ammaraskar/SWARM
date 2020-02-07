@@ -97,13 +97,14 @@ foreach ($Device in $Devices) {
  
     $vendor = $pci.PSobject.Properties.name | Where { $_.substring(0, 4) -eq $vendorId }
     $device_name = $pci.$vendor.PSObject.Properties.Name | Where { $_.substring(0, 4) -eq $deviceId }
-    $deviceSubsys = $pci.$vendor.$device_name.$deviceSubsysId
-    if ($null -eq $deviceSubsys) { $deviceSubsys = ($device_name.split("   ")[1]) }
+    $ideviceSubsys = $pci.$vendor.$device_name.$deviceSubsysId
+    if ($null -eq $ideviceSubsys) { 
+        $ideviceSubsys = if ($device_name) { ($device_name.split("   ")[1]) }
+    }
     $manufacturer = $pci.PSobject.Properties.name | Where { $_.substring(0, 4) -eq $manufacturerId }
 
     $CC = $device.CompatIds | Where { $_ -like "*CC_*" } | Select -First 1
     $CC = $CC.Substring(13 + 3, 4)
-
     $Code = $CC.Substring(0, 2)
     $Code_Id = $CC.Substring(2, 2)
     $title = $pci.PSObject.Properties.Name | Where { $_.substring(0, 4) -eq "C $Code" }
