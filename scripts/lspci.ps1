@@ -25,9 +25,9 @@ class Device {
     [string]$iRev
     [string]$iTitle
     [string]$iVendor
-    [string]$iDevice
-    [string]$iDeviceSubsys
     [string]$imanufacturer
+    [string]$iDevice
+    [string]$iDeviceId
     [string]$iLocation
 
     Device([string]$id, [string]$loc, [string]$compat) {
@@ -39,8 +39,7 @@ class Device {
         [int]$get_functionId = $location_map[2]
         $new_busid = "{0:x2}" -f $get_busid
         $new_deviceID = "{0:x2}" -f $get_deviceID
-        $new_functionId = "{0:x2}" -f $get_functionId
-        $this.iLocation = "$new_busid`:$new_deviceID`:$new_functionId"
+        $this.iLocation = "$new_busid`:$new_deviceID`.$get_functionId"
     }
 }
 
@@ -48,7 +47,6 @@ class Device {
 ## USE CIM to get to PnP Devices- To my knowledge this should not require administrator,
 ## but you know...Windows...
 ## Scratch that- Get-CimInstace Win32_PnPEntity is garbage. I found it missing PCI devices.
-
 #$Devices = Get-CimInstance -class Win32_PnPEntity | Where { $_.PNPDeviceID -match "PCI\\*" } | Select -Unique
 
 ## Use registry entries instead
@@ -56,21 +54,24 @@ $Devices = @()
 $PCI_List = Get-ChildItem "HKLM:\SYSTEM\CurrentControlSet\Enum\PCI"
 $Registry = [RegistryKey]::OpenBaseKey([RegistryHive]::LocalMachine, [RegistryView]::Default).OpenSubKey("SYSTEM\CurrentControlSet\Enum\PCI")
 $PCI_List = $Registry.GetSubKeyNames()
-foreach($item in $PCI_List) {
+foreach ($item in $PCI_List) {
     $pci_key = $Registry.OpenSubKey($item)
     $sub_names = $pci_key.GetSubKeyNames()
-    foreach($sub_value in $sub_names) {
+    foreach ($sub_value in $sub_names) {
         $Sub_key = $pci_key.OpenSubKey($sub_value)
-        $names = $Sub_key.GetValueNames()
-        if(
-            "HardwareID" -in $names -and
-            "LocationInformation" -in $names -and
-            "CompatibleIDs" -in $names
-        ) { 
-            $HID = $sub_key.GetValue("HardwareID") | Where {$_ -like "*REV*"} | Select -First 1;
-            $LOC = $sub_key.GetValue("LocationInformation") | Select -First 1
-            $COM = $sub_key.GetValue("CompatibleIDs") | Where {$_ -like "*CC*"} | Select -First 1;
-            $Devices += [Device]::New($HID,$LOC,$COM)
+        $key_names = $Sub_key.GetSubKeyNames()
+        if ("Control" -in $key_names -or $key_names.count -eq 1) {
+            $names = $Sub_key.GetValueNames()
+            if (
+                "HardwareID" -in $names -and
+                "LocationInformation" -in $names -and
+                "CompatibleIDs" -in $names
+            ) { 
+                $HID = $sub_key.GetValue("HardwareID") | Where { $_ -like "*REV*" } | Select -First 1;
+                $LOC = $sub_key.GetValue("LocationInformation") | Select -First 1
+                $COM = $sub_key.GetValue("CompatibleIDs") | Where { $_ -like "*CC*" } | Select -First 1;
+                $Devices += [Device]::New($HID, $LOC, $COM)
+            }
         }
     }   
 }
@@ -99,7 +100,7 @@ foreach ($Device in $Devices) {
     $device_name = $pci.$vendor.PSObject.Properties.Name | Where { $_.substring(0, 4) -eq $deviceId }
     $ideviceSubsys = $pci.$vendor.$device_name.$deviceSubsysId
     if ($null -eq $ideviceSubsys) { 
-        $ideviceSubsys = if ($device_name) { ($device_name.split("   ")[1]) }
+        $ideviceSubsys = if ($device_name) { $device_name.split("   ")[1] } else { "Device $deviceId" }
     }
     $manufacturer = $pci.PSobject.Properties.name | Where { $_.substring(0, 4) -eq $manufacturerId }
 
@@ -112,16 +113,23 @@ foreach ($Device in $Devices) {
         $title = $pci.$title.PSObject.Properties.Name | Where { $_.substring(0, 2) -eq $Code_Id }
     }
 
+    $Device_Title = "Device $deviceId"
+    if($null -eq $vendor){
+        $vendor = $Device_Title
+    }
+    else{
+        $vendor = $vendor.split("   ")[1]
+    }
     $rev = $Device.HardwareID.IndexOf("REV_")
     $revision = $Device.HardwareID.substring($rev + 4, 2)
     $new_rev = "{0:x2}" -f $revision
 
     $Device.Irev = $new_rev
     $Device.iTitle = ($title.split("   ")[1])
-    $Device.iVendor = ($vendor.split("   ")[1])
-    $Device.iDevice = ($device_name.split("   ")[1])
-    $Device.Idevicesubsys = $deviceSubsys
-    $Device.iManufacturer = ($manufacturer.split("   ")[1])
+    $Device.iVendor = $vendor
+    $Device.IDevice = $ideviceSubsys
+    $Device.IDeviceId = $Device_Title
+    $Device.iManufacturer = if ($manufacturer) { ($manufacturer.split("   ")[1]) } 
 }
 
 ## Print single view
@@ -130,16 +138,18 @@ if ($args[0] -eq "-vmms") {
         Write-Host "Slot:`t$($_.ilocation)"
         Write-Host "Class:`t$($_.ititle)"
         Write-Host "Vendor:`t$($_.ivendor)"
-        Write-Host "Device:`t$($_.idevice)"
-        Write-Host "SVendor:`t$($_.imanufacturer)"
-        Write-Host "SDevice:`t$($_.idevicesubsys)"
+        Write-Host "Device:`t$($_.IDevice)"
+        if ($_.imanufacturer) {
+            Write-Host "SVendor:`t$($_.imanufacturer)"
+            Write-Host "SDevice:`t$($_.IDeviceId)"
+        }
         Write-Host "Rev:`t$($_.irev)"
     }
 }
 ## Print list just like PCIUtils
 else {
     $Devices | Sort-Object ilocation | ForEach-Object {
-        $a = " $($_.idevicesubsys)"
+        $a = " $($_.IDevice)"
         $b = " (rev $($_.irev))"
         Write-Host "$($_.ilocation) $($_.ititle): $($_.ivendor)$a$b"
     }
