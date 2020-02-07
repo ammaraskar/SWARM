@@ -30,10 +30,8 @@ if ($env:SWARM_DIR -ne $Dir) {
 [environment]::SetEnvironmentVariable('PATH', $PATH, $Target1);
 
 ## Cuda Device Order- Set it to match Busid.
-if ($IsWindows) {
-    [Environment]::SetEnvironmentVariable("CUDA_DEVICE_ORDER", "PCI_BUS_ID", $Target1)
-    [Environment]::SetEnvironmentVariable("CUDA_DEVICE_ORDER", "PCI_BUS_ID", $Target2)
-}
+[Environment]::SetEnvironmentVariable("CUDA_DEVICE_ORDER", "PCI_BUS_ID", $Target1)
+[Environment]::SetEnvironmentVariable("CUDA_DEVICE_ORDER", "PCI_BUS_ID", $Target2)
 
 ## Reset Explorer If Windows- You can do this to reset
 ## Global environment variables, and re-load registry
