@@ -15,8 +15,7 @@ class SWARM {
 
         ## Build Rig
         $Global:Log.screen('Building Rig Before Starting GUI...This can take a moment.');
-        $Global:Data = [Hashtable]::Synchronized(@{});
-        $Global:Data.Add('rig',[SWARM_RIG]::New());
+        $Global:RIG = [Hashtable]::Synchronized([RIG]::New());
 
         ## Print Rig details
         $Global:Log.screen('');
@@ -26,7 +25,7 @@ class SWARM {
         $Global:Log.screen('');
         $Global:Log.screen('##### RIG SPECIFICATIONS #####');
         $Global:Log.screen('');
-        $Global:Data.Rig.list();
+        [RIG_RUN]::list($Global:RIG)
 
         ## List GPUS
         $Global:Log.screen('');
@@ -44,7 +43,11 @@ class SWARM {
         ## To Prevent to much module depth, this is ran as a
         ## script. User can run themselves with 'check_configs json'.
         $Global:Log.screen("Gathering Last Known Configurations...");
-        $Global:Data.rig.Configs = . .\scripts\configs_check swarm;
+        $Global:RIG.configs = . .\scripts\configs_check swarm;
+
+        ## Now we check if user is using a website, and connect to it
+        ## To get their configs.
+        [WEB_RUN]::Start_Connections($RIG)
 
         ## Now that we have last know configurations- We parse arguments
         ## Make changes as neccessary.

@@ -1,15 +1,6 @@
 Using namespace System;
 Using module "..\control\process.psm1";
 
-## Mining Threads for CPU
-class THREAD {
-    [String]$Brand = "CPU"
-    [Decimal]$Speed; #Current Hashrate
-    [Int]$Temp = 0; #Current Temperature Not Used Yet
-    [Int]$Fan = 0; #Current Fan Speed Not Used Yet
-    [Int]$Wattage = 0; #Current Wattage Not Used Yet
-}
-
 class CPU {
     [string]$aes;
     [string]$model;

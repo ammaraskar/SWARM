@@ -16,22 +16,25 @@ if ($IsLinux) { $Divider = ":" }
 elseif ($IsWindows) { $Divider = ";" }
 
 ## Add SWARM to PATH
-$PATH = ([Environment]::GetEnvironmentVariable('PATH')).Split($Divider) | Where { $_ -ne "" } | Where { $_ -notlike "*SWARM*" }
-if ($Scripts -NotIn $PATH) { $PATH += $Scripts; }
-$PATH = $PATH -Join $Divider
-
-## Set SWARM_DIR $env for both machine and this process.
-## Add SWARM path.
-if ($env:SWARM_DIR -ne $Dir) {
-    Write-Host "Adding new SWARM_DIR to evironment variables"
+$PATH = ([Environment]::GetEnvironmentVariable('PATH')).Split($Divider)
+if ($Scripts -notin $PATH) {
+    Write-Host "Adding SWARM_DIR to environment variables..."
+    $PATH = ([Environment]::GetEnvironmentVariable('PATH')).Split($Divider) | Where { $_ -ne "" } | Where { $_ -notlike "*SWARM*" }
+    $PATH += $Scripts; 
+    $PATH = $PATH -Join $Divider;
     [environment]::SetEnvironmentVariable('SWARM_DIR', $Dir, $Target1);
-    $reset = $true
+    [environment]::SetEnvironmentVariable('SWARM_DIR', $Dir, $Target2);
+    [environment]::SetEnvironmentVariable('PATH', $PATH, $Target1);
+    [environment]::SetEnvironmentVariable('PATH', $PATH, $Target2);
+    $Reset = $true;
 }
-[environment]::SetEnvironmentVariable('PATH', $PATH, $Target1);
 
-## Cuda Device Order- Set it to match Busid.
-[Environment]::SetEnvironmentVariable("CUDA_DEVICE_ORDER", "PCI_BUS_ID", $Target1)
-[Environment]::SetEnvironmentVariable("CUDA_DEVICE_ORDER", "PCI_BUS_ID", $Target2)
+if ($env:CUDA_DEVICE_ORDER -ne "PCI_BUS_ID") {
+    Write-Host "Setting Cuda Device Order To Match PCI bus..."
+    [Environment]::SetEnvironmentVariable("CUDA_DEVICE_ORDER", "PCI_BUS_ID", $Target1)
+    [Environment]::SetEnvironmentVariable("CUDA_DEVICE_ORDER", "PCI_BUS_ID", $Target2)
+    $Reset = $true
+}
 
 ## Reset Explorer If Windows- You can do this to reset
 ## Global environment variables, and re-load registry
@@ -49,12 +52,6 @@ if ($IsLinux) {
         $proc | Wait-Process
     }
 }
-
-## Set $env for Process
-if ($env:SWARM_DIR -ne $Dir) {
-    [environment]::SetEnvironmentVariable('PATH', $PATH, $Target2);
-}
-[environment]::SetEnvironmentVariable('SWARM_DIR', $Dir, $Target2);
 
 ## If location isn't already main dir, script won't launch.
 ## This is just to flag an error if there was an issue with
